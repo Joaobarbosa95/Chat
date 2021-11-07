@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import MainContent from "./MainContent";
-
+import MainContent from "../MainContent/MainContent";
 import {
   FaUserAlt, // User
   FaHome, // Home

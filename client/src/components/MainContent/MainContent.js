@@ -1,12 +1,11 @@
 import React from "react";
-import PropTypes from "prop-types";
 
-import GlobalChat from "./GlobalChat";
-import OnlineUsers from "./OnlineUsers";
+import GlobalChat from "../Users/GlobalChat";
+import OnlineUsers from "../Users/OnlineUsers/";
 
 const renderSwitch = function (title) {
   switch (title) {
-    case "Home":
+    case "Users":
       return (
         <>
           <GlobalChat />

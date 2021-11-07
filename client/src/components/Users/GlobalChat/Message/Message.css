@@ -1,0 +1,18 @@
+.message-container {
+  margin-bottom: 20px;
+}
+
+.message-text {
+  border: 1px solid #e6e3e3;
+  background: #e6e3e3;
+  border-radius: 15px;
+  width: max-content;
+  padding: 10px 15px;
+}
+
+.message-date {
+  font-size: 0.6em;
+  position: relative;
+  left: 12px;
+  margin-top: 5px;
+}
