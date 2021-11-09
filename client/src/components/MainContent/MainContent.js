@@ -12,6 +12,12 @@ const renderSwitch = function (title) {
           <OnlineUsers />
         </>
       );
+    default:
+      return (
+        <>
+          <h1>Under Construction</h1>
+        </>
+      );
   }
 };
 

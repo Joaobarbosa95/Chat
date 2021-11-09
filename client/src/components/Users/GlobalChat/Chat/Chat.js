@@ -1,8 +1,9 @@
 import React from "react";
 import { FaTelegramPlane } from "react-icons/fa";
 import "./Chat.css";
+import { v4 as uuidv4 } from "uuid";
 
-const Chat = () => {
+const Chat = ({ updateChat }) => {
   return (
     <div className="chat-input-form">
       <form
@@ -10,7 +11,13 @@ const Chat = () => {
         action=""
         onSubmit={(e) => {
           e.preventDefault();
-          console.log(e.target[0]);
+          updateChat({
+            user: "Anon",
+            text: e.target[0].value,
+            time: new Date().getMilliseconds(),
+            id: uuidv4(),
+          });
+          e.target[0].value = "";
         }}
       >
         <textarea className="chat-input" placeholder="Insert text"></textarea>

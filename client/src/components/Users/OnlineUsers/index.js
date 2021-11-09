@@ -7,19 +7,22 @@ const mockUsers = [
   { image: "", name: "Cabral está on", status: "" },
 ];
 
-const OnlineUsers = (props) => {
+const OnlineUsers = () => {
   return (
     <div className="online-users-container">
       <Title />
       <div className="online-users">
         {mockUsers.map((user) => (
-          <User image={user.image} name={user.name} status={user.status} />
+          <User
+            key={user.name}
+            image={user.image}
+            name={user.name}
+            status={user.status}
+          />
         ))}
       </div>
     </div>
   );
 };
-
-OnlineUsers.propTypes = {};
 
 export default OnlineUsers;
