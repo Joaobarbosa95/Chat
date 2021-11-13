@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 
+// Components
 import ChatTitle from "./ChatTitle/ChatTitle";
 import Message from "./Message/Message";
 import Chat from "./Chat/Chat";
 
+// Style
 import "./GlobalChat.css";
 
 const GlobalChat = () => {

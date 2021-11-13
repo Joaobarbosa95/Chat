@@ -1,23 +1,13 @@
 import React from "react";
 
-import GlobalChat from "../Users/GlobalChat";
-import OnlineUsers from "../Users/OnlineUsers/";
+import Users from "../Users";
 
 const renderSwitch = function (title) {
   switch (title) {
     case "Users":
-      return (
-        <>
-          <GlobalChat />
-          <OnlineUsers />
-        </>
-      );
+      return <Users />;
     default:
-      return (
-        <>
-          <h1>Under Construction</h1>
-        </>
-      );
+      return <h1>Under Construction</h1>;
   }
 };
 

@@ -7,12 +7,13 @@ const mockUsers = [
   { image: "", name: "Cabral está on", status: "" },
 ];
 
-const OnlineUsers = () => {
+const OnlineUsers = ({ users }) => {
+  console.log(users);
   return (
     <div className="online-users-container">
       <Title />
       <div className="online-users">
-        {mockUsers.map((user) => (
+        {users.map((user) => (
           <User
             key={user.name}
             image={user.image}

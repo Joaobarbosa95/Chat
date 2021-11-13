@@ -3,6 +3,15 @@ import { FaTelegramPlane } from "react-icons/fa";
 import "./Chat.css";
 import { v4 as uuidv4 } from "uuid";
 
+const textareaFocus = (e) => {
+  e.target.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      document.querySelector(".chat-send-btn").click();
+    }
+  });
+};
+
 const Chat = ({ updateChat }) => {
   return (
     <div className="chat-input-form">
@@ -11,16 +20,28 @@ const Chat = ({ updateChat }) => {
         action=""
         onSubmit={(e) => {
           e.preventDefault();
+          const message = e.target[0].value;
+
+          if (message.length < 1) return;
+
           updateChat({
             user: "Anon",
-            text: e.target[0].value,
-            time: new Date().getMilliseconds(),
+            text: message,
+            time: new Date().getTime(),
             id: uuidv4(),
           });
+
           e.target[0].value = "";
         }}
       >
-        <textarea className="chat-input" placeholder="Insert text"></textarea>
+        <textarea
+          className="chat-input"
+          placeholder="Insert text"
+          onFocus={textareaFocus}
+          onBlur={(e) => {
+            e.target.removeEventListener("keydown", textareaFocus);
+          }}
+        ></textarea>
 
         <div className="chat-send">
           <button type="submit" className="chat-send-btn">
