@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 // Components
-import ChatTitle from "./ChatTitle/ChatTitle";
+import ChatHeader from "./ChatHeader/ChatHeader";
 import Message from "./Message/Message";
 import Chat from "./Chat/Chat";
 
@@ -13,7 +13,7 @@ const GlobalChat = () => {
 
   return (
     <div className="chat-container">
-      <ChatTitle />
+      <ChatHeader />
       <div className="chat-messages-container">
         <div className="chat-messages">
           {messages.map((message) => (

@@ -2,13 +2,7 @@ import React from "react";
 import Title from "./Title/Title";
 import User from "./User/User";
 
-const mockUsers = [
-  { image: "", name: "Johnny", status: "" },
-  { image: "", name: "Cabral está on", status: "" },
-];
-
 const OnlineUsers = ({ users }) => {
-  console.log(users);
   return (
     <div className="online-users-container">
       <Title />

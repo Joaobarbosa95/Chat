@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 const UserContext = React.createContext();
 
 const defaultUser = {
-  username: "Guest",
+  username: null,
   stayConnected: false,
   socket: null,
   accountType: "Temporary",
@@ -16,6 +16,9 @@ export function useUserContext() {
 export function UserProvider({ children }) {
   const [user, setUser] = useState(defaultUser);
 
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}
