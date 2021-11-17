@@ -1,11 +1,14 @@
 import "./index.css";
 import LeftMenu from "./components/LeftMenu/LeftMenu.js";
+import { UserProvider } from "./components/Contexts/UserContext";
 
 function App() {
   return (
-    <div className="app">
-      <LeftMenu />
-    </div>
+    <UserProvider>
+      <div className="app">
+        <LeftMenu />
+      </div>
+    </UserProvider>
   );
 }
 
