@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Title from "./Title/Title";
 import User from "./User/User";
 import { useUserContext } from "../../Contexts/UserContext";
+import userEvent from "@testing-library/user-event";
 
 const OnlineUsers = () => {
   const { user } = useUserContext();
@@ -17,10 +18,16 @@ const OnlineUsers = () => {
   }
 
   user.socket.on("online-users", (users) => {
-    setOnlineUsers([...users]);
+    setOnlineUsers(users);
   });
 
-  user.socket.on("");
+  user.socket.on("new-user", (users) => {
+    setOnlineUsers(users);
+  });
+
+  user.socket.on("user-disconnect", (users) => {
+    setOnlineUsers(users);
+  });
 
   return (
     <div className="online-users-container">

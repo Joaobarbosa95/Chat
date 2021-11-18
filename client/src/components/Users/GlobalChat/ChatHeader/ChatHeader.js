@@ -7,15 +7,18 @@ const ChatHeader = () => {
   const { user, setUser } = useUserContext();
   const [connection, setConnection] = useState(false);
 
+  // Don't seem a good place to be/happen
   useEffect(() => {
-    if (user.socket) {
+    user.socket &&
       user.socket.emit("user", {
         name: user.username,
         status: "online",
         image: "",
       });
-    }
-    console.log("effect");
+
+    return () => {
+      // clean up event (user-disconnect)
+    };
   }, [connection]);
 
   if (!connection) {
