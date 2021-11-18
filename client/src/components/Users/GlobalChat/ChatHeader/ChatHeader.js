@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ChatHeader.css";
 import { useUserContext } from "../../../Contexts/UserContext";
 import { socketInit } from "../../../../utils/socketConnection";
@@ -6,6 +6,17 @@ import { socketInit } from "../../../../utils/socketConnection";
 const ChatHeader = () => {
   const { user, setUser } = useUserContext();
   const [connection, setConnection] = useState(false);
+
+  useEffect(() => {
+    if (user.socket) {
+      user.socket.emit("user", {
+        name: user.username,
+        status: "online",
+        image: "",
+      });
+    }
+    console.log("effect");
+  }, [connection]);
 
   if (!connection) {
     return (
