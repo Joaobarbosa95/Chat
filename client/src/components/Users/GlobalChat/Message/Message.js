@@ -1,12 +1,16 @@
 import React from "react";
 import "./Message.css";
 
-const Message = ({ author, text, time }) => {
+const Message = ({ username, author, text, time }) => {
+  console.log(username, author);
+
   return (
     <>
       <div className="message-container">
-        <div className="message-text">{text}</div>
-        <div className="message-date">{time}</div>
+        <div style={username === author ? { float: "right" } : {}}>
+          <div className="message-text">{text}</div>
+          <div className="message-date">{time}</div>
+        </div>
       </div>
     </>
   );

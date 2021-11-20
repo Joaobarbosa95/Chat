@@ -12,7 +12,7 @@ const textareaFocus = (e) => {
   });
 };
 
-const Chat = ({ updateChat }) => {
+const Chat = ({ updateChat, username }) => {
   return (
     <div className="chat-input-form">
       <form
@@ -22,10 +22,10 @@ const Chat = ({ updateChat }) => {
           e.preventDefault();
           const message = e.target[0].value;
 
-          if (message.length < 1) return;
+          if (message.trim().length < 1) return;
 
           updateChat({
-            user: "Anon",
+            username: username,
             text: message,
             time: new Date().getTime(),
             id: uuidv4(),

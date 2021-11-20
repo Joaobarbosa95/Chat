@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Title from "./Title/Title";
 import User from "./User/User";
 import { useUserContext } from "../../Contexts/UserContext";
-import userEvent from "@testing-library/user-event";
 
 const OnlineUsers = () => {
   const { user } = useUserContext();
