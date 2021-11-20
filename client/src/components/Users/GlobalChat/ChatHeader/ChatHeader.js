@@ -15,10 +15,6 @@ const ChatHeader = () => {
         status: "online",
         image: "",
       });
-
-    return () => {
-      // clean up event (user-disconnect)
-    };
   }, [connection]);
 
   if (!connection) {
@@ -55,9 +51,23 @@ const ChatHeader = () => {
   }
 
   return (
-    <div className="chat-title">
-      <p>{user.accountType} Global Chat</p>
-      <p>You are logged as {user.username}</p>
+    <div className="chat-title chat-online">
+      <div>
+        <p>{user.accountType} Global Chat</p>
+        <p>You are logged as {user.username}</p>
+      </div>
+      <button
+        className="logout-btn"
+        onClick={() => {
+          user.socket.close();
+          setUser((previousUser) => {
+            return { ...previousUser, socket: null };
+          });
+          setConnection(false);
+        }}
+      >
+        Logout
+      </button>
     </div>
   );
 };
