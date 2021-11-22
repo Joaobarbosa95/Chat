@@ -20,22 +20,28 @@ let messages = [];
 let onlineUsers = [{ name: "eu" }];
 
 io.on("connection", (socket) => {
+  let newUser;
   // New client
-  socket.on("user", (newUser) => {
-    onlineUsers.push(newUser);
-    // Inform this user which client are connected
-    socket.emit("online-users", onlineUsers);
+  socket.on("user", (user) => {
+    newUser = user;
+    onlineUsers.push(user);
   });
 
-  // // Inform other users this client connected
-  // socket.broadcast.emit("new-user", { onlineUsers, newUser });
+  socket.on("get-users", () => {
+    // Inform this user which client are connected
+    socket.emit("online-users", onlineUsers);
+    console.table(onlineUsers);
+  });
 
-  // socket.once("disconnect", () => {
-  //   console.log("User disconnect", newUser);
-  //   // filter is the easy fix, not the best
-  //   onlineUsers = onlineUsers.filter((user) => user.name !== newUser.name);
-  //   io.emit("user-disconnect", { onlineUsers, newUser });
-  // });
+  // Inform other users this client connected
+  socket.broadcast.emit("new-user", { onlineUsers, newUser });
+
+  socket.once("disconnect", () => {
+    console.log("User disconnect", newUser);
+    // filter is the easy fix, not the best
+    onlineUsers = onlineUsers.filter((user) => user.name !== newUser.name);
+    io.emit("user-disconnect", { onlineUsers, newUser });
+  });
 });
 
 server.listen(PORT, () => console.log("Server listing on port %i", PORT));
