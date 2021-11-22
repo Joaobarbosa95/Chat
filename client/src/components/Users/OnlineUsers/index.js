@@ -1,11 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Title from "./Title/Title";
 import User from "./User/User";
 import { useUserContext } from "../../Contexts/UserContext";
 
-const OnlineUsers = () => {
+const OnlineUsers = ({ onlineUsers, setOnlineUsers }) => {
   const { user } = useUserContext();
-  const [onlineUsers, setOnlineUsers] = useState([]);
+
+  useEffect(() => {
+    if (user.username) {
+      user.socket.emit("get-users");
+
+      user.socket.on("online-users", (users) => {
+        setOnlineUsers(users);
+      });
+
+      user.socket.on("new-user", (users) => {
+        setOnlineUsers(users);
+      });
+
+      user.socket.on("user-disconnect", (users) => {
+        setOnlineUsers(onlineUsers);
+      });
+    }
+    return () => {
+      if (user.socket) {
+        user.socket.off("online-users");
+        user.socket.off("new-user");
+        user.socket.off("user-disconnect");
+      }
+    };
+  }, [user.username]);
 
   if (!user.socket) {
     return (
@@ -15,18 +39,6 @@ const OnlineUsers = () => {
       </div>
     );
   }
-
-  user.socket.on("online-users", (users) => {
-    setOnlineUsers(users);
-  });
-
-  user.socket.on("new-user", (users) => {
-    setOnlineUsers(users);
-  });
-
-  user.socket.on("user-disconnect", (users) => {
-    setOnlineUsers(users);
-  });
 
   return (
     <div className="online-users-container">

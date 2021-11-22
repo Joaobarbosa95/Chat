@@ -11,13 +11,12 @@ import { useUserContext } from "../../Contexts/UserContext";
 // Style
 import "./GlobalChat.css";
 
-const GlobalChat = () => {
+const GlobalChat = ({ onlineUsers, setOnlineUsers }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState(null);
   const { user } = useUserContext();
 
   useEffect(() => {
-    console.log(newMessage);
     user.socket && newMessage && user.socket.emit("new-message", newMessage);
     newMessage &&
       setMessages((previousMessages) => [...previousMessages, newMessage]);
@@ -35,7 +34,10 @@ const GlobalChat = () => {
 
   return (
     <div className="chat-container">
-      <ChatHeader />
+      <ChatHeader
+        onlineUsers={onlineUsers}
+        setOnlineUsers={(users) => setOnlineUsers(users)}
+      />
       <div className="chat-messages-container">
         <div className="chat-messages">
           {messages.length

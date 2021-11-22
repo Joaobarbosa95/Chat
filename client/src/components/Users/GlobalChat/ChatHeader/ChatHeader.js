@@ -3,41 +3,34 @@ import "./ChatHeader.css";
 import { useUserContext } from "../../../Contexts/UserContext";
 import { socketInit } from "../../../../utils/socketConnection";
 
-const ChatHeader = () => {
+const ChatHeader = ({ onlineUsers, setOnlineUsers }) => {
   const { user, setUser } = useUserContext();
-  const [connection, setConnection] = useState(false);
+  const [payload, setPayload] = useState(null);
 
-  // Don't seem a good place to be/happen
   useEffect(() => {
-    user.socket &&
-      user.socket.emit("user", {
-        name: user.username,
-        status: "online",
-        image: "",
+    if (payload) {
+      setUser((prev) => {
+        return {
+          ...prev,
+          username: payload.username,
+          stayConnected: payload.stayConnected,
+          socket: socketInit(payload.username),
+        };
       });
-  }, [connection]);
+    }
+  }, [payload]);
 
-  if (!connection) {
+  if (!user.username) {
     return (
       <div className="chat-title">
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            const payload = {
+
+            setPayload({
               username: e.target[0].value,
               stayConnected: e.target[1].checked,
-            };
-
-            setUser((prev) => {
-              return {
-                ...prev,
-                username: payload.username,
-                stayConnected: payload.stayConnected,
-                socket: socketInit(),
-              };
             });
-
-            setConnection(true);
           }}
         >
           <label htmlFor="username">Username: </label>
@@ -59,11 +52,11 @@ const ChatHeader = () => {
       <button
         className="logout-btn"
         onClick={() => {
-          user.socket.close();
+          user.socket.disconnect();
+          setOnlineUsers([]);
           setUser((previousUser) => {
-            return { ...previousUser, socket: null };
+            return { ...previousUser, username: null };
           });
-          setConnection(false);
         }}
       >
         Logout

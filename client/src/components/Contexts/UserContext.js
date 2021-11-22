@@ -16,9 +16,6 @@ export function useUserContext() {
 export function UserProvider({ children }) {
   const [user, setUser] = useState(defaultUser);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}

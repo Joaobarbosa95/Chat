@@ -3,10 +3,18 @@ import GlobalChat from "./GlobalChat";
 import OnlineUsers from "./OnlineUsers";
 
 const Users = () => {
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
   return (
     <>
-      <GlobalChat />
-      <OnlineUsers />
+      <GlobalChat
+        onlineUsers={onlineUsers}
+        setOnlineUsers={(users) => setOnlineUsers(users)}
+      />
+      <OnlineUsers
+        onlineUsers={onlineUsers}
+        setOnlineUsers={(users) => setOnlineUsers(users)}
+      />
     </>
   );
 };
