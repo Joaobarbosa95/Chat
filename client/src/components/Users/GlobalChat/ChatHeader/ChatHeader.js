@@ -3,6 +3,9 @@ import "./ChatHeader.css";
 import { useUserContext } from "../../../Contexts/UserContext";
 import { socketInit } from "../../../../utils/socketConnection";
 
+import ChatHeaderOnline from "./ChatHeaderOnline";
+import ChatHeaderSignIn from "./ChatHeaderSignIn";
+
 const ChatHeader = ({ onlineUsers, setOnlineUsers }) => {
   const { user, setUser } = useUserContext();
   const [payload, setPayload] = useState(null);
@@ -20,48 +23,18 @@ const ChatHeader = ({ onlineUsers, setOnlineUsers }) => {
     }
   }, [payload]);
 
-  if (!user.username) {
-    return (
-      <div className="chat-title">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-
-            setPayload({
-              username: e.target[0].value,
-              stayConnected: e.target[1].checked,
-            });
-          }}
-        >
-          <label htmlFor="username">Username: </label>
-          <input type="text" name="username" />
-          <label htmlFor="stayConnected">Stay Connected: </label>
-          <input type="checkbox" name="stayConnected" />
-          <button type="submit">Log in</button>
-        </form>
-      </div>
-    );
-  }
-
   return (
-    <div className="chat-title chat-online">
-      <div>
-        <p>{user.accountType} Global Chat</p>
-        <p>You are logged as {user.username}</p>
-      </div>
-      <button
-        className="logout-btn"
-        onClick={() => {
-          user.socket.disconnect();
-          setOnlineUsers([]);
-          setUser((previousUser) => {
-            return { ...previousUser, username: null };
-          });
-        }}
-      >
-        Logout
-      </button>
-    </div>
+    <>
+      {user.username ? (
+        <ChatHeaderOnline
+          user={user}
+          setUser={(user) => setUser(user)}
+          setOnlineUsers={(users) => setOnlineUsers(users)}
+        />
+      ) : (
+        <ChatHeaderSignIn setPayload={(payload) => setPayload(payload)} />
+      )}
+    </>
   );
 };
 

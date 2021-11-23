@@ -4,21 +4,21 @@ import User from "./User/User";
 import { useUserContext } from "../../Contexts/UserContext";
 
 const OnlineUsers = ({ onlineUsers, setOnlineUsers }) => {
-  const { user } = useUserContext();
+  const { user, setUser } = useUserContext();
 
   useEffect(() => {
     if (user.username) {
       user.socket.emit("get-users");
 
-      user.socket.on("online-users", (users) => {
-        setOnlineUsers(users);
+      user.socket.on("online-users", (onlineUsers) => {
+        setOnlineUsers(onlineUsers);
       });
 
-      user.socket.on("new-user", (users) => {
-        setOnlineUsers(users);
+      user.socket.on("new-user", ({ onlineUsers, user }) => {
+        setOnlineUsers(onlineUsers);
       });
 
-      user.socket.on("user-disconnect", (users) => {
+      user.socket.on("user-disconnect", ({ onlineUsers, user }) => {
         setOnlineUsers(onlineUsers);
       });
     }

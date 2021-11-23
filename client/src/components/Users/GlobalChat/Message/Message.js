@@ -2,8 +2,6 @@ import React from "react";
 import "./Message.css";
 
 const Message = ({ username, author, text, time }) => {
-  console.log(username, author);
-
   return (
     <>
       <div className="message-container">
