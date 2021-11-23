@@ -16,31 +16,37 @@ const server = http.createServer(app);
 
 const io = socketIo(server);
 
-let messages = [];
-let onlineUsers = [{ name: "eu" }];
+let onlineUsers = [];
 
 io.on("connection", (socket) => {
-  let newUser;
+  let socketUser;
+  let messages = [];
+
   // New client
-  socket.on("user", (user) => {
-    newUser = user;
-    onlineUsers.push(user);
+  socket.on("user", (newUser) => {
+    console.log(newUser);
+    socketUser = newUser;
+    onlineUsers.push(newUser);
+    socket.broadcast.emit("new-user", { onlineUsers, user: socketUser });
   });
 
+  // Get users
   socket.on("get-users", () => {
-    // Inform this user which client are connected
     socket.emit("online-users", onlineUsers);
-    console.table(onlineUsers);
+  });
+
+  // Update messages
+  socket.on("new-message", (message) => {
+    socket.broadcast.emit("update-messages", message);
   });
 
   // Inform other users this client connected
-  socket.broadcast.emit("new-user", { onlineUsers, newUser });
-
-  socket.once("disconnect", () => {
-    console.log("User disconnect", newUser);
+  socket.on("disconnect", () => {
+    console.log("User disconnect", socketUser);
+    console.log(onlineUsers);
     // filter is the easy fix, not the best
-    onlineUsers = onlineUsers.filter((user) => user.name !== newUser.name);
-    io.emit("user-disconnect", { onlineUsers, newUser });
+    onlineUsers = onlineUsers.filter((user) => user.name !== socketUser.name);
+    io.emit("user-disconnect", onlineUsers);
   });
 });
 
