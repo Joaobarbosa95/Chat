@@ -31,7 +31,7 @@ const OnlineUsers = ({ onlineUsers, setOnlineUsers }) => {
     };
   }, [user.username]);
 
-  if (!user.socket) {
+  if (!user.username) {
     return (
       <div className="online-users-container">
         <Title />

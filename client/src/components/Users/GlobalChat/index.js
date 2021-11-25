@@ -27,21 +27,23 @@ const GlobalChat = ({ onlineUsers, setOnlineUsers }) => {
   // Solves the multiple events firing problem
   useEffect(() => {
     if (user.socket) {
+      user.socket.on("get-chat", (messages) => {
+        setMessages(messages);
+      });
       user.socket.on("update-messages", (message) => {
         setMessages((previousMessages) => [...previousMessages, message]);
       });
 
       user.socket.on("disconnect", () => setMessages([]));
 
-      user.socket.emit("get-messages", (messages) => {
-        setMessages(messages);
-      });
+      user.socket.emit("get-messages");
     }
 
     return () => {
       if (user.socket) {
         user.socket.off("update-messages");
         user.socket.off("disconnect");
+        user.socket.off("get-chat");
       }
     };
   }, [user.username]);
