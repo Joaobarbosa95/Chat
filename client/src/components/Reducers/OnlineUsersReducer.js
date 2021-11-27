@@ -1,12 +1,25 @@
 import { useReducer } from "react";
+// importar object para chamar nos dispatchs
+const ACTION_TYPE = {
+  GET_USERS: "get-users",
+  NEW_USER: "new-user",
+  USER_DISCONNECT: "user-disconnect",
+};
 
 const initialState = [];
 const reducer = function (state, action) {
-  if (action.type === "user-connected") {
-    state.push(action.payload);
-  }
-  if (action.type === "user-disconnected") {
-    state.filter((user) => user.username !== action.payload.username);
+  switch (action.type) {
+    case ACTION_TYPE.GET_USERS:
+      return action.onlineUsers;
+
+    case ACTION_TYPE.NEW_USER:
+      return [...state, action.user];
+
+    case ACTION_TYPE.USER_DISCONNECT:
+      return state.filter((user) => user.name !== action.user.name);
+
+    default:
+      return state;
   }
 };
 

@@ -12,6 +12,7 @@ const ChatHeader = ({ onlineUsers, setOnlineUsers }) => {
 
   useEffect(() => {
     if (payload) {
+      console.log("payload");
       setUser((prev) => {
         return {
           ...prev,

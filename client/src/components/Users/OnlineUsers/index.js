@@ -2,24 +2,27 @@ import React, { useState, useEffect } from "react";
 import Title from "./Title/Title";
 import User from "./User/User";
 import { useUserContext } from "../../Contexts/UserContext";
+import { useOnlineUsersContext } from "../../Contexts/OnlineUsersContext";
 
-const OnlineUsers = ({ onlineUsers, setOnlineUsers }) => {
+const OnlineUsers = ({ setOnlineUsers }) => {
   const { user, setUser } = useUserContext();
+  const { onlineUsers, dispatch } = useOnlineUsersContext();
 
   useEffect(() => {
     if (user.username) {
       user.socket.emit("get-users");
 
       user.socket.on("online-users", (onlineUsers) => {
-        setOnlineUsers(onlineUsers);
+        dispatch({ type: "get-users", onlineUsers: onlineUsers });
       });
 
-      user.socket.on("new-user", ({ onlineUsers, user }) => {
-        setOnlineUsers(onlineUsers);
+      user.socket.on("new-user", ({ user }) => {
+        dispatch({ type: "new-user", user: user });
       });
 
-      user.socket.on("user-disconnect", ({ onlineUsers, user }) => {
-        setOnlineUsers(onlineUsers);
+      user.socket.on("user-disconnect", ({ user }) => {
+        console.log(user);
+        dispatch({ type: "user-disconnect", user: user });
       });
     }
     return () => {

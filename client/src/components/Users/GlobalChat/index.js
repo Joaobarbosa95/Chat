@@ -38,7 +38,7 @@ const GlobalChat = ({ onlineUsers, setOnlineUsers }) => {
 
       user.socket.emit("get-messages");
     }
-
+    console.log("ai  ai ai");
     return () => {
       if (user.socket) {
         user.socket.off("update-messages");
@@ -46,7 +46,7 @@ const GlobalChat = ({ onlineUsers, setOnlineUsers }) => {
         user.socket.off("get-chat");
       }
     };
-  }, [user.username]);
+  }, [user.socket]);
 
   return (
     <div className="chat-container">
