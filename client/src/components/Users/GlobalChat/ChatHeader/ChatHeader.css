@@ -1,0 +1,15 @@
+.chat-title {
+  grid-row: 1;
+  background-color: #dadada;
+}
+
+.chat-online {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.logout-btn {
+  align-self: center;
+  margin-right: 50px;
+}

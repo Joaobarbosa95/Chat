@@ -1,0 +1,13 @@
+.online-users-container {
+    grid-column: 2;
+    background-color: #f8f8f8;
+    padding: 20px;
+  }
+  
+  .online-user {
+    margin-bottom: 10px;
+  }
+  
+  .online-username {
+    margin-left: 8px;
+  }
