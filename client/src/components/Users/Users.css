@@ -1,0 +1,5 @@
+.user-content {
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto 200px;
+}

@@ -1,8 +1,11 @@
 // Models
-import User from "./models/user";
-import Messages from "./models/messages";
+const User = require("../models/user");
+const Messages = require("../models/messages");
+const auth = require("../middleware/auth");
 
-import express from "express";
+const multer = require("multer");
+const sharp = require("sharp");
+
 const express = require("express");
 
 const router = new express.Router();
@@ -12,16 +15,20 @@ router.get("/", (req, res) => {
 });
 
 router.post("/user/login", async (req, res) => {
-  try {
-    const user = await User.findByCredentials(
-      req.body.username,
-      req.body.password
-    );
-    const token = await user.generateAuthToken();
-    res.send({ user, token });
-  } catch (e) {
-    res.status(400).send();
-  }
+  console.log(req);
+
+  res.json({ status: "ok" });
+
+  // try {
+  //   const user = await User.findByCredentials(
+  //     req.body.username,
+  //     req.body.password
+  //   );
+  //   const token = await user.generateAuthToken();
+  //   res.send({ user, token });
+  // } catch (e) {
+  //   res.status(400).send();
+  // }
 });
 
 router.post("/users/logout", auth, async (req, res) => {
@@ -113,6 +120,6 @@ router.get("/users/:id/avatar", async (req, res) => {
   }
 });
 
-export function mountUserRoutes(app) {
+module.exports = function mountUserRoutes(app) {
   app.use(router);
-}
+};

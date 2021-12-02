@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const privateMessagesSchema = new mongoose.Schema({
   user: {
@@ -18,7 +18,7 @@ const privateMessagesSchema = new mongoose.Schema({
   ],
 });
 
-privateMessagesSchema.virtual("user", {
+privateMessagesSchema.virtual("userId", {
   ref: "User",
   localField: "user",
   foreignField: "_id",
@@ -29,4 +29,4 @@ const privateMessages = mongoose.model(
   privateMessagesSchema
 );
 
-export default privateMessages;
+module.exports = privateMessages;

@@ -1,17 +1,20 @@
-import express, { json } from "express";
-import { createServer } from "http";
+// Environment variables
+require("dotenv").config();
+
+const express = require("express");
+const { createServer } = require("http");
 
 // Socket
-import socketIo from "socket.io";
-import connectSocket from "./socket/connectSocket";
+const socketIo = require("socket.io");
+const connectSocket = require("./socket/connectSocket");
 
 // Routes
-import { mountUserRouter } from "./routes/user";
+const mountUserRouter = require("./routes/user");
 
 const PORT = process.env.PORT;
 const app = express();
 
-app.use(json());
+app.use(express.json());
 
 // Routes
 mountUserRouter(app);
