@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import Icon from "./Icon";
 
+import { useNavigate } from "react-router-dom";
 const LeftMenu = () => {
   const tabs = [
     {
@@ -64,7 +65,8 @@ const LeftMenu = () => {
     },
   ];
 
-  const [activeTab, setActiveTab] = useState(tabs[0].title);
+  const [activeTab, setActiveTab] = useState(tabs[1].title);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -76,13 +78,16 @@ const LeftMenu = () => {
             title={tab.title}
             key={tab.title}
             activeTab={activeTab}
-            onClick={(title) => setActiveTab(title)}
+            onClick={(title) => {
+              setActiveTab(title);
+              navigate(tab.title);
+            }}
           />
         ))}
       </div>
-      <MainContent activeTab={activeTab} />
     </>
   );
 };
 
 export default LeftMenu;
+// <MainContent activeTab={activeTab} />

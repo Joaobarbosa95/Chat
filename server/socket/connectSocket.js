@@ -1,16 +1,14 @@
 function connectSocket(io) {
+  let onlineUsers = [];
+
   io.on("connection", (socket) => {
     let socketUser;
-    // From which index in messages array the user has message access
     let messages = [];
-    let messagesRenderPoint;
 
     // New client
     socket.on("user", (newUser) => {
       socketUser = newUser;
       onlineUsers.push(newUser);
-      // messages.push() - push a user has joined the room message
-      // messagesRenderPoint = messages.length - 1;
       socket.broadcast.emit("new-user", { user: socketUser });
     });
 
@@ -18,16 +16,6 @@ function connectSocket(io) {
     socket.on("get-users", () => {
       socket.emit("online-users", onlineUsers);
     });
-
-    // Get messages
-    socket.on("get-messages", () => {
-      socket.emit("get-chat", messages.slice(messagesRenderPoint));
-    });
-
-    // Another way to update messages
-    // socket.on("new-message", () => {
-    //   io.sockets.emit("update-chat", messages);
-    // });
 
     // Update messages
     socket.on("new-message", (message) => {
@@ -44,4 +32,4 @@ function connectSocket(io) {
   });
 }
 
-export default connectSocket;
+module.exports = connectSocket;

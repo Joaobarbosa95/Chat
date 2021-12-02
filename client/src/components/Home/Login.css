@@ -1,0 +1,42 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: inherit;
+}
+
+.login-content {
+  width: 90%;
+  height: 90%;
+  text-align: center;
+}
+
+.login-logo {
+  margin-top: 20px;
+}
+.login-title {
+  margin-top: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  row-gap: 10px;
+}
+
+.login-form > * {
+  height: 35px;
+}
+
+.login-form > input {
+  text-indent: 10px;
+  font-size: 1em;
+}
