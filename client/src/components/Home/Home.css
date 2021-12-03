@@ -1,26 +1,31 @@
 .home-container {
-  background-color: grey;
+  background-color: #fff;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .home {
   width: 500px;
   height: 400px;
-  background-color: red;
+  background-color: #ffffff;
   border-radius: 25px;
   display: grid;
   grid-template-rows: 50px auto;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
 .tabs {
-  background-color: yellow;
   display: grid;
   grid-template-columns: 250px 250px;
   text-align: center;
+}
+
+.tabs > div {
+  background: rgba(239, 208, 148, 0.84);
 }
 
 .login {
@@ -37,4 +42,78 @@
 
 .create-account {
   grid-column: 2;
+}
+
+.login-btn {
+  border-radius: 20px;
+  border: 1px solid #ff4b2b;
+  background-color: #ff4b2b;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+}
+
+.home-container > input {
+  background-color: #eee;
+  border: none;
+}
+
+.login-error {
+  position: relative;
+  bottom: 30px;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.tabs-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: inherit;
+  height: inherit;
+}
+
+.login-content {
+  width: 90%;
+  height: 90%;
+  text-align: center;
+}
+
+.login-logo {
+  margin-top: 20px;
+}
+.login-title {
+  margin-top: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  row-gap: 10px;
+}
+
+.login-form > * {
+  height: 35px;
+}
+
+.login-form > input {
+  text-indent: 10px;
+  font-size: 1em;
 }
