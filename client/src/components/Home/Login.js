@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 
-import "./Login.css";
-
-const Login = ({}) => {
+const Login = ({ setError }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
   function submitHandle(e) {
     e.preventDefault();
     const url = "http://localhost:4000/user/login";
@@ -19,9 +16,14 @@ const Login = ({}) => {
 
     fetch(url, options)
       .then((res) => res.json())
-      .then((res) => console.log(res));
-  }
+      .then((res) => {
+        console.log(res);
+        setError("Wrong user or password");
+      });
 
+    setUsername("");
+    setPassword("");
+  }
   return (
     <div className="login-container">
       <div className="login">
@@ -34,14 +36,18 @@ const Login = ({}) => {
             <input
               type="text"
               placeholder="Username"
-              onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value) && console.log("q")}
             />
             <input
               type="password"
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value) && console.log("q")}
             />
-            <button type="submit">Login</button>
+            <button type="submit" className="login-btn">
+              Login
+            </button>
           </form>
         </div>
       </div>
