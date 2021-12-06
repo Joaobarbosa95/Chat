@@ -14,29 +14,17 @@ const Home = () => {
         <div className="tabs">
           <div
             onClick={() => setUserHasAccount(true)}
-            className="login tabs-display"
-            style={
-              userHasAccount
-                ? {
-                    background:
-                      "radial-gradient(ellipse at 50%, rgba(244, 193, 121, 0.65) 20%, rgba(253, 113, 45, 0.84) 100%)",
-                  }
-                : {}
-            }
+            className={`login tabs-display ${
+              userHasAccount ? "tab-active" : ""
+            }`}
           >
             Login
           </div>
           <div
             onClick={() => setUserHasAccount(false)}
-            className="create-account tabs-display"
-            style={
-              userHasAccount
-                ? {}
-                : {
-                    background:
-                      "radial-gradient(ellipse at 50%, rgba(244, 193, 121, 0.65) 20%, rgba(253, 113, 45, 0.84) 100%)",
-                  }
-            }
+            className={`create-account tabs-display ${
+              userHasAccount ? "" : "tab-active"
+            }`}
           >
             Create account
           </div>

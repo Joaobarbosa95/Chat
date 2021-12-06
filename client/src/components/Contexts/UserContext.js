@@ -7,6 +7,7 @@ const defaultUser = {
   stayConnected: false,
   socket: null,
   accountType: "Temporary",
+  token: null,
 };
 
 export function useUserContext() {

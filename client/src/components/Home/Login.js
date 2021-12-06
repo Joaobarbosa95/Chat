@@ -14,12 +14,10 @@ const Login = ({ setError }) => {
       },
     };
 
-    fetch(url, options)
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-        setError("Wrong user or password");
-      });
+    fetch(url, options).then((res) => {
+      console.log(res);
+      setError("Wrong user or password");
+    });
 
     setUsername("");
     setPassword("");

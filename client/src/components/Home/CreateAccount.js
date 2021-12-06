@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useUserContext } from "../Contexts/UserContext";
 
 const CreateAccount = ({ setError }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const { setUser } = useUserContext();
 
   function submitHandle(e) {
     e.preventDefault();
@@ -21,9 +23,22 @@ const CreateAccount = ({ setError }) => {
       },
     };
 
+    // input control
+    if (username.trim().length < 1)
+      setError("Username must be at least one character");
+    if (password.trim().length < 6)
+      setError("Password must be at least 7 characters");
+    if (password !== repeatPassword) setError("Passwords don't match");
+
     fetch(url, options)
       .then((res) => res.json())
-      .then((res) => console.log(res));
+      .then((res) => {
+        if (res.error) return setError(res.error);
+        console.log(res);
+        setUser((prev) => {
+          return { ...prev, username: res.user.username, token: res.token };
+        });
+      });
   }
 
   return (
