@@ -27,6 +27,13 @@
 .tabs > div {
   background: rgba(239, 208, 148, 0.84);
 }
+.tab-active {
+  background: radial-gradient(
+    ellipse at 50%,
+    rgba(244, 193, 121, 0.65) 20%,
+    rgba(253, 113, 45, 0.84) 100%
+  ) !important;
+}
 
 .login {
   grid-column: 1;
