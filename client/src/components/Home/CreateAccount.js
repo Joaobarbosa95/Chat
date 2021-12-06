@@ -34,7 +34,6 @@ const CreateAccount = ({ setError }) => {
       .then((res) => res.json())
       .then((res) => {
         if (res.error) return setError(res.error);
-        console.log(res);
         setUser((prev) => {
           return { ...prev, username: res.user.username, token: res.token };
         });
@@ -63,7 +62,7 @@ const CreateAccount = ({ setError }) => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <input
-              type="repeat-password"
+              type="password"
               placeholder="Repeat Password"
               value={repeatPassword}
               onChange={(e) => setRepeatPassword(e.target.value)}

@@ -1,8 +1,14 @@
 import React, { useState } from "react";
+import { useUserContext } from "../Contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ setError }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser } = useUserContext();
+
+  const navigate = useNavigate();
+
   function submitHandle(e) {
     e.preventDefault();
     const url = "http://localhost:4000/user/login";
@@ -14,13 +20,21 @@ const Login = ({ setError }) => {
       },
     };
 
-    fetch(url, options).then((res) => {
-      console.log(res);
-      setError("Wrong user or password");
-    });
+    fetch(url, options)
+      .then((res) => res.json())
+      .then((res) => {
+        setUsername("");
+        setPassword("");
+        console.log(res);
 
-    setUsername("");
-    setPassword("");
+        if (res.error) return setError(res.error);
+
+        setUser((prev) => {
+          return { ...prev, username: res.user.username, token: res.token };
+        });
+
+        // navigate("/users");
+      });
   }
   return (
     <div className="login-container">
@@ -35,13 +49,13 @@ const Login = ({ setError }) => {
               type="text"
               placeholder="Username"
               value={username}
-              onChange={(e) => setUsername(e.target.value) && console.log("q")}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value) && console.log("q")}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <button type="submit" className="login-btn">
               Login

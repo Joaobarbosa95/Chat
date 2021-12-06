@@ -6,6 +6,7 @@ import { OnlineUsersProvider } from "./components/Contexts/OnlineUsersContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Users from "./components/Users";
 import Home from "./components/Home";
+import User from "./components/User";
 
 function App() {
   // <Router path="*" element={<Users />} />
@@ -32,6 +33,7 @@ function App() {
                 <Routes>
                   <Route path="home" element={<Home />} />
                   <Route path="users" element={<Users />} />
+                  <Route path="user" element={<User />} />
                 </Routes>
               </div>
             </div>
