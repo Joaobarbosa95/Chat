@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useUserContext } from "../Contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const CreateAccount = ({ setError }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const { setUser } = useUserContext();
+  const navigate = useNavigate();
 
   function submitHandle(e) {
     e.preventDefault();
@@ -37,6 +39,8 @@ const CreateAccount = ({ setError }) => {
         setUser((prev) => {
           return { ...prev, username: res.user.username, token: res.token };
         });
+
+        navigate("/user", { replace: true });
       });
   }
 
