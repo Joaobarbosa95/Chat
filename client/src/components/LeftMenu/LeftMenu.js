@@ -72,7 +72,6 @@ const LeftMenu = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(location.pathname.slice(1));
     setActiveTab(location.pathname.slice(1).toLowerCase());
   }, [location.pathname]);
 

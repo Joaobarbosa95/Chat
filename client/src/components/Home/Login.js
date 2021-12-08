@@ -14,7 +14,10 @@ const Login = ({ setError }) => {
     const url = "http://localhost:4000/user/login";
     const options = {
       method: "POST",
-      body: JSON.stringify({ username: username, password: password }),
+      body: JSON.stringify({
+        username: username.trim().toLowerCase(),
+        password: password,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
