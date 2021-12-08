@@ -25,7 +25,6 @@ const Login = ({ setError }) => {
       .then((res) => {
         setUsername("");
         setPassword("");
-        console.log(res);
 
         if (res.error) return setError(res.error);
 
@@ -33,7 +32,7 @@ const Login = ({ setError }) => {
           return { ...prev, username: res.user.username, token: res.token };
         });
 
-        // navigate("/users");
+        navigate("/users", { replace: true });
       });
   }
   return (
