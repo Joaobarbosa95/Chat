@@ -32,7 +32,7 @@ const Login = ({ setError }) => {
           return { ...prev, username: res.user.username, token: res.token };
         });
 
-        navigate("/users", { replace: true });
+        navigate("/user", { replace: true });
       });
   }
   return (

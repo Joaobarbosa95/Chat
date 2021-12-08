@@ -2,10 +2,15 @@ import React, { useState } from "react";
 import "./Home.css";
 import Login from "./Login";
 import CreateAccount from "./CreateAccount";
+import Logged from "./Logged";
+import { useUserContext } from "../Contexts/UserContext";
 
 const Home = () => {
   const [userHasAccount, setUserHasAccount] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useUserContext();
+
+  if (user.token) return <Logged />;
 
   return (
     <div className="home-container">

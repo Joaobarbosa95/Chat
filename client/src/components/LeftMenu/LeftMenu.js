@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainContent from "../MainContent/MainContent";
+
 import {
   FaUserAlt, // User
   FaHome, // Home
@@ -12,61 +13,68 @@ import {
 } from "react-icons/fa";
 import Icon from "./Icon";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 const LeftMenu = () => {
   const tabs = [
     {
       icon: FaUserAlt,
       classes: "user",
-      title: "User",
-      active: true,
+      title: "user",
+      active: false,
     },
     {
       icon: FaHome,
       classes: null,
-      title: "Home",
-      active: false,
+      title: "home",
+      active: true,
     },
     {
       icon: FaTelegramPlane,
       classes: null,
-      title: "Send",
+      title: "send",
       active: false,
     },
     {
       icon: FaInbox,
       classes: null,
-      title: "Inbox",
+      title: "inbox",
       active: false,
     },
     {
       icon: FaUsers,
       classes: null,
-      title: "Users",
+      title: "users",
       active: false,
     },
     {
       icon: FaBell,
       classes: null,
-      title: "Notifications",
+      title: "notifications",
       active: false,
     },
     {
       icon: FaEllipsisH,
       classes: null,
-      title: "Options",
+      title: "options",
       active: false,
     },
     {
       icon: FaCog,
       classes: "settings",
-      title: "Settings",
+      title: "settings",
       active: false,
     },
   ];
 
-  const [activeTab, setActiveTab] = useState(tabs[1].title);
+  let location = useLocation();
+
+  const [activeTab, setActiveTab] = useState();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(location.pathname.slice(1));
+    setActiveTab(location.pathname.slice(1).toLowerCase());
+  }, [location.pathname]);
 
   return (
     <>
