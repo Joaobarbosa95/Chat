@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -12,8 +14,6 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-
-  user.tokens = user.tokens.concat({ token });
   await user.save();
 
   return token;
@@ -23,22 +23,21 @@ userSchema.statics.findByCredentials = async (username, password) => {
   const user = await User.findOne({ username });
 
   if (!user) {
-    throw new Error("Unable to login");
+    throw new Error("Username not found");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new Error("Unable to login");
+    throw new Error("Wrong password");
   }
 
   return user;
 };
 
 // Hash the plain text password before saving
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (req, res, next) {
   const user = this;
-
   if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 8);
   }
