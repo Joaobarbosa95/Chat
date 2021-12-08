@@ -15,20 +15,34 @@ router.get("/", (req, res) => {
 });
 
 router.post("/user/login", async (req, res) => {
-  console.log(req);
+  try {
+    const user = await User.findByCredentials(
+      req.body.username,
+      req.body.password
+    );
+    const token = await user.generateAuthToken();
+    res.status(200).send({ user, token });
+  } catch (e) {
+    res.status(400).send({ error: e.message });
+  }
+});
 
-  res.json({ status: "ok" });
+router.post("/user/createAccount", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
 
-  // try {
-  //   const user = await User.findByCredentials(
-  //     req.body.username,
-  //     req.body.password
-  //   );
-  //   const token = await user.generateAuthToken();
-  //   res.send({ user, token });
-  // } catch (e) {
-  //   res.status(400).send();
-  // }
+  try {
+    const userMatch = await User.find({ username: username });
+    if (userMatch.length !== 0)
+      return res.status(400).send({ error: "Username already in use" });
+
+    const user = new User({ username: username, password: password });
+    const token = await user.generateAuthToken();
+
+    res.status(201).send({ user, token });
+  } catch (e) {
+    res.status(400).send({ error: e });
+  }
 });
 
 router.post("/users/logout", auth, async (req, res) => {
@@ -61,7 +75,6 @@ router.get("/users/me", auth, async (req, res) => {
 router.delete("/users/me", auth, async (req, res) => {
   try {
     await req.user.remove();
-    sendCancelationEmail(req.user.email, req.user.name);
     res.send(req.user);
   } catch (e) {
     res.status(500).send();

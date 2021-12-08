@@ -1,6 +1,9 @@
 // Environment variables
 require("dotenv").config();
 
+// Database
+require("./db/mongoose");
+
 const express = require("express");
 const { createServer } = require("http");
 
