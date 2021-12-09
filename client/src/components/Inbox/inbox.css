@@ -1,0 +1,21 @@
+.inbox-container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 400px auto 300px;
+}
+
+.dialogues-container {
+  grid-column: 1;
+  background-color: red;
+}
+
+.direct-messages-container {
+  grid-column: 2;
+  background-color: yellow;
+}
+
+.about-user-container {
+  grid-column: 3;
+  background-color: aqua;
+}
