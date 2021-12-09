@@ -13,6 +13,7 @@ import {
 import Users from "./components/Users";
 import Home from "./components/Home";
 import User from "./components/User";
+import Inbox from "./components/Inbox";
 
 function App() {
   // <Router path="*" element={<Users />} />
@@ -39,6 +40,7 @@ function App() {
                   <Route path="home" element={<Home />} />
                   <Route path="users" element={<Users />} />
                   <Route path="user" element={<User />} />
+                  <Route path="inbox" element={<Inbox />} />
                 </Routes>
               </div>
             </div>
