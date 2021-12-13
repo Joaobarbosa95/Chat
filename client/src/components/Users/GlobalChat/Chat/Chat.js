@@ -35,7 +35,6 @@ const Chat = ({ updateChat, username }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {
-            // Don't know if needs it
             if (e.code === "Enter") {
               e.preventDefault();
               Submit();
