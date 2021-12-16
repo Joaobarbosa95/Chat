@@ -33,17 +33,17 @@ const Dialogues = () => {
         <input type="text" placeholder="Enter for search..." />
       </form>
       <div className="actions">
-        <label htmlFor="sort">sort by:</label>
+        <label htmlFor="sort">Sort By:</label>
         <select name="sort">
           <option value="latest first">latest first</option>
           <option value="last first">last first</option>
         </select>
-        <button onClick={() => {}} className="add-new-btn">
-          imagem
-        </button>
         <label htmlFor="add-new-btn" className="add-new-btn-label">
           Add New
         </label>
+        <button onClick={() => {}} className="add-new-btn">
+          +
+        </button>
       </div>
       <div className="dialogues">
         {mock.map((user) => {
