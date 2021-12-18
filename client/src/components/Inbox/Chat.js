@@ -1,6 +1,6 @@
 import React from "react";
-import ChatForm from "../Users/GlobalChat/Chat/Chat";
 import { FaUserCircle } from "react-icons/fa";
+import ChatInput from "./ChatInput";
 
 import "./chat.css";
 const Chat = () => {
@@ -39,7 +39,7 @@ const Chat = () => {
         </div>
       </div>
 
-      <ChatForm />
+      <ChatInput />
     </>
   );
 };

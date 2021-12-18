@@ -20,7 +20,7 @@
   background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 65.34%, #ffffff 100%);
   border-right: #efece8 1px solid;
   display: grid;
-  grid-template-rows: 130px auto 150px;
+  grid-template-rows: 130px auto 75px;
 }
 
 .about-user-container {
