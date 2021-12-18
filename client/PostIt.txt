@@ -1,1 +1,5 @@
 // Create User reducer
+
+// Fix Create user account bug
+// Fix GlobalChat user bug (perhaps a full refactor)
+
