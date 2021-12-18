@@ -22,7 +22,7 @@ const DialogueItem = ({ user }) => {
       )}
       <div className="dialogue-info">
         <div className="dialogue-name">{user.username}</div>
-        <div className="last-message-time">{lastMessageTime}</div>
+        <div className="last-message-time">{lastMessageTime}H</div>
         <div className="dialogue-status">{user.status}</div>
       </div>
       <div className="dialogue-text">
