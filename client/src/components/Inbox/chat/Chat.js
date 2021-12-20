@@ -1,6 +1,7 @@
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
 import ChatInput from "./ChatInput";
+import Message from "./Message";
 
 import "./chat.css";
 const Chat = () => {
@@ -21,24 +22,10 @@ const Chat = () => {
         </div>
       </div>
       <div className="messages-box">
-        <div className="message-receiver">
-          <div className="individual-message-receiver">
-            {" "}
-            Olá chicquitoaweeeeeeeeeeeeeeeeeeeeeeeeeeeeebbbbbbbbbbbbbbbbbb
-            awerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrawer aweraw
-          </div>
-          <div className="message-time">13-10-2020</div>
-        </div>
-        <div className="message-sender">
-          <div className="individual-message-sender">
-            {" "}
-            Olá chicquitoaweeeeeeeeeeeeeeeeeeeeeeeeeeeeebbbbbbbbbbbbbbbbbb
-            awerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrawer aweraw
-          </div>
-          <div className="message-time sender">13-10-2020</div>
-        </div>
+        <Message fromWho="receiver" />
+        <Message fromWho="sender" />
+        <Message fromWho="receiver" />
       </div>
-
       <ChatInput />
     </>
   );
