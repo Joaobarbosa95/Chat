@@ -1,0 +1,44 @@
+.message-sender {
+  width: 70%;
+  height: fit-content;
+
+  float: right;
+  margin-bottom: 10px;
+}
+
+.individual-message-sender {
+  border-radius: 25px;
+  background: #ffffff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 14px;
+}
+
+.message-receiver {
+  width: 70%;
+  height: fit-content;
+  margin-bottom: 20px;
+}
+
+.individual-message-receiver {
+  border-radius: 25px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background: #f44a4a;
+  color: white;
+  padding: 14px;
+}
+
+.message-time {
+  color: #1a2028;
+  opacity: 0.3;
+  margin-top: 6px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 12px;
+  margin-left: 20px;
+}
+
+.sender {
+  float: right;
+  margin-right: 20px;
+}
