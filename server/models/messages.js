@@ -1,32 +1,37 @@
 const mongoose = require("mongoose");
 
-const privateMessagesSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+const MessagesSchema = new mongoose.Schema({
+  userOne: {
+    type: String,
     required: true,
+    ref: "User",
   },
-  privateMessages: [
+  userTwo: {
+    type: String,
+    required: true,
+    ref: "User",
+  },
+  messages: [
     {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+      sender: {
+        type: String,
         required: true,
       },
-      messages: [{ timestamp: Number, text: String }],
+      text: {
+        type: String,
+        required: true,
+      },
+      timestamps: {
+        createdAt: "created_at",
+      },
+      seen: {
+        type: boolean,
+        default: false,
+      },
     },
   ],
 });
 
-privateMessagesSchema.virtual("userId", {
-  ref: "User",
-  localField: "user",
-  foreignField: "_id",
-});
+const Messages = mongoose.model("Messages", MessagesSchema);
 
-const privateMessages = mongoose.model(
-  "Private_Messages",
-  privateMessagesSchema
-);
-
-module.exports = privateMessages;
+module.exports = Messages;
