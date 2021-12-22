@@ -48,5 +48,3 @@ userSchema.pre("save", async function (req, res, next) {
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
-
-// db.users.insert({ username: "mirtilo", password: "$2b$08$1aNBvtDY.8YPBDOvWRq0D.i1YZ4u4l0Ex2L1ljQWwPjHP1aw0uvSm" });
