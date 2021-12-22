@@ -32,11 +32,53 @@ const PublicProfileSchema = mongoose.Schema({
   },
 
   status: {
-    type: boolean,
+    type: Boolean,
     required: true,
   },
 });
 
-const PublicProfile = mongoose.model("PublicProfile", PublicProfileSchema);
+const PublicProfile = mongoose.model("Public_Profile", PublicProfileSchema);
 
 module.exports = PublicProfile;
+
+// Mock data
+/*
+db.public_profiles.insert([
+  {
+    username: "Reis",
+    from: "France",
+    description: "Blogger",
+    phone: "+352 505 000",
+    email: "Reis@gmail.com",
+    other: "reis1889@linkedin.com",
+    more: "On a mission to travel the earth",
+    status: true,
+  },
+  {
+    username: "Esteves",
+    from: "Belgica",
+    description: "Padre",
+    phone: "+666 666 666",
+    email: "priest@gmail.com",
+    status: false,
+  },
+  {
+    username: "NotYou",
+    from: "RU",
+    status: true,
+  },
+  {
+    username: "Isidro",
+    from: "Tuga",
+    more: "A podar videiras",
+    status: false,
+  },
+  {
+    username: "YOLO",
+    description: "You only live once",
+    other: "4chan.org",
+    more: "A unique style of trolling",
+    status: true,
+  },
+]);
+*/
