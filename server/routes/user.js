@@ -1,6 +1,7 @@
 // Models
 const User = require("../models/user");
 const Messages = require("../models/messages");
+const PublicProfile = require("../models/publicProfile");
 const auth = require("../middleware/auth");
 
 const multer = require("multer");
@@ -136,3 +137,79 @@ router.get("/users/:id/avatar", async (req, res) => {
 module.exports = function mountUserRoutes(app) {
   app.use(router);
 };
+
+// introduce mock data
+async function mock() {
+  await Messages.create([
+    {
+      userOne: "Reis",
+      userTwo: "Esteves",
+      messages: [
+        {
+          sender: "Reis",
+          text: "Hi",
+          seen: true,
+          timestamp: new Date() - 1,
+        },
+        {
+          sender: "Esteves",
+          text: "Hello",
+          seen: true,
+          timestamp: new Date() - 1000,
+        },
+        {
+          sender: "Esteves",
+          text: "How are you doing=",
+          seen: false,
+          timestamp: new Date() - 10000,
+        },
+      ],
+    },
+  ]);
+
+  await User.create({
+    username: "mirtilo",
+    password: "$2b$08$1aNBvtDY.8YPBDOvWRq0D.i1YZ4u4l0Ex2L1ljQWwPjHP1aw0uvSm",
+  });
+
+  await PublicProfile.insertMany([
+    {
+      username: "Reis",
+      from: "France",
+      description: "Blogger",
+      phone: "+352 505 000",
+      email: "Reis@gmail.com",
+      other: "reis1889@linkedin.com",
+      more: "On a mission to travel the earth",
+      status: true,
+    },
+    {
+      username: "Esteves",
+      from: "Belgica",
+      description: "Padre",
+      phone: "+666 666 666",
+      email: "priest@gmail.com",
+      status: false,
+    },
+    {
+      username: "NotYou",
+      from: "RU",
+      status: true,
+    },
+    {
+      username: "Isidro",
+      from: "Tuga",
+      more: "A podar videiras",
+      status: false,
+    },
+    {
+      username: "YOLO",
+      description: "You only live once",
+      other: "4chan.org",
+      more: "A unique style of trolling",
+      status: true,
+    },
+  ]);
+}
+
+mock();
