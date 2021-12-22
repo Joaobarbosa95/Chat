@@ -19,7 +19,7 @@ router.get("/dialogues", auth, async (req, res) => {
   }
 });
 
-router.get("/public-profile", auth, (req, res) => {
+router.get("/public-profile", auth, async (req, res) => {
   try {
     const publicProfile = await PublicProfile.find({ username: req.user });
 
@@ -28,3 +28,5 @@ router.get("/public-profile", auth, (req, res) => {
     res.send({ error: e.message });
   }
 });
+
+module.exports = router
