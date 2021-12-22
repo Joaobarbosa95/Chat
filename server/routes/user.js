@@ -134,6 +134,8 @@ router.get("/users/:id/avatar", async (req, res) => {
   }
 });
 
+module.exports = router;
+
 // introduce mock data
 async function mock() {
   await Messages.create([
