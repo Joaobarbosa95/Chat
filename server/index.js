@@ -12,7 +12,7 @@ const socketIo = require("socket.io");
 const connectSocket = require("./socket/connectSocket");
 
 // Routes
-const mountUserRouter = require("./routes/user");
+const mountRoutes = require("./routes");
 
 const PORT = process.env.PORT;
 const app = express();
@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());
 
 // Routes
-mountUserRouter(app);
+mountRoutes(app);
 
 // Server
 const server = createServer(app);

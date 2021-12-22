@@ -134,10 +134,6 @@ router.get("/users/:id/avatar", async (req, res) => {
   }
 });
 
-module.exports = function mountUserRoutes(app) {
-  app.use(router);
-};
-
 // introduce mock data
 async function mock() {
   await Messages.create([

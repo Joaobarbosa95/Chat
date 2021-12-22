@@ -33,34 +33,3 @@ const MessagesSchema = new mongoose.Schema({
 const Messages = mongoose.model("Messages", MessagesSchema);
 
 module.exports = Messages;
-
-// Usernames:Reis, Esteves, Isidro, NotYou, YOLO
-
-/*
-db.messages.insert([
-  {
-    userOne: "Reis",
-    userTwo: "Esteves",
-    messages: [
-      {
-        sender: "Reis",
-        text: "Hi",
-        seen: true,
-        timestamp: new Date() - 1
-      },
-      {
-        sender: "Esteves",
-        text: "Hello",
-        seen: true,
-        timestamp: new Date() - 1000
-      },
-      {
-        sender: "Esteves",
-        text: "How are you doing=",
-        seen: false,
-        timestamp: new Date() - 10000
-      },
-    ],
-  },
-]);
-*/
