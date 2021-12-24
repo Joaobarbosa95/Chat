@@ -24,7 +24,10 @@ const Login = ({ setError }) => {
     };
 
     fetch(url, options)
-      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        return res.json();
+      })
       .then((res) => {
         setUsername("");
         setPassword("");

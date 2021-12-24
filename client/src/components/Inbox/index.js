@@ -1,27 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import "./inbox.css";
 
 import Dialogues from "./dialogues/Dialogues";
 import Chat from "./chat/Chat";
 import AboutUser from "./aboutUser/AboutUser";
 
-const index = () => {
+const Index = () => {
+  const [activeDialogue, setActiveDialogue] = useState();
+
   return (
     <div className="inbox-container">
       <div className="dialogues-container">
-        <Dialogues />
+        <Dialogues setActiveDialogue={setActiveDialogue} />
       </div>
       <div className="direct-messages-container">
-        <Chat />
+        <Chat activeDialogue={activeDialogue} />
       </div>
       <div className="about-user-container">
-        <AboutUser />
+        <AboutUser activeDialogue={activeDialogue} />
       </div>
     </div>
   );
 };
 
-export default index;
+export default Index;
 
 /* 
   1st
@@ -58,7 +60,6 @@ export default index;
         Private Profile: private stuff 
         Public Profile: username? - from - description - phone - email - other - more
         Messages: username1 - username2 - messages {sender: String, seen: boolean, text: String, time: Date }
-        status: username:String - status: boolean
 
 
 
@@ -84,10 +85,10 @@ export default index;
  *  6th Wanna be able to add a new conversation to the list
  *  7th Wanna be able to send chat messages to other people
  *
- * 1st -> Fetch the messages database(fetch all messages with username id)
- *       -> Sort them by last message received and calculate the number of messages unread
- *       -> setState the messages fetched
- *       -> Render the messages in the dialogues with a .map
+ * 1st -> Fetch the messages database(fetch all messages with username id) - DONE
+ *       -> Sort them by last message received and calculate the number of messages unread - DONE
+ *       -> setState the messages fetched - DONE
+ *       -> Render the messages in the dialogues with a .map - DONE
  *
  *  2nd -> Render the last message received dialogue in the chat as default
  *          -> Create a state with the active user being rendered in the dialogue box and about user component

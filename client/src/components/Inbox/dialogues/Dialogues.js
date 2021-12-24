@@ -1,31 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./dialogues.css";
 import { FaSearch } from "react-icons/fa";
 import DialogueItem from "./DialogueItem";
+import { useUserContext } from "../../Contexts/UserContext";
 
-const mock = [
-  {
-    username: "paulo",
-    avatar: null,
-    status: "Offline",
-    messages: [
-      {
-        text: "lalalala waeawerawrawe aweraweafsdf a awerawfea df wefwaf sdf ew",
-        time: new Date().getTime() - 172800000,
-        status: "seen",
-      },
-      {
-        text: "2342342342lalalala waeawerawrawe aweraweafsdf a awerawfea df wefwaf sdf ew",
-        time: new Date().getTime() - 17280000,
-        status: "unseen",
-      },
-    ],
-  },
-];
+function sortDialogues(dialogues, sort) {
+  return [].concat(dialogues).sort((conversationA, conversationB) => {
+    const { messages: messagesA } = conversationA;
+    const { messages: messagesB } = conversationB;
 
-const Dialogues = () => {
-  const [sortType, setSortType] = useState();
-  const [dialogues, setDialogues] = useState();
+    const messageTimeA = new Date(
+      messagesA[messagesA.length - 1].timestamp
+    ).getTime();
+
+    const messageTimeB = new Date(
+      messagesB[messagesB.length - 1].timestamp
+    ).getTime();
+
+    if (sort == "latest first") {
+      return messageTimeB - messageTimeA;
+    } else if (sort == "last first") {
+      return messageTimeA - messageTimeB;
+    }
+  });
+}
+
+const Dialogues = ({ setActiveDialogue }) => {
+  const { user } = useUserContext();
+
+  const [sortType, setSortType] = useState("latest first");
+  const [dialogues, setDialogues] = useState([]);
+
+  useEffect(() => {
+    const url = "http://localhost:4000/inbox/dialogues";
+
+    const bearer = "Bearer " + user?.token;
+
+    const opts = {
+      method: "GET",
+      withCredentials: true,
+      credentials: "include",
+      headers: {
+        Authorization: bearer,
+      },
+    };
+
+    fetch(url, opts)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.error) return;
+        const sortedDialogues = sortDialogues(res, sortType);
+        console.log(sortedDialogues);
+        setDialogues(sortedDialogues);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (dialogues.length === 0) return;
+    const sortedDialogues = sortDialogues(dialogues, sortType);
+
+    setDialogues(sortedDialogues);
+  }, [sortType]);
 
   return (
     <>
@@ -34,7 +69,12 @@ const Dialogues = () => {
       </form>
       <div className="actions">
         <label htmlFor="sort">Sort By:</label>
-        <select name="sort">
+        <select
+          name="sort"
+          onChange={(e) => {
+            setSortType(e.target.value);
+          }}
+        >
           <option value="latest first">latest first</option>
           <option value="last first">last first</option>
         </select>
@@ -46,8 +86,8 @@ const Dialogues = () => {
         </button>
       </div>
       <div className="dialogues">
-        {mock.map((user) => {
-          return <DialogueItem key={user.username} user={user} />;
+        {dialogues.map((dialogue) => {
+          return <DialogueItem key={dialogue._id} dialogue={dialogue} />;
         })}
       </div>
     </>

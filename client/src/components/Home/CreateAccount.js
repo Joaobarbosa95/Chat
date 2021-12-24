@@ -16,7 +16,7 @@ const CreateAccount = ({ setError }) => {
     const options = {
       method: "POST",
       body: JSON.stringify({
-        username: username,
+        username: username.trim().toLowerCase(),
         password: password,
         repeatPassword: repeatPassword,
       }),
