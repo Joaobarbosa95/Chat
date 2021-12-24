@@ -2,7 +2,7 @@ import React from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useUserContext } from "../../Contexts/UserContext";
 
-const DialogueItem = ({ dialogue }) => {
+const DialogueItem = ({ dialogue, setActiveDialogue }) => {
   const { user } = useUserContext();
   const { userOne, userTwo, messages } = dialogue;
 
@@ -33,7 +33,10 @@ const DialogueItem = ({ dialogue }) => {
   }
 
   return (
-    <div className="dialogue-item">
+    <div
+      className="dialogue-item"
+      onClick={(e) => setActiveDialogue(dialogue._id)}
+    >
       {dialogue.avatar ? (
         <img src={dialogue.avatar} alt="avatar" className="avatar" />
       ) : (

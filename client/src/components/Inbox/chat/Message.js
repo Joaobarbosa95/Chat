@@ -1,14 +1,17 @@
 import React from "react";
 import "./message.css";
+import { useUserContext } from "../../Contexts/UserContext";
 
-const Message = ({ fromWho }) => {
+const Message = ({ message }) => {
+  const { user } = useUserContext();
+
+  const fromWho = user.username === message.sender ? "sender" : "receiver";
+
+  console.log(fromWho);
   return (
     <div className={`message-${fromWho}`}>
-      <div className={`individual-message-${fromWho}`}>
-        Olá chicquitoaweeeeeeeeeeeeeeeeeeeeeeeeeeeeebbbbbbbbbbbbbbbbbb
-        awerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrawer aweraw
-      </div>
-      <div className={`message-time ${fromWho}`}>13-10-2020</div>
+      <div className={`individual-message-${fromWho}`}>{message.text}</div>
+      <div className={`message-time ${fromWho}`}>{message.timestamp}</div>
     </div>
   );
 };
