@@ -25,11 +25,17 @@ function sortDialogues(dialogues, sort) {
   });
 }
 
-const Dialogues = ({ setActiveDialogue }) => {
+const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
   const { user } = useUserContext();
 
   const [sortType, setSortType] = useState("latest first");
-  const [dialogues, setDialogues] = useState([]);
+
+  useEffect(() => {
+    if (dialogues.length === 0) return;
+    const sortedDialogues = sortDialogues(dialogues, sortType);
+
+    setDialogues(sortedDialogues);
+  }, [sortType]);
 
   useEffect(() => {
     const url = "http://localhost:4000/inbox/dialogues";
@@ -50,17 +56,12 @@ const Dialogues = ({ setActiveDialogue }) => {
       .then((res) => {
         if (res.error) return;
         const sortedDialogues = sortDialogues(res, sortType);
-        console.log(sortedDialogues);
+        if (!sortedDialogues[0]) return;
+
         setDialogues(sortedDialogues);
+        setActiveDialogue(sortedDialogues[0]._id);
       });
   }, []);
-
-  useEffect(() => {
-    if (dialogues.length === 0) return;
-    const sortedDialogues = sortDialogues(dialogues, sortType);
-
-    setDialogues(sortedDialogues);
-  }, [sortType]);
 
   return (
     <>
@@ -87,7 +88,13 @@ const Dialogues = ({ setActiveDialogue }) => {
       </div>
       <div className="dialogues">
         {dialogues.map((dialogue) => {
-          return <DialogueItem key={dialogue._id} dialogue={dialogue} />;
+          return (
+            <DialogueItem
+              setActiveDialogue={(active) => setActiveDialogue(active)}
+              key={dialogue._id}
+              dialogue={dialogue}
+            />
+          );
         })}
       </div>
     </>

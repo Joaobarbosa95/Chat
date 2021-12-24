@@ -7,17 +7,36 @@ import AboutUser from "./aboutUser/AboutUser";
 
 const Index = () => {
   const [activeDialogue, setActiveDialogue] = useState();
+  const [dialogues, setDialogues] = useState([]);
 
+  console.log("active", activeDialogue);
   return (
     <div className="inbox-container">
       <div className="dialogues-container">
-        <Dialogues setActiveDialogue={setActiveDialogue} />
+        <Dialogues
+          setActiveDialogue={(active) => setActiveDialogue(active)}
+          dialogues={dialogues}
+          setDialogues={(dialogues) => setDialogues(dialogues)}
+        />
       </div>
       <div className="direct-messages-container">
-        <Chat activeDialogue={activeDialogue} />
+        {activeDialogue && (
+          <Chat
+            activeDialogue={dialogues.find(
+              (dialogue) => dialogue._id === activeDialogue
+            )}
+          />
+        )}
       </div>
       <div className="about-user-container">
-        <AboutUser activeDialogue={activeDialogue} />
+        {activeDialogue && (
+          <AboutUser
+            publicProfile={dialogues.find(
+              (dialogue) => dialogue._id === activeDialogue
+            )}
+            activeDialogue={activeDialogue}
+          />
+        )}
       </div>
     </div>
   );
@@ -90,7 +109,7 @@ export default Index;
  *       -> setState the messages fetched - DONE
  *       -> Render the messages in the dialogues with a .map - DONE
  *
- *  2nd -> Render the last message received dialogue in the chat as default
+ *  2nd -> Render the last message received dialogue in the chat as default -DONE
  *          -> Create a state with the active user being rendered in the dialogue box and about user component
  *         -> When clicked render the conversation and fetch the about user info
  *         -> setState the about user info and render it
