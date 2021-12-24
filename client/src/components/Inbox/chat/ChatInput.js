@@ -3,7 +3,7 @@ import { FaTelegramPlane } from "react-icons/fa";
 import "./chatInput.css";
 
 export const ChatInput = () => {
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState("");
 
   return (
     <div className="chat-input-form">
