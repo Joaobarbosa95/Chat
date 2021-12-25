@@ -30,6 +30,8 @@ const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
 
   const [sortType, setSortType] = useState("latest first");
 
+  const [searchUser, setSearchUser] = useState("");
+
   useEffect(() => {
     if (dialogues.length === 0) return;
     const sortedDialogues = sortDialogues(dialogues, sortType);
@@ -65,9 +67,13 @@ const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
 
   return (
     <>
-      <form className="search">
-        <input type="text" placeholder="Enter for search..." />
-      </form>
+      <div className="search">
+        <input
+          type="text"
+          placeholder="Enter for search..."
+          onChange={(e) => setSearchUser(e.target.value)}
+        />
+      </div>
       <div className="actions">
         <label htmlFor="sort">Sort By:</label>
         <select
@@ -87,15 +93,21 @@ const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
         </button>
       </div>
       <div className="dialogues">
-        {dialogues.map((dialogue) => {
-          return (
-            <DialogueItem
-              setActiveDialogue={(active) => setActiveDialogue(active)}
-              key={dialogue._id}
-              dialogue={dialogue}
-            />
-          );
-        })}
+        {dialogues
+          .filter(
+            (dialogue) =>
+              dialogue.userOne.startsWith(searchUser) ||
+              dialogue.userTwo.startsWith(searchUser)
+          )
+          .map((dialogue) => {
+            return (
+              <DialogueItem
+                setActiveDialogue={(active) => setActiveDialogue(active)}
+                key={dialogue._id}
+                dialogue={dialogue}
+              />
+            );
+          })}
       </div>
     </>
   );
