@@ -8,9 +8,9 @@ const AboutUser = ({ activeDialogue, publicProfile }) => {
   const { userOne, userTwo } = publicProfile;
 
   const [profile, setProfile] = useState({});
+
   const otherUser = user.username === userOne ? userTwo : userOne;
 
-  console.log(otherUser);
   useEffect(() => {
     const url = "http://localhost:4000/inbox/public-profile";
 
@@ -47,10 +47,10 @@ const AboutUser = ({ activeDialogue, publicProfile }) => {
       <div className="contact-info">
         <p className="info-description">Phone: </p>
         <p className="info-description-value"> {profile.phone} </p>
-        <p className="info-description">Email: </p>{" "}
-        <span className="info-description-value"> {profile.email} </span>
-        <p className="info-description">Other: </p>{" "}
-        <span className="info-description-value"> {profile.other} </span>
+        <p className="info-description">Email: </p>
+        <p className="info-description-value"> {profile.email} </p>
+        <p className="info-description">Other: </p>
+        <p className="info-description-value"> {profile.other} </p>
       </div>
       <div className="other-info"> {profile.more}</div>
     </div>
