@@ -4,12 +4,10 @@ const MessagesSchema = new mongoose.Schema({
   userOne: {
     type: String,
     required: true,
-    ref: "User",
   },
   userTwo: {
     type: String,
     required: true,
-    ref: "User",
   },
   messages: [
     {

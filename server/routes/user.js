@@ -4,6 +4,8 @@ const Messages = require("../models/messages");
 const PublicProfile = require("../models/publicProfile");
 const auth = require("../middleware/auth");
 
+const mongoose = require("mongoose");
+
 const multer = require("multer");
 const sharp = require("sharp");
 
@@ -140,26 +142,53 @@ module.exports = router;
 async function mock() {
   await Messages.create([
     {
-      userOne: "Reis",
-      userTwo: "Esteves",
+      userOne: "reis",
+      userTwo: "esteves",
       messages: [
         {
-          sender: "Reis",
+          sender: "reis",
           text: "Hi",
           seen: true,
-          timestamp: new Date() - 1,
+          timestamp: new Date().getTime(),
         },
         {
-          sender: "Esteves",
+          sender: "esteves",
           text: "Hello",
           seen: true,
-          timestamp: new Date() - 1000,
+          timestamp: new Date().getTime(),
         },
         {
-          sender: "Esteves",
+          sender: "esteves",
           text: "How are you doing=",
           seen: false,
-          timestamp: new Date() - 10000,
+          timestamp: new Date().getTime(),
+        },
+      ],
+    },
+  ]);
+
+  await Messages.create([
+    {
+      userOne: "paulo",
+      userTwo: "esteves",
+      messages: [
+        {
+          sender: "paulo",
+          text: "Hi",
+          seen: true,
+          timestamp: new Date(22222222).getTime(),
+        },
+        {
+          sender: "esteves",
+          text: "Hello",
+          seen: true,
+          timestamp: new Date(500000).getTime(),
+        },
+        {
+          sender: "esteves",
+          text: "How are you doing=",
+          seen: false,
+          timestamp: new Date(1000000).getTime(),
         },
       ],
     },
@@ -170,9 +199,14 @@ async function mock() {
     password: "$2b$08$1aNBvtDY.8YPBDOvWRq0D.i1YZ4u4l0Ex2L1ljQWwPjHP1aw0uvSm",
   });
 
+  await User.create({
+    username: "reis",
+    password: "123456789",
+  });
+
   await PublicProfile.insertMany([
     {
-      username: "Reis",
+      username: "reis",
       from: "France",
       description: "Blogger",
       phone: "+352 505 000",
@@ -182,7 +216,7 @@ async function mock() {
       status: true,
     },
     {
-      username: "Esteves",
+      username: "esteves",
       from: "Belgica",
       description: "Padre",
       phone: "+666 666 666",
