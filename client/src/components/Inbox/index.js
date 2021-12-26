@@ -9,16 +9,14 @@ const Index = () => {
   const [activeDialogue, setActiveDialogue] = useState();
   const [dialogues, setDialogues] = useState([]);
 
-  console.log("active", activeDialogue);
   return (
     <div className="inbox-container">
-      <div className="dialogues-container">
-        <Dialogues
-          setActiveDialogue={(active) => setActiveDialogue(active)}
-          dialogues={dialogues}
-          setDialogues={(dialogues) => setDialogues(dialogues)}
-        />
-      </div>
+      <Dialogues
+        setActiveDialogue={(active) => setActiveDialogue(active)}
+        dialogues={dialogues}
+        setDialogues={(dialogues) => setDialogues(dialogues)}
+      />
+
       <div className="direct-messages-container">
         {activeDialogue && (
           <Chat
