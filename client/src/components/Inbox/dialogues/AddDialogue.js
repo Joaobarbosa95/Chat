@@ -2,14 +2,6 @@ import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useUserContext } from "../../Contexts/UserContext";
 
-// const mock = [
-//   { name: "joao", _id: 1 },
-//   { name: "lecas", _id: 2 },
-//   { name: "yolo", _id: 3 },
-//   { name: "nenem", _id: 4 },
-//   { name: "joquinhas", _id: 5 },
-// ];
-
 async function searchUser(user, username) {
   const url = "http://localhost:4000/inbox/dialogue-search";
   const bearer = "Bearer " + user?.token;
@@ -31,7 +23,12 @@ async function searchUser(user, username) {
   return data;
 }
 
-const AddDialogue = ({ addDialogue, setAddDialogue }) => {
+const AddDialogue = ({
+  addDialogue,
+  setAddDialogue,
+  setDialogues,
+  setActiveDialogue,
+}) => {
   const { user } = useUserContext();
   const [userSearch, setUserSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -47,6 +44,7 @@ const AddDialogue = ({ addDialogue, setAddDialogue }) => {
           setNotFound(false);
           setAddDialogue(false);
         }}
+        onChange={(e) => userSearch(e.target.value)}
       >
         x
       </button>
@@ -67,10 +65,20 @@ const AddDialogue = ({ addDialogue, setAddDialogue }) => {
         </div>
         <div className="add-dialogue-results">
           {notFound ? (
-            <p style={{ textAlign: "center" }}>Result not found</p>
+            <p style={{ textAlign: "center" }}>Results not found</p>
           ) : (
-            searchResults.map((user) => (
-              <DialogueResult user={user} key={user._id} />
+            searchResults.map((searchedUser) => (
+              <DialogueResult
+                searchedUser={searchedUser}
+                user={user}
+                key={searchedUser._id}
+                setUserSearch={(res) => setUserSearch(res)}
+                setSearchResults={(res) => setSearchResults(res)}
+                setNotFound={(boolean) => setNotFound(boolean)}
+                setAddDialogue={(boolean) => setAddDialogue(boolean)}
+                setDialogues={(data) => setDialogues(data)}
+                setActiveDialogue={(id) => setActiveDialogue(id)}
+              />
             ))
           )}
         </div>
@@ -81,15 +89,45 @@ const AddDialogue = ({ addDialogue, setAddDialogue }) => {
 
 export default AddDialogue;
 
-function DialogueResult({ user }) {
+function DialogueResult({
+  searchedUser,
+  user,
+  setUserSearch,
+  setSearchResults,
+  setNotFound,
+  setAddDialogue,
+  setDialogues,
+  setActiveDialogue,
+}) {
   return (
-    <div className="dialogue-result">
+    <div
+      className="dialogue-result"
+      onClick={(e) => {
+        setUserSearch("");
+        setSearchResults([]);
+        setNotFound(false);
+        setAddDialogue(false);
+
+        // Add a clause: if it is in dialogues, it cannot be added again
+        setDialogues((prevDialogues) => [
+          {
+            _id: searchedUser._id,
+            userOne: user.username,
+            userTwo: searchedUser.username,
+            messages: [],
+          },
+          ...prevDialogues,
+        ]);
+
+        setActiveDialogue(searchedUser._id);
+      }}
+    >
       {undefined ? (
-        <img src={user.avatar} alt="avatar" className="avatar-search" />
+        <img src={searchedUser.avatar} alt="avatar" className="avatar-search" />
       ) : (
         <FaUserCircle className="avatar-search" />
       )}
-      <p>{user.username}</p>
+      <p>{searchedUser.username}</p>
     </div>
   );
 }

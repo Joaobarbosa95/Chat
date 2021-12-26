@@ -77,6 +77,8 @@ const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
       <AddDialogue
         addDialogue={addDialogue}
         setAddDialogue={(boolean) => setAddDialogue(boolean)}
+        setDialogues={(data) => setDialogues(data)}
+        setActiveDialogue={(id) => setActiveDialogue(id)}
       />
       <div className={addDialogue ? "inactive" : ""}>
         <div className="search">

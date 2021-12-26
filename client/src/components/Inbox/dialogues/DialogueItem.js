@@ -11,16 +11,19 @@ const DialogueItem = ({ dialogue, setActiveDialogue }) => {
 
   // unseenMessages count
   for (let i = length; i > 0; i--) {
-    if (messages[i].seen === false) unseenMessages++;
+    if (messages[i].seen === false && length > 0) unseenMessages++;
     break;
   }
 
   // in hours
   let lastMessageTime =
-    new Date().getTime() - new Date(messages[length].timestamp).getTime();
+    length > 0 &&
+    new Date().getTime() - new Date(messages[length]?.timestamp).getTime();
 
   // Dirty solution
-  if (lastMessageTime < 60000) {
+  if (!lastMessageTime) {
+    lastMessageTime = "";
+  } else if (lastMessageTime < 60000) {
     lastMessageTime = "1 min";
   } else if (lastMessageTime < 3600000) {
     lastMessageTime = parseInt(lastMessageTime / 1000 / 60) + "min";
@@ -50,7 +53,7 @@ const DialogueItem = ({ dialogue, setActiveDialogue }) => {
         <div className="dialogue-status">{dialogue.status}</div>
       </div>
       <div className="dialogue-text">
-        <div className="dialogue-last-message">{messages[length].text}</div>
+        <div className="dialogue-last-message">{messages[length]?.text}</div>
         <div className="unseen-messages-count">{unseenMessages}</div>
       </div>
     </div>
