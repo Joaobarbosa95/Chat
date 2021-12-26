@@ -33,7 +33,7 @@ const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
 
   const [searchUser, setSearchUser] = useState("");
 
-  const [addDialogue, setAddDialogue] = useState(true);
+  const [addDialogue, setAddDialogue] = useState(false);
 
   useEffect(() => {
     if (dialogues.length === 0) return;
@@ -69,8 +69,15 @@ const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
   }, []);
 
   return (
-    <div className="dialogues-container">
-      <AddDialogue />
+    <div
+      className={`dialogues-container ${
+        addDialogue ? "inactive-overflow" : ""
+      }`}
+    >
+      <AddDialogue
+        addDialogue={addDialogue}
+        setAddDialogue={(boolean) => setAddDialogue(boolean)}
+      />
       <div className={addDialogue ? "inactive" : ""}>
         <div className="search">
           <input
@@ -93,7 +100,7 @@ const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
           <label htmlFor="add-new-btn" className="add-new-btn-label">
             Add New
           </label>
-          <button onClick={() => {}} className="add-new-btn">
+          <button onClick={(e) => setAddDialogue(true)} className="add-new-btn">
             +
           </button>
         </div>

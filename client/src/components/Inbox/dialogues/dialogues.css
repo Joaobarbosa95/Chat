@@ -149,6 +149,10 @@
   opacity: 35%;
 }
 
+.inactive-overflow {
+  overflow: hidden;
+}
+
 .add-dialogue {
   width: 380px;
   height: 287.2px;
@@ -188,4 +192,21 @@
   box-shadow: 0px 50px 100px rgba(0, 0, 0, 0.1);
   background: #e2dede;
   cursor: pointer;
+}
+
+.add-dialogue-hidden {
+  display: none;
+  visibility: hidden;
+}
+
+.close-add-dialogue {
+  width: 22px;
+  height: 22px;
+  border-radius: 24px;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  margin-top: 33px;
+  margin-left: 370px;
+  z-index: 3;
 }
