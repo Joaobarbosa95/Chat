@@ -19,9 +19,11 @@ router.get("/dialogues", auth, async (req, res) => {
   }
 });
 
-router.get("/public-profile", auth, async (req, res) => {
+router.post("/public-profile", auth, async (req, res) => {
   try {
-    const publicProfile = await PublicProfile.find({ username: req.user });
+    const publicProfile = await PublicProfile.find({
+      username: req.body.username,
+    });
 
     res.send(publicProfile);
   } catch (e) {
@@ -29,4 +31,18 @@ router.get("/public-profile", auth, async (req, res) => {
   }
 });
 
-module.exports = router
+router.post("/dialogue-search", auth, async (req, res) => {
+  try {
+    if (req.body.username.length === 0) return res.send([]);
+
+    const publicProfile = await PublicProfile.find({
+      username: { $regex: "^" + req.body.username },
+    }).limit(5);
+
+    res.send(publicProfile);
+  } catch (e) {
+    res.send({ error: e.message });
+  }
+});
+
+module.exports = router;
