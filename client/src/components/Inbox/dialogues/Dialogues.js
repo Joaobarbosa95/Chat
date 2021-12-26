@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./dialogues.css";
 import { FaSearch } from "react-icons/fa";
 import DialogueItem from "./DialogueItem";
+import AddDialogue from "./AddDialogue";
 import { useUserContext } from "../../Contexts/UserContext";
 
 function sortDialogues(dialogues, sort) {
@@ -31,6 +32,8 @@ const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
   const [sortType, setSortType] = useState("latest first");
 
   const [searchUser, setSearchUser] = useState("");
+
+  const [addDialogue, setAddDialogue] = useState(true);
 
   useEffect(() => {
     if (dialogues.length === 0) return;
@@ -66,50 +69,53 @@ const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
   }, []);
 
   return (
-    <>
-      <div className="search">
-        <input
-          type="text"
-          placeholder="Enter for search..."
-          onChange={(e) => setSearchUser(e.target.value)}
-        />
+    <div className="dialogues-container">
+      <AddDialogue />
+      <div className={addDialogue ? "inactive" : ""}>
+        <div className="search">
+          <input
+            type="text"
+            placeholder="Enter for search..."
+            onChange={(e) => setSearchUser(e.target.value)}
+          />
+        </div>
+        <div className="actions">
+          <label htmlFor="sort">Sort By:</label>
+          <select
+            name="sort"
+            onChange={(e) => {
+              setSortType(e.target.value);
+            }}
+          >
+            <option value="latest first">latest first</option>
+            <option value="last first">last first</option>
+          </select>
+          <label htmlFor="add-new-btn" className="add-new-btn-label">
+            Add New
+          </label>
+          <button onClick={() => {}} className="add-new-btn">
+            +
+          </button>
+        </div>
+        <div className="dialogues">
+          {dialogues
+            .filter(
+              (dialogue) =>
+                dialogue.userOne.startsWith(searchUser) ||
+                dialogue.userTwo.startsWith(searchUser)
+            )
+            .map((dialogue) => {
+              return (
+                <DialogueItem
+                  setActiveDialogue={(active) => setActiveDialogue(active)}
+                  key={dialogue._id}
+                  dialogue={dialogue}
+                />
+              );
+            })}
+        </div>
       </div>
-      <div className="actions">
-        <label htmlFor="sort">Sort By:</label>
-        <select
-          name="sort"
-          onChange={(e) => {
-            setSortType(e.target.value);
-          }}
-        >
-          <option value="latest first">latest first</option>
-          <option value="last first">last first</option>
-        </select>
-        <label htmlFor="add-new-btn" className="add-new-btn-label">
-          Add New
-        </label>
-        <button onClick={() => {}} className="add-new-btn">
-          +
-        </button>
-      </div>
-      <div className="dialogues">
-        {dialogues
-          .filter(
-            (dialogue) =>
-              dialogue.userOne.startsWith(searchUser) ||
-              dialogue.userTwo.startsWith(searchUser)
-          )
-          .map((dialogue) => {
-            return (
-              <DialogueItem
-                setActiveDialogue={(active) => setActiveDialogue(active)}
-                key={dialogue._id}
-                dialogue={dialogue}
-              />
-            );
-          })}
-      </div>
-    </>
+    </div>
   );
 };
 
