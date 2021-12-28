@@ -4,7 +4,6 @@ const PublicProfileSchema = mongoose.Schema({
   username: {
     type: String,
     required: true,
-    ref: "User",
   },
   from: {
     type: String,
