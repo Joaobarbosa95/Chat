@@ -12,15 +12,18 @@ const Index = () => {
 
   const [activeDialogue, setActiveDialogue] = useState();
   const [dialogues, setDialogues] = useState([]);
+  console.log(activeDialogue);
 
   useEffect(() => {
     if (!socket) return;
+    console.log(activeDialogue);
     socket.on("new dialogue", ({ newConversation, activeDialogueId }) => {
       setDialogues((prevDialogues) => {
         const conversations = prevDialogues.filter(
           (conversation) => conversation._id !== activeDialogueId
         );
 
+        setActiveDialogue(newConversation._id);
         return [newConversation, ...conversations];
       });
     });
@@ -52,9 +55,10 @@ const Index = () => {
       <div className="direct-messages-container">
         {activeDialogue && (
           <Chat
-            activeDialogue={dialogues.find(
-              (dialogue) => dialogue._id === activeDialogue
-            )}
+            dialogue={dialogues.find((dialogue) => {
+              console.log(activeDialogue);
+              return dialogue._id === activeDialogue;
+            })}
           />
         )}
       </div>
