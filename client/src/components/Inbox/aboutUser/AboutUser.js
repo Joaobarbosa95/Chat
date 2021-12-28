@@ -3,7 +3,7 @@ import "./aboutUser.css";
 import { FaUserCircle } from "react-icons/fa";
 import { useUserContext } from "../../Contexts/UserContext";
 
-const AboutUser = ({ activeDialogue, publicProfile }) => {
+const AboutUser = ({ dialogue, publicProfile }) => {
   const { user } = useUserContext();
   const { userOne, userTwo } = publicProfile;
 
@@ -30,7 +30,7 @@ const AboutUser = ({ activeDialogue, publicProfile }) => {
     fetch(url, opts)
       .then((res) => res.json())
       .then((res) => setProfile(res[0]));
-  }, [activeDialogue]);
+  }, [dialogue]);
 
   return (
     <div className="user-account-info">
