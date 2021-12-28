@@ -26,7 +26,11 @@ mountRoutes(app);
 const server = createServer(app);
 
 // Socket io
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
 
 connectSocket(io);
 
