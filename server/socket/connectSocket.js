@@ -1,33 +1,114 @@
+const Messages = require("../models/messages");
+
 function connectSocket(io) {
-  let onlineUsers = [];
+  // let onlineUsers = [];
+  // io.on("connection", (socket) => {
+  //   let socketUser;
+  //   let messages = [];
+  //   // New client
+  //   socket.on("user", (newUser) => {
+  //     socketUser = newUser;
+  //     onlineUsers.push(newUser);
+  //     socket.broadcast.emit("new-user", { user: socketUser });
+  //   });
+  //   // Get users
+  //   socket.on("get-users", () => {
+  //     socket.emit("online-users", onlineUsers);
+  //   });
+  //   // Update messages
+  //   socket.on("new-message", (message) => {
+  //     messages.push(message);
+  //     socket.broadcast.emit("update-messages", message);
+  //   });
+  //   // Inform other users this client connected
+  //   socket.on("disconnect", () => {
+  //     onlineUsers = onlineUsers.filter((user) => user.name !== socketUser.name);
+  //     io.sockets.emit("user-disconnect", { user: socketUser });
+  //   });
+  // });
+  const users = [];
+
+  io.use((socket, next) => {
+    const { username, sessionId, userId } = socket.handshake.auth;
+
+    if (sessionId) {
+      const session = users.find(
+        (socket) =>
+          socket.sessionId === sessionId &&
+          socket.userId === userId &&
+          socket.username === username
+      );
+      if (session) {
+        socket.sessionId = session.sessionId;
+        socket.userId = session.userId;
+        socket.username = session.username;
+        return next();
+      }
+    }
+
+    if (!username) return next("Invalid username");
+
+    socket.sessionId = sessionId;
+    socket.userId = userId;
+    socket.username = username;
+    users.push(socket);
+    next();
+  });
 
   io.on("connection", (socket) => {
-    let socketUser;
-    let messages = [];
-
-    // New client
-    socket.on("user", (newUser) => {
-      socketUser = newUser;
-      onlineUsers.push(newUser);
-      socket.broadcast.emit("new-user", { user: socketUser });
+    socket.on("connect", (socket) => {
+      users.push(socket);
     });
 
-    // Get users
-    socket.on("get-users", () => {
-      socket.emit("online-users", onlineUsers);
+    // socket.emit("users", users);
+
+    socket.emit("session", {
+      sessionId: socket.sessionId,
+      userId: socket.userId,
     });
 
-    // Update messages
-    socket.on("new-message", (message) => {
-      messages.push(message);
-      socket.broadcast.emit("update-messages", message);
-    });
+    socket.join(socket.userId);
 
-    // Inform other users this client connected
-    socket.on("disconnect", () => {
-      console.log("User disconnect", socketUser);
-      onlineUsers = onlineUsers.filter((user) => user.name !== socketUser.name);
-      io.sockets.emit("user-disconnect", { user: socketUser });
+    socket.on("private message", async (data) => {
+      const { message, dialogueId, activeDialogue, otherUser } = data;
+
+      const dialogue = await Messages.findByIdAndUpdate(
+        dialogueId,
+        {
+          $push: { messages: message },
+        },
+        { new: true }
+      );
+
+      if (!dialogue) {
+        const newDialogue = new Messages({
+          userOne: socket.username,
+          userTwo: otherUser,
+          messages: [message],
+        });
+
+        const newConversation = await newDialogue.save();
+
+        socket
+          .to(activeDialogue)
+          .to(socket.userId)
+          .emit("new dialogue", {
+            activeDialogueId: activeDialogue,
+            newDialogue,
+          });
+
+        socket.emit("new dialogue", { userId: activeDialogue, newDialogue });
+        return;
+      }
+
+      // Send to the other user and other open tabs
+      socket
+        .to(activeDialogue)
+        .to(socket.userId)
+        .emit("private message", { dialogue });
+
+      // Send main tab
+      socket.emit("private message", { dialogue });
     });
   });
 }
