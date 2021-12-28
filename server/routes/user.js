@@ -42,6 +42,13 @@ router.post("/user/createAccount", async (req, res) => {
     const user = new User({ username: username, password: password });
     const token = await user.generateAuthToken();
 
+    // New public profile entry
+    const newPublicProfile = new PublicProfile({
+      username: username,
+      status: true,
+    });
+    await newPublicProfile.save();
+
     res.status(201).send({ user, token });
   } catch (e) {
     res.status(400).send({ error: e });

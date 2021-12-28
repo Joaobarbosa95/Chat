@@ -89,15 +89,18 @@ function connectSocket(io) {
 
         const newConversation = await newDialogue.save();
 
-        socket
-          .to(activeDialogue)
-          .to(socket.userId)
-          .emit("new dialogue", {
-            activeDialogueId: activeDialogue,
-            newDialogue,
-          });
+        console.log(activeDialogue._id);
+        console.log(newConversation);
 
-        socket.emit("new dialogue", { userId: activeDialogue, newDialogue });
+        socket.to(activeDialogue).to(socket.userId).emit("new dialogue", {
+          activeDialogueId: activeDialogue._id,
+          newConversation,
+        });
+
+        socket.emit("new dialogue", {
+          activeDialogueId: activeDialogue._id,
+          newConversation,
+        });
         return;
       }
 
