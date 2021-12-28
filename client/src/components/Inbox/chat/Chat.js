@@ -7,9 +7,9 @@ import { useUserContext } from "../../Contexts/UserContext";
 import "./chat.css";
 const Chat = ({ activeDialogue }) => {
   const { user } = useUserContext();
-  const { messages } = activeDialogue;
+  const { userOne, userTwo, messages, _id } = activeDialogue;
 
-  console.log(activeDialogue);
+  const otherUser = user.username === userOne ? userTwo : userOne;
   return (
     <>
       <div className="chat-user">
@@ -19,11 +19,7 @@ const Chat = ({ activeDialogue }) => {
           <FaUserCircle className="avatar" />
         )}
         <div className="user-info">
-          <div className="chat-username">
-            {user.username === activeDialogue.userOne
-              ? activeDialogue.userTwo
-              : activeDialogue.userOne}
-          </div>
+          <div className="chat-username">{otherUser}</div>
           <div className="options">options</div>
           <div className="chat-status">Online</div>
         </div>
@@ -33,7 +29,11 @@ const Chat = ({ activeDialogue }) => {
           <Message message={message} key={message._id} />
         ))}
       </div>
-      <ChatInput />
+      <ChatInput
+        activeDialogue={activeDialogue}
+        otherUser={otherUser}
+        dialogueId={_id}
+      />
     </>
   );
 };

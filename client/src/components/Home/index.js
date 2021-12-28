@@ -10,7 +10,9 @@ const Home = () => {
   const [error, setError] = useState(null);
   const { user } = useUserContext();
 
-  if (user.token) return <Logged />;
+  if (user.token) {
+    return <Logged />;
+  }
 
   return (
     <div className="home-container">

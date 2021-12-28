@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useUserContext } from "../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import { socketInit } from "../../utils/socketConnection";
 
 const Login = ({ setError }) => {
   const [username, setUsername] = useState("");
@@ -33,8 +34,16 @@ const Login = ({ setError }) => {
 
         if (res.error) return setError(res.error);
 
+        localStorage.setItem("ChatToken", res.token);
+        localStorage.setItem("ChatUsername", res.user.username);
+
         setUser((prev) => {
-          return { ...prev, username: res.user.username, token: res.token };
+          return {
+            ...prev,
+            username: res.user.username,
+            token: res.token,
+            socket: socketInit(res.user.username, res.user._id),
+          };
         });
 
         navigate("/user", { replace: true });
