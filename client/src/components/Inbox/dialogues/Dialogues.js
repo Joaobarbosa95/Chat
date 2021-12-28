@@ -28,12 +28,17 @@ function sortDialogues(dialogues, sort) {
 
 const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
   const { user } = useUserContext();
+  const { socket } = user;
 
   const [sortType, setSortType] = useState("latest first");
 
   const [searchUser, setSearchUser] = useState("");
 
   const [addDialogue, setAddDialogue] = useState(false);
+
+  // useEffect(() => {
+  //   return socket.off("users");
+  // }, [onlineUsers]);
 
   useEffect(() => {
     if (dialogues.length === 0) return;

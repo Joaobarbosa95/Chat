@@ -44,7 +44,6 @@ const AddDialogue = ({
           setNotFound(false);
           setAddDialogue(false);
         }}
-        onChange={(e) => userSearch(e.target.value)}
       >
         x
       </button>

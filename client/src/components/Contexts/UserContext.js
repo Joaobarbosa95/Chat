@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { socketInit } from "../../utils/socketConnection";
 
 const UserContext = React.createContext();
 
@@ -9,6 +10,11 @@ const defaultUser = {
   accountType: "Temporary",
   token: null,
 };
+
+// defaultUser.username = localStorage.getItem("ChatUsername");
+// defaultUser.token = localStorage.getItem("ChatToken");
+
+// if (defaultUser.token) defaultUser.socket = socketInit();
 
 export function useUserContext() {
   return useContext(UserContext);

@@ -28,6 +28,11 @@ function App() {
   // navigate("/home");
   // const { id } = useParams();
 
+  // const token = localStorage.getItem("ChatToken");
+  // const username = localStorate.getItem("ChatUsername");
+  // user.token = token;
+  // user.username = username;
+
   return (
     <UserProvider>
       <ChatProvider>

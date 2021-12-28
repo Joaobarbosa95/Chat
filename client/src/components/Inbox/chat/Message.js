@@ -7,7 +7,6 @@ const Message = ({ message }) => {
 
   const fromWho = user.username === message.sender ? "sender" : "receiver";
 
-  console.log(fromWho);
   return (
     <div className={`message-${fromWho}`}>
       <div className={`individual-message-${fromWho}`}>{message.text}</div>
