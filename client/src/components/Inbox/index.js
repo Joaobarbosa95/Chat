@@ -12,11 +12,10 @@ const Index = () => {
 
   const [activeDialogue, setActiveDialogue] = useState();
   const [dialogues, setDialogues] = useState([]);
-  console.log(activeDialogue);
+  const [publicProfile, setPublicProfile] = useState({});
 
   useEffect(() => {
     if (!socket) return;
-    console.log(activeDialogue);
     socket.on("new dialogue", ({ newConversation, activeDialogueId }) => {
       setDialogues((prevDialogues) => {
         const conversations = prevDialogues.filter(
@@ -50,25 +49,29 @@ const Index = () => {
         setActiveDialogue={(active) => setActiveDialogue(active)}
         dialogues={dialogues}
         setDialogues={(dialogues) => setDialogues(dialogues)}
+        setPublicProfile={(publicProfile) => setPublicProfile(publicProfile)}
       />
 
       <div className="direct-messages-container">
         {activeDialogue && (
           <Chat
             dialogue={dialogues.find((dialogue) => {
-              console.log(activeDialogue);
               return dialogue._id === activeDialogue;
             })}
+            publicId={publicProfile?._id}
           />
         )}
       </div>
       <div className="about-user-container">
         {activeDialogue && (
           <AboutUser
-            publicProfile={dialogues.find(
-              (dialogue) => dialogue._id === activeDialogue
-            )}
+            dialogue={dialogues.find((dialogue) => {
+              return dialogue._id === activeDialogue;
+            })}
+            publicId={publicProfile?._id}
             activeDialogue={activeDialogue}
+            publicProfile={publicProfile}
+            setPublicProfile={(profile) => setPublicProfile(profile)}
           />
         )}
       </div>
@@ -116,36 +119,15 @@ export default Index;
 */
 
 /**
- *        -> Only save if a message is sent
- *        -> Update the Message database with a new entry: username1 - username2 - messages´
- *  7th -> setState newMessage: onChange event in the textarea field
- *        -> need to open a socket connection at login
- *        -> add newMessage to Messages on submit
- *        -> trigger a socket event to send it to server and save it to database
- *        -> trigger the socket event to send it to the receiver end
- *        -> useEffect triggered on private message received
- *        -> if not rendered, sort it to top dialogues(unless it's not sorted by last message), add a not seen messages number and the last message text in
- * 
  * At login/logout update the status in the public profile database (basically when the socket connection is closed)
- * 
+ *
  * Protect all routes except the Global Chat and Home/Login
- * 
+ *
  * Home after login will show the user public profile and edit options
  *
  * Add localStorage save to preserv the session and shared with other tabs
- * 
- * REFACTOR ALL THE GLOBAL CHAT 
- * /
-
-/**
- * Open a socket connection at login - DONE
- * Send username and in the server look for the socketID to forward the message - DONE
- * 
- * Handle messages:
- * -> update the dialogues array
- * -> emit event "private message"
- * -> socket.on("private message") update the dialogues array -> Problem if user is not on the tab 
- * -> if user not on tab, should pop the orange dot on corner
- * ->  
- * 
+ *
+ * REFACTOR ALL THE GLOBAL CHAT
+ *
+ * AuthContext to protect routes as it should be
  */

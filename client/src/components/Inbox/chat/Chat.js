@@ -5,11 +5,10 @@ import Message from "./Message";
 import { useUserContext } from "../../Contexts/UserContext";
 
 import "./chat.css";
-const Chat = ({ dialogue }) => {
+const Chat = ({ dialogue, publicId }) => {
   const { user } = useUserContext();
   const { userOne, userTwo, messages, _id } = dialogue;
 
-  console.log(dialogue);
   const otherUser = user.username === userOne ? userTwo : userOne;
   return (
     <>
@@ -30,7 +29,12 @@ const Chat = ({ dialogue }) => {
           <Message message={message} key={message._id} />
         ))}
       </div>
-      <ChatInput dialogue={dialogue} otherUser={otherUser} dialogueId={_id} />
+      <ChatInput
+        dialogue={dialogue}
+        otherUser={otherUser}
+        dialogueId={_id}
+        publicId={publicId}
+      />
     </>
   );
 };

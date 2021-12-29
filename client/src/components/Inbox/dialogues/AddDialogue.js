@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useUserContext } from "../../Contexts/UserContext";
+import { fetchPublicProfile } from "../../../services/api/user";
 
 async function searchUser(user, username) {
   const url = "http://localhost:4000/inbox/dialogue-search";
@@ -19,7 +20,6 @@ async function searchUser(user, username) {
 
   const res = await fetch(url, opts);
   const data = await res.json();
-  console.log(data);
   return data;
 }
 
@@ -28,6 +28,7 @@ const AddDialogue = ({
   setAddDialogue,
   setDialogues,
   setActiveDialogue,
+  setPublicProfile,
 }) => {
   const { user } = useUserContext();
   const [userSearch, setUserSearch] = useState("");
@@ -77,6 +78,9 @@ const AddDialogue = ({
                 setAddDialogue={(boolean) => setAddDialogue(boolean)}
                 setDialogues={(data) => setDialogues(data)}
                 setActiveDialogue={(id) => setActiveDialogue(id)}
+                setPublicProfile={(publicProfile) =>
+                  setPublicProfile(publicProfile)
+                }
               />
             ))
           )}
@@ -97,6 +101,7 @@ function DialogueResult({
   setAddDialogue,
   setDialogues,
   setActiveDialogue,
+  setPublicProfile,
 }) {
   return (
     <div
@@ -119,6 +124,9 @@ function DialogueResult({
         ]);
 
         setActiveDialogue(searchedUser._id);
+        fetchPublicProfile(user, searchUser.username).then((data) =>
+          setPublicProfile(data)
+        );
       }}
     >
       {undefined ? (
