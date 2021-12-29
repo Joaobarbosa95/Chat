@@ -29,18 +29,21 @@ function connectSocket(io) {
   const users = [];
 
   io.use((socket, next) => {
-    const { username, sessionId, userId } = socket.handshake.auth;
+    const { username, sessionId, publicId } = socket.handshake.auth;
+
+    // fix the forwarding id.
+    // bug: giving the login database id to publicId but using the public profile id when sending
 
     if (sessionId) {
       const session = users.find(
         (socket) =>
           socket.sessionId === sessionId &&
-          socket.userId === userId &&
+          socket.publicId === publicId &&
           socket.username === username
       );
       if (session) {
         socket.sessionId = session.sessionId;
-        socket.userId = session.userId;
+        socket.publicId = session.publicId;
         socket.username = session.username;
         return next();
       }
@@ -49,7 +52,7 @@ function connectSocket(io) {
     if (!username) return next("Invalid username");
 
     socket.sessionId = sessionId;
-    socket.userId = userId;
+    socket.publicId = publicId;
     socket.username = username;
     users.push(socket);
     next();
@@ -64,13 +67,15 @@ function connectSocket(io) {
 
     socket.emit("session", {
       sessionId: socket.sessionId,
-      userId: socket.userId,
+      publicId: socket.publicId,
     });
 
-    socket.join(socket.userId);
+    socket.join(socket.publicId);
+    console.log(socket.username, socket.publicId);
 
     socket.on("private message", async (data) => {
-      const { message, dialogueId, activeDialogue, otherUser } = data;
+      const { message, dialogueId, otherUser, publicId } = data;
+      console.log(dialogueId, otherUser, publicId);
 
       const dialogue = await Messages.findByIdAndUpdate(
         dialogueId,
@@ -89,16 +94,13 @@ function connectSocket(io) {
 
         const newConversation = await newDialogue.save();
 
-        console.log(activeDialogue._id);
-        console.log(newConversation);
-
-        socket.to(activeDialogue).to(socket.userId).emit("new dialogue", {
-          activeDialogueId: activeDialogue._id,
+        socket.to(publicId).to(socket.publicId).emit("new dialogue", {
+          activeDialogueId: dialogueId,
           newConversation,
         });
 
         socket.emit("new dialogue", {
-          activeDialogueId: activeDialogue._id,
+          activeDialogueId: dialogueId,
           newConversation,
         });
         return;
@@ -106,8 +108,8 @@ function connectSocket(io) {
 
       // Send to the other user and other open tabs
       socket
-        .to(activeDialogue)
-        .to(socket.userId)
+        .to(publicId)
+        .to(socket.publicId)
         .emit("private message", { dialogue });
 
       // Send main tab
