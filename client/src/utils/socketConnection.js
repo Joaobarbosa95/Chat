@@ -6,12 +6,12 @@ const ENDPOINT = "http://localhost:4000";
 export function socketInit(username, publicId) {
   const socket = ioClient(ENDPOINT);
 
-  const sessionId = undefined; //localStorage.getItem("SessionID");
+  const sessionId = localStorage.getItem("SessionID");
 
-  socket.auth = { username, publicId, sessionId };
   if (sessionId) {
+    socket.auth = { username, publicId, sessionId };
   } else {
-    // socket.auth = { username, publicId };
+    socket.auth = { username, publicId, sessionId: uuidv4() };
   }
 
   socket.connect();
@@ -24,9 +24,9 @@ export function socketInit(username, publicId) {
     }
   });
 
-  socket.on("session", (sessionId) => {
+  socket.on("session", ({ sessionId }) => {
     socket.sessionId = sessionId;
-    localStorage.setItem("SessionId", sessionId);
+    localStorage.setItem("SessionID", sessionId);
   });
 
   return socket;

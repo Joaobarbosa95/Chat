@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUserContext } from "../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { socketInit } from "../../utils/socketConnection";
@@ -6,7 +6,7 @@ import { socketInit } from "../../utils/socketConnection";
 const Login = ({ setError }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { setUser } = useUserContext();
+  const { user, setUser } = useUserContext();
 
   const navigate = useNavigate();
 
@@ -35,7 +35,6 @@ const Login = ({ setError }) => {
         if (res.error) return setError(res.error);
 
         localStorage.setItem("ChatToken", res.token);
-        localStorage.setItem("ChatUsername", res.user.username);
 
         setUser((prev) => {
           return {
