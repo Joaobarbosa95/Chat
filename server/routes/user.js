@@ -24,7 +24,10 @@ router.post("/user/login", async (req, res) => {
       req.body.password
     );
     const token = await user.generateAuthToken();
-    res.status(200).send({ user, token });
+
+    const public = await PublicProfile.findOne({ username: req.body.username });
+
+    res.status(200).send({ user, token, public });
   } catch (e) {
     res.status(400).send({ error: e.message });
   }
@@ -47,9 +50,9 @@ router.post("/user/createAccount", async (req, res) => {
       username: username,
       status: true,
     });
-    await newPublicProfile.save();
+    const public = await newPublicProfile.save();
 
-    res.status(201).send({ user, token });
+    res.status(201).send({ user, token, public });
   } catch (e) {
     res.status(400).send({ error: e });
   }
