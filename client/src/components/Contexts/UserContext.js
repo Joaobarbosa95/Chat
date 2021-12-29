@@ -11,11 +11,6 @@ const defaultUser = {
   token: null,
 };
 
-// defaultUser.username = localStorage.getItem("ChatUsername");
-// defaultUser.token = localStorage.getItem("ChatToken");
-
-// if (defaultUser.token) defaultUser.socket = socketInit();
-
 export function useUserContext() {
   return useContext(UserContext);
 }
