@@ -3,15 +3,15 @@ import { v4 as uuidv4 } from "uuid";
 
 const ENDPOINT = "http://localhost:4000";
 
-export function socketInit(username, userId) {
+export function socketInit(username, publicId) {
   const socket = ioClient(ENDPOINT);
 
   const sessionId = undefined; //localStorage.getItem("SessionID");
 
-  socket.auth = { username, userId, sessionId };
+  socket.auth = { username, publicId, sessionId };
   if (sessionId) {
   } else {
-    // socket.auth = { username, userId };
+    // socket.auth = { username, publicId };
   }
 
   socket.connect();

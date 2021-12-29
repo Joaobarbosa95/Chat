@@ -3,7 +3,7 @@ import { FaTelegramPlane } from "react-icons/fa";
 import "./chatInput.css";
 import { useUserContext } from "../../Contexts/UserContext";
 
-export const ChatInput = ({ dialogueId, dialogue, otherUser }) => {
+export const ChatInput = ({ dialogueId, dialogue, otherUser, publicId }) => {
   const { user } = useUserContext();
   const { socket } = user;
   const [messageText, setMessageText] = useState("");
@@ -24,6 +24,7 @@ export const ChatInput = ({ dialogueId, dialogue, otherUser }) => {
       message,
       dialogueId,
       otherUser,
+      publicId,
     });
 
     // Clean input

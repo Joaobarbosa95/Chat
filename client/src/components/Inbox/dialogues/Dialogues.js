@@ -26,7 +26,12 @@ function sortDialogues(dialogues, sort) {
   });
 }
 
-const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
+const Dialogues = ({
+  setActiveDialogue,
+  dialogues,
+  setDialogues,
+  setPublicProfile,
+}) => {
   const { user } = useUserContext();
   const { socket } = user;
 
@@ -84,6 +89,7 @@ const Dialogues = ({ setActiveDialogue, dialogues, setDialogues }) => {
         setAddDialogue={(boolean) => setAddDialogue(boolean)}
         setDialogues={(data) => setDialogues(data)}
         setActiveDialogue={(id) => setActiveDialogue(id)}
+        setPublicProfile={(publicProfile) => setPublicProfile(publicProfile)}
       />
       <div className={addDialogue ? "inactive" : ""}>
         <div className="search">

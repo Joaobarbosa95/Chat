@@ -42,7 +42,7 @@ const CreateAccount = ({ setError }) => {
             ...prev,
             username: res.user.username,
             token: res.token,
-            socket: socketInit(res.user.username, res.user._id),
+            socket: socketInit(res.user.username, res.public._id),
           };
         });
 

@@ -2,34 +2,18 @@ import React, { useEffect, useState } from "react";
 import "./aboutUser.css";
 import { FaUserCircle } from "react-icons/fa";
 import { useUserContext } from "../../Contexts/UserContext";
+import { fetchPublicProfile } from "../../../services/api/user";
 
-const AboutUser = ({ dialogue, publicProfile }) => {
+const AboutUser = ({ dialogue, publicProfile, setPublicProfile }) => {
   const { user } = useUserContext();
-  const { userOne, userTwo } = publicProfile;
-
-  const [profile, setProfile] = useState({});
+  const { userOne, userTwo } = dialogue || {};
 
   const otherUser = user.username === userOne ? userTwo : userOne;
 
   useEffect(() => {
-    const url = "http://localhost:4000/inbox/public-profile";
-
-    const bearer = "Bearer " + user?.token;
-
-    const opts = {
-      method: "POST",
-      withCredentials: true,
-      credentials: "include",
-      headers: {
-        Authorization: bearer,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username: otherUser }),
-    };
-
-    fetch(url, opts)
-      .then((res) => res.json())
-      .then((res) => setProfile(res[0]));
+    fetchPublicProfile(user, otherUser).then((data) =>
+      setPublicProfile(data[0])
+    );
   }, [dialogue]);
 
   return (
@@ -40,19 +24,19 @@ const AboutUser = ({ dialogue, publicProfile }) => {
         ) : (
           <FaUserCircle className="avatar-info" />
         )}
-        <p className="name">{profile.username}</p>
-        <p className="from">{profile.from}</p>
-        <p className="description">{profile.description}</p>
+        <p className="name">{publicProfile?.username}</p>
+        <p className="from">{publicProfile?.from}</p>
+        <p className="description">{publicProfile?.description}</p>
       </div>
       <div className="contact-info">
         <p className="info-description">Phone: </p>
-        <p className="info-description-value"> {profile.phone} </p>
+        <p className="info-description-value"> {publicProfile?.phone} </p>
         <p className="info-description">Email: </p>
-        <p className="info-description-value"> {profile.email} </p>
+        <p className="info-description-value"> {publicProfile?.email} </p>
         <p className="info-description">Other: </p>
-        <p className="info-description-value"> {profile.other} </p>
+        <p className="info-description-value"> {publicProfile?.other} </p>
       </div>
-      <div className="other-info"> {profile.more}</div>
+      <div className="other-info"> {publicProfile?.more}</div>
     </div>
   );
 };
