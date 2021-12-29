@@ -1,52 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useUserContext } from "../Contexts/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { socketInit } from "../../utils/socketConnection";
+import { login } from "../../services/api/user";
+import { useAuthContext } from "../Contexts/AuthContext";
 
 const Login = ({ setError }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { user, setUser } = useUserContext();
+  const { setAuthed } = useAuthContext();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   function submitHandle(e) {
     e.preventDefault();
-    const url = "http://localhost:4000/user/login";
-    const options = {
-      method: "POST",
-      body: JSON.stringify({
-        username: username.trim().toLowerCase(),
-        password: password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+    login(username, password).then((res) => {
+      setUsername("");
+      setPassword("");
 
-    fetch(url, options)
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        setUsername("");
-        setPassword("");
+      if (res.error) return setError(res.error);
 
-        if (res.error) return setError(res.error);
+      localStorage.setItem("ChatToken", res.token);
 
-        localStorage.setItem("ChatToken", res.token);
-
-        setUser((prev) => {
-          return {
-            ...prev,
-            username: res.user.username,
-            token: res.token,
-            socket: socketInit(res.user.username, res.public._id),
-          };
-        });
-
-        navigate("/user", { replace: true });
+      setUser((prev) => {
+        return {
+          ...prev,
+          username: res.user.username,
+          token: res.token,
+          socket: socketInit(res.user.username, res.public._id),
+        };
       });
+      setAuthed(true);
+
+      console.log(location);
+      if (location.state) {
+        navigate(location.state.from.pathname);
+      }
+    });
   }
   return (
     <div className="login-container">

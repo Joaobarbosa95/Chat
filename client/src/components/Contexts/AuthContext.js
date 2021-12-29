@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useUserContext } from "./UserContext";
 import { socketInit } from "../../utils/socketConnection";
 import { validateToken } from "../../services/api/user";
@@ -22,7 +22,6 @@ export function AuthProvider({ children }) {
     if (!token) return;
 
     validateToken(token).then((res) => {
-      console.log(res);
       if (res.error) return console.log("invalid token");
       setUser((prevUser) => {
         return {
@@ -38,17 +37,10 @@ export function AuthProvider({ children }) {
   }, []);
 
   // UI/UX problem where after refreshing the page the loggin form appear for a second
+  // Create a black page to be delivered until the token is validated or auth is accessed
 
-  function login() {
-    // POST req to validate the form
-  }
-
-  function logout() {
-    // POST to clear sessionId from server
-    // Clear sessionId and Token localStorage
-  }
   return (
-    <AuthContext.Provider value={{ authed, setAuthed, login, logout }}>
+    <AuthContext.Provider value={{ authed, setAuthed }}>
       {children}
     </AuthContext.Provider>
   );
@@ -56,6 +48,11 @@ export function AuthProvider({ children }) {
 
 export function RequireAuth({ children }) {
   const { authed } = useAuthContext();
+  const location = useLocation();
 
-  return authed === true ? children : <Navigate to="/home" replace />;
+  return authed === true ? (
+    children
+  ) : (
+    <Navigate to="/home" state={{ from: location }} replace />
+  );
 }

@@ -38,4 +38,30 @@ async function validateToken(token) {
   return data;
 }
 
-module.exports = { fetchPublicProfile, validateToken };
+async function login(username, password) {
+  const url = "http://localhost:4000/user/login";
+  const options = {
+    method: "POST",
+    body: JSON.stringify({
+      username: username.trim().toLowerCase(),
+      password: password,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const res = await fetch(url, options);
+  const data = await res.json();
+  return data;
+}
+
+async function logout(user) {
+  localStorage.removeItem("SessionID");
+  localStorage.removeItem("ChatToken");
+  user.username = null;
+  user.token = null;
+  user.socket.disconnect();
+}
+
+module.exports = { fetchPublicProfile, validateToken, login, logout };
