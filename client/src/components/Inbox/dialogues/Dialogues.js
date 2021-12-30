@@ -31,9 +31,9 @@ const Dialogues = ({
   dialogues,
   setDialogues,
   setPublicProfile,
+  status,
 }) => {
   const { user } = useUserContext();
-  const { socket } = user;
 
   const [sortType, setSortType] = useState("latest first");
 

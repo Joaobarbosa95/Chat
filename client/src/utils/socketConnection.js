@@ -1,5 +1,4 @@
 import ioClient from "socket.io-client";
-import { v4 as uuidv4 } from "uuid";
 
 const ENDPOINT = "http://localhost:4000";
 
@@ -8,11 +7,7 @@ export function socketInit(username, publicId) {
 
   const sessionId = localStorage.getItem("SessionID");
 
-  if (sessionId) {
-    socket.auth = { username, publicId, sessionId };
-  } else {
-    socket.auth = { username, publicId, sessionId: uuidv4() };
-  }
+  socket.auth = { username, publicId, sessionId };
 
   socket.connect();
 

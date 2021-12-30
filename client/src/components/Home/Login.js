@@ -34,7 +34,6 @@ const Login = ({ setError }) => {
       });
       setAuthed(true);
 
-      console.log(location);
       if (location.state) {
         navigate(location.state.from.pathname);
       }

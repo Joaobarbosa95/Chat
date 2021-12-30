@@ -50,7 +50,9 @@ const DialogueItem = ({ dialogue, setActiveDialogue }) => {
           {user.username === userOne ? userTwo : userOne}
         </div>
         <div className="last-message-time">{lastMessageTime}</div>
-        <div className="dialogue-status">{dialogue.status}</div>
+        <div className="dialogue-status">
+          {dialogue?.status ? "online" : "offline"}
+        </div>
       </div>
       <div className="dialogue-text">
         <div className="dialogue-last-message">{messages[length]?.text}</div>

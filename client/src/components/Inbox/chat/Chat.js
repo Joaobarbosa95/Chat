@@ -21,7 +21,9 @@ const Chat = ({ dialogue, publicId }) => {
         <div className="user-info">
           <div className="chat-username">{otherUser}</div>
           <div className="options">options</div>
-          <div className="chat-status">Online</div>
+          <div className="chat-status">
+            {dialogue?.status ? "online" : "offline"}
+          </div>
         </div>
       </div>
       <div className="messages-box">

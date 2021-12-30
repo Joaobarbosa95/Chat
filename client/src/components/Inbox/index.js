@@ -36,12 +36,88 @@ const Index = () => {
         return [dialogue, ...conversations];
       });
     });
-
     return () => {
       socket.off("new dialogue");
       socket.off("private message");
     };
   }, [socket]);
+
+  useEffect(() => {
+    if (dialogues.length === 0) return;
+    socket.emit("users");
+
+    socket.on("users", (users) => {
+      setDialogues((prevDialogues) => {
+        const newDialogues = prevDialogues.map((dialogue) => {
+          const { userOne, userTwo } = dialogue;
+          const socketUsername = userOne === user.username ? userTwo : userOne;
+
+          const online = users.find(
+            (socket) => socket.username === socketUsername
+          );
+
+          if (online) {
+            dialogue.status = true;
+            return dialogue;
+          }
+
+          dialogue.status = false;
+          return dialogue;
+        });
+        return newDialogues;
+      });
+    });
+
+    socket.on("user connected", ({ username }) => {
+      const socketUsername = username;
+
+      setDialogues((prevDialogues) => {
+        let userIndex;
+
+        prevDialogues.find((user, i) => {
+          if (
+            user.userOne === socketUsername ||
+            user.userTwo === socketUsername
+          ) {
+            userIndex = i;
+          }
+        });
+
+        if (userIndex === -1) return prevDialogues;
+
+        prevDialogues[userIndex].status = true;
+        return [].concat(prevDialogues);
+      });
+    });
+
+    socket.on("user disconnected", ({ username }) => {
+      const socketUsername = username;
+
+      setDialogues((prevDialogues) => {
+        let userIndex;
+
+        prevDialogues.find((user, i) => {
+          if (
+            user.userOne === socketUsername ||
+            user.userTwo === socketUsername
+          ) {
+            userIndex = i;
+          }
+        });
+
+        if (userIndex === -1) return prevDialogues;
+
+        prevDialogues[userIndex].status = false;
+        return [].concat(prevDialogues);
+      });
+    });
+
+    return () => {
+      socket.off("users");
+      socket.off("user connected");
+      socket.off("user disconnected");
+    };
+  }, [dialogues?.length]);
 
   return (
     <div className="inbox-container">
@@ -56,7 +132,7 @@ const Index = () => {
         {activeDialogue && (
           <Chat
             dialogue={dialogues.find((dialogue) => {
-              return dialogue._id === activeDialogue;
+              return dialogue?._id === activeDialogue;
             })}
             publicId={publicProfile?._id}
           />
@@ -81,53 +157,10 @@ const Index = () => {
 
 export default Index;
 
-/* 
-  1st
-    Fecth the last conversations (ordered by the last message received)
-      -> Information object draft: (this can be phased, depends on the database tables it is divided)
-         user {
-          name: String;
-          status: String; 
-          messages: messages[]
-          publicProfile: {
-            from: String,
-            description: String,
-            contacts: {
-              phone: String,
-              email: String,
-              other: String
-            }
-            more: String,
-          }
-        }
-
-        messages [{   
-          username: String, 
-          messages: [{
-            text: String;
-            time: Date;
-            sender: String,
-            seen: boolean
-          }]   
-        }] 
-    
-    -> Databases
-        Login/Create uuser : username - password
-        Private Profile: private stuff 
-        Public Profile: username? - from - description - phone - email - other - more
-        Messages: username1 - username2 - messages {sender: String, seen: boolean, text: String, time: Date }
-*/
-
 /**
- * At login/logout update the status in the public profile database (basically when the socket connection is closed)
- *
- * Protect all routes except the Global Chat and Home/Login
- *
  * Home after login will show the user public profile and edit options
- *
- * Add localStorage save to preserv the session and shared with other tabs
+ * Smooth scrolling in chat
  *
  * REFACTOR ALL THE GLOBAL CHAT
  *
- * AuthContext to protect routes as it should be
  */
