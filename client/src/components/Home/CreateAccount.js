@@ -46,7 +46,7 @@ const CreateAccount = ({ setError }) => {
           };
         });
 
-        navigate("/user", { replace: true });
+        navigate("/home", { replace: true });
       });
   }
 
