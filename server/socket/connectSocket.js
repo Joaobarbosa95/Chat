@@ -1,4 +1,7 @@
 const Messages = require("../models/messages");
+const PublicProfile = require("../models/publicProfile");
+
+const uuidv4 = require("uuid").v4;
 
 function connectSocket(io) {
   // let onlineUsers = [];
@@ -26,13 +29,10 @@ function connectSocket(io) {
   //     io.sockets.emit("user-disconnect", { user: socketUser });
   //   });
   // });
-  const users = [];
+  let users = [];
 
   io.use((socket, next) => {
     const { username, sessionId, publicId } = socket.handshake.auth;
-
-    // fix the forwarding id.
-    // bug: giving the login database id to publicId but using the public profile id when sending
 
     if (sessionId) {
       const session = users.find(
@@ -42,40 +42,39 @@ function connectSocket(io) {
           socket.username === username
       );
       if (session) {
-        socket.sessionId = session.sessionId;
-        socket.publicId = session.publicId;
-        socket.username = session.username;
         return next();
       }
     }
 
     if (!username) return next("Invalid username");
 
-    socket.sessionId = sessionId;
+    socket.sessionId = uuidv4();
     socket.publicId = publicId;
     socket.username = username;
-    users.push(socket);
+    users.push({
+      username: socket.username,
+      sessionId: socket.sessionId,
+      publicId: socket.publicId,
+    });
     next();
   });
 
   io.on("connection", (socket) => {
-    socket.on("connect", (socket) => {
-      users.push(socket);
-    });
-
-    // socket.emit("users", users);
-
     socket.emit("session", {
       sessionId: socket.sessionId,
       publicId: socket.publicId,
     });
 
     socket.join(socket.publicId);
-    console.log(socket.username, socket.publicId);
+
+    socket.broadcast.emit("user connected", { username: socket.username });
+
+    socket.on("users", () => {
+      socket.emit("users", users);
+    });
 
     socket.on("private message", async (data) => {
       const { message, dialogueId, otherUser, publicId } = data;
-      console.log(dialogueId, otherUser, publicId);
 
       const dialogue = await Messages.findByIdAndUpdate(
         dialogueId,
@@ -114,6 +113,22 @@ function connectSocket(io) {
 
       // Send main tab
       socket.emit("private message", { dialogue });
+    });
+
+    socket.on("disconnect", async () => {
+      // Clear session
+      users = users.filter(
+        (usersSocket) => usersSocket.sessionId !== socket.sessionId
+      );
+
+      // Set status in the publicProfile
+      await PublicProfile.findByIdAndUpdate(
+        { _id: socket.publicId },
+        { status: false }
+      );
+
+      // Broadcast the disconnect event
+      io.emit("user disconnected", { username: socket.username });
     });
   });
 }
