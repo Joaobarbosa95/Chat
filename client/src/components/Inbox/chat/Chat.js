@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import ChatInput from "./ChatInput";
 import Message from "./Message";
@@ -10,6 +10,19 @@ const Chat = ({ dialogue, publicId }) => {
   const { userOne, userTwo, messages, _id } = dialogue;
 
   const otherUser = user.username === userOne ? userTwo : userOne;
+
+  const messagesBottom = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesBottom.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
     <>
       <div className="chat-user">
@@ -30,6 +43,7 @@ const Chat = ({ dialogue, publicId }) => {
         {messages.map((message) => (
           <Message message={message} key={message._id} />
         ))}
+        <div ref={messagesBottom} style={{ width: "100%" }} />
       </div>
       <ChatInput
         dialogue={dialogue}
