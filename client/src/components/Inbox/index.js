@@ -159,7 +159,6 @@ export default Index;
 
 /**
  * Home after login will show the user public profile and edit options
- * Smooth scrolling in chat
  *
  * REFACTOR ALL THE GLOBAL CHAT
  *
