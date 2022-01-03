@@ -167,7 +167,8 @@ export default Index;
  * REFACTOR ALL THE GLOBAL CHAT
  * Infinite scroll react
  * add button hover and active - DONE
- * dates and size on messages
+ * dates and size on messages - DONE
+ * Message time count bug - DONE
  * Not seen count has a bug
  *
  * socket authentication
