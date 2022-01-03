@@ -160,6 +160,26 @@ export default Index;
 /**
  * Home after login will show the user public profile and edit options
  *
+ * CREATE A PRIVATE MESSAGES CONTEXT
+ * this way only need to request messages one time
+ *
+ *
  * REFACTOR ALL THE GLOBAL CHAT
+ * Infinite scroll react
+ * add button hover and active - DONE
+ * dates and size on messages
+ * Not seen count has a bug
+ *
+ * socket authentication
+ *
+ *
+ * new database just for messages
+ * limit the number of messages to be loaded on each request
+ * limit the number of conversations requested
+ *
+ * in the new database for messages request the last 5/10 people the user messaged
+ * then by those names request the last 5/10 messages sent to each one
+ *
+ *
  *
  */
