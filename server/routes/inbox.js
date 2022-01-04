@@ -9,9 +9,11 @@ const router = new express.Router();
 
 router.get("/dialogues", auth, async (req, res) => {
   try {
-    const dialogues = await Messages.find({
-      $or: [{ userOne: req.user }, { userTwo: req.user }],
-    });
+    // Queries 5 unique conversations last messages
+    const dialogues = await Messages.find
+      .distinct("conversationId")
+      .or([{ sender: req.user }, { receiver: req.user }])
+      .limit(5);
 
     res.send(dialogues);
   } catch (e) {
