@@ -105,12 +105,6 @@ function connectSocket(io) {
         (usersSocket) => usersSocket.sessionId !== socket.sessionId
       );
 
-      // Set status in the publicProfile
-      await PublicProfile.findByIdAndUpdate(
-        { _id: socket.publicId },
-        { status: false }
-      );
-
       // Broadcast the disconnect event
       io.emit("user disconnected", { username: socket.username });
     });
