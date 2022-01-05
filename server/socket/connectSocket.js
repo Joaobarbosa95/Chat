@@ -74,45 +74,29 @@ function connectSocket(io) {
     });
 
     socket.on("private message", async (data) => {
-      const { message, dialogueId, otherUser, publicId } = data;
+      const { text, sender, receiver, publicId } = data;
+      let { conversationId } = data;
 
-      const dialogue = await Messages.findByIdAndUpdate(
-        dialogueId,
-        {
-          $push: { messages: message },
-        },
-        { new: true }
-      );
-
-      if (!dialogue) {
-        const newDialogue = new Messages({
-          userOne: socket.username,
-          userTwo: otherUser,
-          messages: [message],
-        });
-
-        const newConversation = await newDialogue.save();
-
-        socket.to(publicId).to(socket.publicId).emit("new dialogue", {
-          activeDialogueId: dialogueId,
-          newConversation,
-        });
-
-        socket.emit("new dialogue", {
-          activeDialogueId: dialogueId,
-          newConversation,
-        });
-        return;
+      if (!conversationId) {
+        conversationId = uuidv4();
       }
 
-      // Send to the other user and other open tabs
-      socket
-        .to(publicId)
-        .to(socket.publicId)
-        .emit("private message", { dialogue });
+      const message = await Messages.InsertOne({
+        sender: sender,
+        receiver: receiver,
+        conversationId: conversationId,
+        message: text,
+        timestamp: new Date(),
+        seen: false,
+      });
 
-      // Send main tab
-      socket.emit("private message", { dialogue });
+      // send message to both sockets
+      socket.to(publicId).to(socket.publicId).emit("private message", {
+        message,
+      });
+
+      // Send message to main tab
+      socket.emit("private message", { message });
     });
 
     socket.on("disconnect", async () => {
