@@ -21,6 +21,27 @@ router.get("/dialogues", auth, async (req, res) => {
   }
 });
 
+router.get("/conversation", auth, async (req, res) => {
+  try {
+    // User will send a "page number", that will be a query of 10 new messages
+    // Ex: req.body.page = 0, query first 10 messages
+    //       req.body.page = 1, query the 10 messages after those (skip first 10)
+    const startPoint = req.body.page * 10;
+
+    // Query last 10 messages of the conversation
+    const messages = await Messages.find({
+      conversationId: req.body.conversationId,
+    })
+      .skip(startPoint)
+      .limit(10);
+    // See if skip includes the first/end result
+
+    res.send(messages);
+  } catch (e) {
+    res.send({ error: e.message });
+  }
+});
+
 router.post("/public-profile", auth, async (req, res) => {
   try {
     const publicProfile = await PublicProfile.find({
