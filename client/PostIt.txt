@@ -1,6 +1,177 @@
-// Create User reducer
+/**
+ * Home after login will show the user public profile and edit options
+ *
+ * cache messages while on tab
+* 
+*  CREACTE ACCOUNT BUG (no redirect, no token)
 
-// Fix Create user account bug
-// Fix GlobalChat user bug (perhaps a full refactor)
+ * REFACTOR ALL THE GLOBAL CHAT
+ * Infinite scroll react - PARCIALLY DONE
+ *
+ * socket authentication (pass the user token in the initial connection to validate)
+ *
+ * Connect to MongoAtlas
+ *
+ *  DEALING WITH ERRORS
+ *
+ */
+db.conversations.insertMany([{
+    userOne: "reis",
+    userTwo: "esteves",
+    conversationId: "1",
+    last_updated: new Date()
+},
+{
+    userOne: "oblak",
+    userTwo: "esteves",
+    conversationId: "2",
+    last_updated: new Date()
+},
+{
+    userOne: "lecas",
+    userTwo: "esteves",
+    conversationId: "4",
+    last_updated: new Date()
+},
+{
+    userOne: "nono",
+    userTwo: "esteves",
+    conversationId: "5",
+    last_updated: new Date()
+},
+{
+    userOne: "esteves",
+    userTwo: "papa",
+    conversationId: "3",
+    last_updated: new Date()
+}])
 
-// Fix  GlobalChat input form UI
+
+db.messages.insertMany([{
+    conversationId: "1",
+    sender: "esteves",
+    receiver: "reis",
+        text: "Vamos a isto",
+        timestamp: new Date(),
+        seen: false
+    
+}, 
+{    
+    conversationId: "1", 
+    sender: "esteves",
+    receiver: "reis",
+    
+        text: "era só isto mesmo",
+        timestamp: new Date(),
+        seen: false
+    
+}, 
+{
+    conversationId: "1", 
+    sender: "reis",
+    receiver: "esteves",
+        text: "está na hora pá",
+        timestamp: new Date(),
+        seen: false
+    
+}, 
+{
+    conversationId: "1", 
+    sender: "esteves",
+    receiver: "reis",
+        text: "Vamos a isto",
+        timestamp: new Date(),
+        seen: false
+}, 
+{
+    conversationId: "2",
+    sender: "esteves",
+    receiver: "oblak",
+        text: "grande defesa pá",
+        timestamp: new Date(),
+        seen: false
+}, 
+{
+    conversationId: "2", 
+    sender: "oblak",
+    receiver: "esteves",
+        text: "obrigado",
+        timestamp: new Date(),
+        seen: false
+}, 
+{
+    conversationId: "3", 
+    sender: "esteves",
+    receiver: "papa",
+        text: "habemos",
+        timestamp: new Date(),
+        seen: false
+}, 
+{
+    conversationId: "4",
+    sender: "esteves",
+    receiver: "lecas",
+        text: "fiesta cubana",
+        timestamp: new Date(),
+        seen: false
+},
+{
+    conversationId: "5",
+    sender: "esteves",
+    receiver: "nono",
+        text: "lecas convida para fiesta",
+        timestamp: new Date(),
+        seen: false
+},
+    {
+        conversationId: "5",
+    sender: "nono",
+    receiver: "esteves",
+        text: "Im in",
+        timestamp: new Date(),
+        seen: false
+}
+])
+
+db.public_profile.insertMany([
+    {
+      username: "reis",
+      from: "France",
+      description: "Blogger",
+      phone: "+352 505 000",
+      email: "Reis@gmail.com",
+      other: "reis1889@linkedin.com",
+      more: "On a mission to travel the earth",
+    },
+    {
+      username: "esteves",
+      from: "Belgica",
+      description: "Padre",
+      phone: "+666 666 666",
+      email: "priest@gmail.com",
+    },
+    {
+      username: "nono",
+      from: "RU",
+    },
+    {
+      username: "oblak",
+      from: "Tuga",
+      more: "A podar videiras",
+      status: false,
+    },
+    {
+      username: "lecas",
+      description: "You only live once",
+      other: "4chan.org",
+      more: "A unique style of trolling",
+    },
+    {
+      username: "papa",
+      description: "You only live once",
+      other: "4chan.org",
+      more: "A unique style of trolling",
+    }
+  ])
+
+

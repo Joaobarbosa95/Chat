@@ -1,31 +1,27 @@
 const mongoose = require("mongoose");
 
 const MessagesSchema = new mongoose.Schema({
-  userOne: {
+  sender: {
     type: String,
     required: true,
   },
-  userTwo: {
+  receiver: {
     type: String,
     required: true,
   },
-  messages: [
-    {
-      sender: {
-        type: String,
-        required: true,
-      },
-      text: {
-        type: String,
-        required: true,
-      },
-      timestamp: Date,
-      seen: {
-        type: Boolean,
-        default: false,
-      },
-    },
-  ],
+  conversationId: {
+    type: String,
+    required: true,
+  },
+  text: {
+    type: String,
+    required: true,
+  },
+  timestamp: Date,
+  seen: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Messages = mongoose.model("Messages", MessagesSchema);

@@ -54,6 +54,15 @@
   height: 30px;
 }
 
+.add-new-btn:hover {
+  background: #bb1616;
+  cursor: pointer;
+}
+
+.add-new-btn:active {
+  background: #f44a4a;
+}
+
 .add-new-btn-label {
   margin-left: auto;
 }

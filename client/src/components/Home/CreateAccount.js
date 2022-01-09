@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { useUserContext } from "../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { socketInit } from "../../utils/socketConnection";
+import { useAuthContext } from "../Contexts/AuthContext";
 
 const CreateAccount = ({ setError }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const { setUser } = useUserContext();
+  const { setAuthed } = useAuthContext();
   const navigate = useNavigate();
 
   function submitHandle(e) {
@@ -37,16 +39,19 @@ const CreateAccount = ({ setError }) => {
       .then((res) => res.json())
       .then((res) => {
         if (res.error) return setError(res.error);
+        localStorage.setItem("ChatToken", res.token);
+        setAuthed(true);
         setUser((prev) => {
           return {
             ...prev,
             username: res.user.username,
             token: res.token,
             socket: socketInit(res.user.username, res.public._id),
+            token: res.token,
           };
         });
 
-        navigate("/home", { replace: true });
+        navigate("/profile", { replace: true });
       });
   }
 

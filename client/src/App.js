@@ -32,7 +32,9 @@ function App() {
                   path="inbox"
                   element={
                     <RequireAuth>
-                      <Inbox />
+                      <ChatProvider>
+                        <Inbox />
+                      </ChatProvider>
                     </RequireAuth>
                   }
                 />

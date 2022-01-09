@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import useChatReducer from "../Reducers/ChatReducer";
+import React, { useContext, useState } from "react";
 
 const ChatContext = React.createContext();
 
@@ -8,10 +7,21 @@ export function useChatContext() {
 }
 
 export function ChatProvider({ children }) {
-  const { messages, dispatch } = useChatReducer();
+  const [activeDialogue, setActiveDialogue] = useState("");
+  const [PublicId, setPublicId] = useState({});
+  const [username, setUsername] = useState("");
 
   return (
-    <ChatContext.Provider value={{ messages, dispatch }}>
+    <ChatContext.Provider
+      value={{
+        activeDialogue,
+        setActiveDialogue,
+        setPublicId,
+        PublicId,
+        username,
+        setUsername,
+      }}
+    >
       {children}
     </ChatContext.Provider>
   );

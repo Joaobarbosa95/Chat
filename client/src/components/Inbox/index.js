@@ -121,45 +121,15 @@ const Index = () => {
 
   return (
     <div className="inbox-container">
-      <Dialogues
-        setActiveDialogue={(active) => setActiveDialogue(active)}
-        dialogues={dialogues}
-        setDialogues={(dialogues) => setDialogues(dialogues)}
-        setPublicProfile={(publicProfile) => setPublicProfile(publicProfile)}
-      />
-
+      <Dialogues />
       <div className="direct-messages-container">
-        {activeDialogue && (
-          <Chat
-            dialogue={dialogues.find((dialogue) => {
-              return dialogue?._id === activeDialogue;
-            })}
-            publicId={publicProfile?._id}
-          />
-        )}
+        <Chat />
       </div>
       <div className="about-user-container">
-        {activeDialogue && (
-          <AboutUser
-            dialogue={dialogues.find((dialogue) => {
-              return dialogue._id === activeDialogue;
-            })}
-            publicId={publicProfile?._id}
-            activeDialogue={activeDialogue}
-            publicProfile={publicProfile}
-            setPublicProfile={(profile) => setPublicProfile(profile)}
-          />
-        )}
+        <AboutUser />
       </div>
     </div>
   );
 };
 
 export default Index;
-
-/**
- * Home after login will show the user public profile and edit options
- *
- * REFACTOR ALL THE GLOBAL CHAT
- *
- */

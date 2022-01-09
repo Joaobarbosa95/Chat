@@ -26,7 +26,7 @@ async function searchUser(user, username) {
 const AddDialogue = ({
   addDialogue,
   setAddDialogue,
-  setDialogues,
+  // setDialogues,
   setActiveDialogue,
   setPublicProfile,
 }) => {
@@ -76,7 +76,7 @@ const AddDialogue = ({
                 setSearchResults={(res) => setSearchResults(res)}
                 setNotFound={(boolean) => setNotFound(boolean)}
                 setAddDialogue={(boolean) => setAddDialogue(boolean)}
-                setDialogues={(data) => setDialogues(data)}
+                // setDialogues={(data) => setDialogues(data)}
                 setActiveDialogue={(id) => setActiveDialogue(id)}
                 setPublicProfile={(publicProfile) =>
                   setPublicProfile(publicProfile)

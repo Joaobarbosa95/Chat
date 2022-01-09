@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./aboutUser.css";
 import { FaUserCircle } from "react-icons/fa";
 import { useUserContext } from "../../Contexts/UserContext";
-import { fetchPublicProfile } from "../../../services/api/user";
+import { useChatContext } from "../../Contexts/ChatContext";
+import usePublicProfileQuery from "../../../services/hooks/usePublicProfileQuery";
 
-const AboutUser = ({ dialogue, publicProfile, setPublicProfile }) => {
+const AboutUser = () => {
   const { user } = useUserContext();
-  const { userOne, userTwo } = dialogue || {};
-
-  const otherUser = user.username === userOne ? userTwo : userOne;
-
-  useEffect(() => {
-    fetchPublicProfile(user, otherUser).then((data) =>
-      setPublicProfile(data[0])
-    );
-  }, [dialogue]);
+  const { username } = useChatContext();
+  const { publicProfile } = usePublicProfileQuery(user.token, username);
 
   return (
     <div className="user-account-info">

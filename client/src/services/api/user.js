@@ -1,4 +1,4 @@
-async function fetchPublicProfile(user, otherUser) {
+export async function fetchPublicProfile(user, otherUser) {
   const url = "http://localhost:4000/inbox/public-profile";
 
   const bearer = "Bearer " + user?.token;
@@ -19,7 +19,7 @@ async function fetchPublicProfile(user, otherUser) {
   return data;
 }
 
-async function validateToken(token) {
+export async function validateToken(token) {
   const url = "http://localhost:4000/user/validate";
 
   const bearer = "Bearer " + token;
@@ -38,7 +38,7 @@ async function validateToken(token) {
   return data;
 }
 
-async function login(username, password) {
+export async function login(username, password) {
   const url = "http://localhost:4000/user/login";
   const options = {
     method: "POST",
@@ -56,12 +56,10 @@ async function login(username, password) {
   return data;
 }
 
-async function logout(user) {
+export async function logout(user) {
   localStorage.removeItem("SessionID");
   localStorage.removeItem("ChatToken");
   user.username = null;
   user.token = null;
   user.socket.disconnect();
 }
-
-module.exports = { fetchPublicProfile, validateToken, login, logout };

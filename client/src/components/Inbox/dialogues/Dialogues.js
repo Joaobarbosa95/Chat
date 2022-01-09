@@ -1,38 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./dialogues.css";
 import { FaSearch } from "react-icons/fa";
 import DialogueItem from "./DialogueItem";
 import AddDialogue from "./AddDialogue";
 import { useUserContext } from "../../Contexts/UserContext";
+import sortDialogues from "../../../utils/sortDialogues";
+import useDialoguesQuery from "../../../services/hooks/useDialoguesQuery";
 
-function sortDialogues(dialogues, sort) {
-  return [].concat(dialogues).sort((conversationA, conversationB) => {
-    const { messages: messagesA } = conversationA;
-    const { messages: messagesB } = conversationB;
-
-    const messageTimeA = new Date(
-      messagesA[messagesA.length - 1].timestamp
-    ).getTime();
-
-    const messageTimeB = new Date(
-      messagesB[messagesB.length - 1].timestamp
-    ).getTime();
-
-    if (sort == "latest first") {
-      return messageTimeB - messageTimeA;
-    } else if (sort == "last first") {
-      return messageTimeA - messageTimeB;
-    }
-  });
-}
-
-const Dialogues = ({
-  setActiveDialogue,
-  dialogues,
-  setDialogues,
-  setPublicProfile,
-  status,
-}) => {
+const Dialogues = () => {
   const { user } = useUserContext();
 
   const [sortType, setSortType] = useState("latest first");
@@ -41,6 +16,12 @@ const Dialogues = ({
 
   const [addDialogue, setAddDialogue] = useState(false);
 
+  const [conversationsLoaded, setConversationsLoaded] = useState(0);
+
+  const { loading, error, hasMore, dialogues } = useDialoguesQuery(
+    user.token,
+    conversationsLoaded
+  );
   // useEffect(() => {
   //   return socket.off("users");
   // }, [onlineUsers]);
@@ -48,35 +29,23 @@ const Dialogues = ({
   useEffect(() => {
     if (dialogues.length === 0) return;
     const sortedDialogues = sortDialogues(dialogues, sortType);
-
-    setDialogues(sortedDialogues);
+    // setDialogues(sortedDialogues);
   }, [sortType]);
 
-  useEffect(() => {
-    const url = "http://localhost:4000/inbox/dialogues";
-
-    const bearer = "Bearer " + user?.token;
-
-    const opts = {
-      method: "GET",
-      withCredentials: true,
-      credentials: "include",
-      headers: {
-        Authorization: bearer,
-      },
-    };
-
-    fetch(url, opts)
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.error) return;
-        const sortedDialogues = sortDialogues(res, sortType);
-        if (!sortedDialogues[0]) return;
-
-        setDialogues(sortedDialogues);
-        setActiveDialogue(sortedDialogues[0]._id);
+  const observer = useRef();
+  const lastDialogueElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setConversationsLoaded(dialogues.length - 1);
+        }
       });
-  }, []);
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
 
   return (
     <div
@@ -87,9 +56,6 @@ const Dialogues = ({
       <AddDialogue
         addDialogue={addDialogue}
         setAddDialogue={(boolean) => setAddDialogue(boolean)}
-        setDialogues={(data) => setDialogues(data)}
-        setActiveDialogue={(id) => setActiveDialogue(id)}
-        setPublicProfile={(publicProfile) => setPublicProfile(publicProfile)}
       />
       <div className={addDialogue ? "inactive" : ""}>
         <div className="search">
@@ -124,15 +90,20 @@ const Dialogues = ({
                 dialogue.userOne.startsWith(searchUser) ||
                 dialogue.userTwo.startsWith(searchUser)
             )
-            .map((dialogue) => {
-              return (
-                <DialogueItem
-                  setActiveDialogue={(active) => setActiveDialogue(active)}
-                  key={dialogue._id}
-                  dialogue={dialogue}
-                />
-              );
+            .map((dialogue, index) => {
+              if (dialogues.length === index + 1)
+                return (
+                  <DialogueItem
+                    key={dialogue._id}
+                    dialogue={dialogue}
+                    ref={lastDialogueElementRef}
+                  />
+                );
+
+              return <DialogueItem key={dialogue._id} dialogue={dialogue} />;
             })}
+          {loading && "Loading..."}
+          {error && "An error occured"}
         </div>
       </div>
     </div>
