@@ -11,6 +11,8 @@
   grid-row: 2;
   padding: 20px;
   overflow-wrap: break-word;
+  display: flex;
+  align-items: end;
 }
 
 .chat-user:after {

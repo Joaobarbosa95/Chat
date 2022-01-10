@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import { FaTelegramPlane } from "react-icons/fa";
 import "./chatInput.css";
 import { useUserContext } from "../../Contexts/UserContext";
+import { useChatContext } from "../../Contexts/ChatContext";
 
-export const ChatInput = ({ dialogueId, otherUser, publicId }) => {
+export const ChatInput = () => {
   const { user } = useUserContext();
+  const { publicId, username, dialogueId } = useChatContext();
   const { socket } = user;
   const [messageText, setMessageText] = useState("");
+
+  // hook to query the conversation id
 
   function handleSubmit() {
     // No input
@@ -23,7 +27,7 @@ export const ChatInput = ({ dialogueId, otherUser, publicId }) => {
     socket.emit("private message", {
       message,
       dialogueId,
-      otherUser,
+      username,
       publicId,
     });
 

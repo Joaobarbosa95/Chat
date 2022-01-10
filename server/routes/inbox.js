@@ -41,7 +41,7 @@ router.post("/messages", auth, async (req, res) => {
   }
 });
 
-router.post("/last-message", async (req, res) => {
+router.post("/last-message", auth, async (req, res) => {
   const conversationId = req.body.conversationId;
   try {
     const lastMessage = await Messages.find({
@@ -84,4 +84,14 @@ router.post("/dialogue-search", auth, async (req, res) => {
   }
 });
 
+router.post("/conversationid", auth, async (req, res) => {
+  const conversationId = await Conversations.find({
+    $or: [{ userOne: req.user }, { userTwo: req.user }],
+  }).and({
+    $or: [{ userOne: req.body.username }, { userTwo: req.body.username }],
+  });
+  console.log(conversationId);
+
+  res.send(conversationId);
+});
 module.exports = router;

@@ -1,48 +1,24 @@
 import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useUserContext } from "../../Contexts/UserContext";
-import { fetchPublicProfile } from "../../../services/api/user";
+import useUserSearch from "../../../services/hooks/useUserSearch";
+import SearchDialogueResult from "./SearchDialogueResult";
 
-async function searchUser(user, username) {
-  const url = "http://localhost:4000/inbox/dialogue-search";
-  const bearer = "Bearer " + user?.token;
-
-  const opts = {
-    method: "POST",
-    withCredentials: true,
-    credentials: "include",
-    headers: {
-      Authorization: bearer,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ username: username.trim().toLowerCase() }),
-  };
-
-  const res = await fetch(url, opts);
-  const data = await res.json();
-  return data;
-}
-
-const AddDialogue = ({
-  addDialogue,
-  setAddDialogue,
-  // setDialogues,
-  setActiveDialogue,
-  setPublicProfile,
-}) => {
+const AddDialogue = ({ addDialogue, setAddDialogue }) => {
   const { user } = useUserContext();
-  const [userSearch, setUserSearch] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [notFound, setNotFound] = useState(false);
+  const [userSearchInput, setUserSearchInput] = useState("");
+
+  const { loading, error, hasMore, userSearch, notFound } = useUserSearch(
+    user.token,
+    userSearchInput
+  );
 
   return (
     <div className={`${addDialogue ? "" : "add-dialogue-hidden"}`}>
       <button
         className="close-add-dialogue"
         onClick={() => {
-          setUserSearch("");
-          setSearchResults([]);
-          setNotFound(false);
+          setUserSearchInput("");
           setAddDialogue(false);
         }}
       >
@@ -53,37 +29,21 @@ const AddDialogue = ({
           <input
             type="text"
             placeholder="Enter to search ..."
-            onKeyDown={async (e) => {
-              if (e.code !== "Enter") return;
-              setNotFound(false);
-              const data = await searchUser(user, userSearch);
-              if (data.length === 0) return setNotFound(true);
-              setSearchResults(data);
-            }}
-            onChange={(e) => setUserSearch(e.target.value)}
+            onChange={(e) => setUserSearchInput(e.target.value)}
           />
         </div>
         <div className="add-dialogue-results">
-          {notFound ? (
-            <p style={{ textAlign: "center" }}>Results not found</p>
-          ) : (
-            searchResults.map((searchedUser) => (
-              <DialogueResult
-                searchedUser={searchedUser}
-                user={user}
-                key={searchedUser._id}
-                setUserSearch={(res) => setUserSearch(res)}
-                setSearchResults={(res) => setSearchResults(res)}
-                setNotFound={(boolean) => setNotFound(boolean)}
-                setAddDialogue={(boolean) => setAddDialogue(boolean)}
-                // setDialogues={(data) => setDialogues(data)}
-                setActiveDialogue={(id) => setActiveDialogue(id)}
-                setPublicProfile={(publicProfile) =>
-                  setPublicProfile(publicProfile)
-                }
-              />
-            ))
-          )}
+          {notFound && <p style={{ textAlign: "center" }}>Results not found</p>}
+          {userSearch.map((searchedUser) => (
+            <SearchDialogueResult
+              searchedUser={searchedUser}
+              conversationId={searchedUser}
+              key={searchedUser._id}
+              setAddDialogue={(boolean) => setAddDialogue(boolean)}
+            />
+          ))}
+          {loading && "Loading..."}
+          {error && "An error occured"}
         </div>
       </div>
     </div>
@@ -91,50 +51,3 @@ const AddDialogue = ({
 };
 
 export default AddDialogue;
-
-function DialogueResult({
-  searchedUser,
-  user,
-  setUserSearch,
-  setSearchResults,
-  setNotFound,
-  setAddDialogue,
-  setDialogues,
-  setActiveDialogue,
-  setPublicProfile,
-}) {
-  return (
-    <div
-      className="dialogue-result"
-      onClick={(e) => {
-        setUserSearch("");
-        setSearchResults([]);
-        setNotFound(false);
-        setAddDialogue(false);
-
-        // Add a clause: if it is in dialogues, it cannot be added again
-        setDialogues((prevDialogues) => [
-          {
-            _id: searchedUser._id,
-            userOne: user.username,
-            userTwo: searchedUser.username,
-            messages: [],
-          },
-          ...prevDialogues,
-        ]);
-
-        setActiveDialogue(searchedUser._id);
-        fetchPublicProfile(user, searchUser.username).then((data) =>
-          setPublicProfile(data)
-        );
-      }}
-    >
-      {undefined ? (
-        <img src={searchedUser.avatar} alt="avatar" className="avatar-search" />
-      ) : (
-        <FaUserCircle className="avatar-search" />
-      )}
-      <p>{searchedUser.username}</p>
-    </div>
-  );
-}

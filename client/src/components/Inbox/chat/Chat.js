@@ -1,28 +1,29 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { FaUserCircle } from "react-icons/fa";
-import ChatInput from "./ChatInput";
-import { useUserContext } from "../../Contexts/UserContext";
+
+// Contexts
 import { useChatContext } from "../../Contexts/ChatContext";
+
+// Components
 import MessagesBox from "./MessagesBox";
+import ChatInput from "./ChatInput";
+
+// CSS
 import "./chat.css";
 
 const Chat = () => {
-  const { user } = useUserContext();
-
-  const { publicProfile } = useChatContext();
-
-  const otherUser = "EU";
+  const { username } = useChatContext();
 
   return (
     <>
       <div className="chat-user">
         {undefined ? (
-          <img src={user.avatar} alt="avatar" className="avatar" />
+          <img src={username.avatar} alt="avatar" className="avatar" />
         ) : (
           <FaUserCircle className="avatar" />
         )}
         <div className="user-info">
-          <div className="chat-username">{otherUser}</div>
+          <div className="chat-username">{username}</div>
           <div className="options">options</div>
           <div className="chat-status">{true ? "online" : "offline"}</div>
         </div>
