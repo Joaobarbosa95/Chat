@@ -1,5 +1,10 @@
-const Messages = require("../models/messages");
 const PublicProfile = require("../models/publicProfile");
+
+const { saveNewMessage } = require("../utils/messagesCollectionFunctions");
+const {
+  createNewConversation,
+  updateConversationLastUpdated,
+} = require("../utils/conversationCollectionFunctions");
 
 const uuidv4 = require("uuid").v4;
 
@@ -74,45 +79,47 @@ function connectSocket(io) {
     });
 
     socket.on("private message", async (data) => {
-      const { message, dialogueId, otherUser, publicId } = data;
+      const { username, dialogueId, publicId, message } = data;
+      let { conversationId } = data;
 
-      const dialogue = await Messages.findByIdAndUpdate(
-        dialogueId,
-        {
-          $push: { messages: message },
-        },
-        { new: true }
+      // If conversationId is an empty string, conversation don't exist, create a new one
+      if (conversationId.length < 1) {
+        const newConversation = await createNewConversation(
+          socket.username,
+          username
+        );
+        conversationId = newConversation.conversationId;
+      }
+
+      const newMessage = await saveNewMessage(
+        req.user,
+        username,
+        conversationId,
+        message
       );
 
-      if (!dialogue) {
-        const newDialogue = new Messages({
-          userOne: socket.username,
-          userTwo: otherUser,
-          messages: [message],
-        });
+      await updateConversationLastUpdated(conversationId);
 
-        const newConversation = await newDialogue.save();
+      //   socket.to(publicId).to(socket.publicId).emit("new dialogue", {
+      //     activeDialogueId: dialogueId,
+      //     newConversation,
+      //   });
 
-        socket.to(publicId).to(socket.publicId).emit("new dialogue", {
-          activeDialogueId: dialogueId,
-          newConversation,
-        });
-
-        socket.emit("new dialogue", {
-          activeDialogueId: dialogueId,
-          newConversation,
-        });
-        return;
-      }
+      //   socket.emit("new dialogue", {
+      //     activeDialogueId: dialogueId,
+      //     newConversation,
+      //   });
+      //   return;
+      // }
 
       // Send to the other user and other open tabs
       socket
         .to(publicId)
         .to(socket.publicId)
-        .emit("private message", { dialogue });
+        .emit("private message", { newMessage });
 
       // Send main tab
-      socket.emit("private message", { dialogue });
+      socket.emit("private message", { newMessage });
     });
 
     socket.on("disconnect", async () => {

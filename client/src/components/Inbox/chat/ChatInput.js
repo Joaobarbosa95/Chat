@@ -18,9 +18,9 @@ export const ChatInput = () => {
 
     const message = {
       sender: user.username,
+      receiver: username,
       text: messageText.trim(),
       timestamp: new Date(),
-      seen: false,
     };
 
     // emit event

@@ -27,13 +27,13 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
       cancelToken: new axios.CancelToken((c) => (cancel = c)),
     })
       .then((res) => {
-        if (dialogues.length === 0) {
-          const { userOne, userTwo, conversationId } = res.data[0];
-          setActiveDialogue(conversationId);
+        console.log(res);
+        if (dialogues.length === 0) return setLoading(false);
 
-          const otherUser = user.username === userOne ? userTwo : userOne;
-          setUsername(otherUser);
-        }
+        const { userOne, userTwo, conversationId } = res.data[0];
+
+        setUsername(user.username === userOne ? userTwo : userOne);
+        setActiveDialogue(conversationId);
 
         setDialogues((prevDialogues) => {
           return [...prevDialogues, ...res.data];

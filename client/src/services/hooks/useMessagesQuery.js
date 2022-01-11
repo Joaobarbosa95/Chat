@@ -6,7 +6,7 @@ export default function useMessagesQuery(
   messagesLoaded,
   conversationId
 ) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [messages, setMessages] = useState([]);
   const [hasMore, setHasMore] = useState(false);
@@ -16,7 +16,8 @@ export default function useMessagesQuery(
   }, [conversationId]);
 
   useEffect(() => {
-    if (!token || !conversationId) return;
+    if (!token || conversationId.trim().length < 1) return;
+
     setLoading(true);
     setError(false);
     let cancel;

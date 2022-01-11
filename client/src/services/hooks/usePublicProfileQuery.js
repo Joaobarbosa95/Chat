@@ -9,10 +9,9 @@ export default function usePublicProfileQuery(token, username) {
   const [hasMore, setHasMore] = useState(false);
 
   const { setPublicId } = useChatContext();
-  console.log(username);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || username.trim().length < 1) return;
     setLoading(true);
     setError(false);
     let cancel;
