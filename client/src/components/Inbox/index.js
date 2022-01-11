@@ -10,22 +10,20 @@ const Index = () => {
   const { user } = useUserContext();
   const { socket } = user;
 
-  const [activeDialogue, setActiveDialogue] = useState();
   const [dialogues, setDialogues] = useState([]);
-  const [publicProfile, setPublicProfile] = useState({});
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("new dialogue", ({ newConversation, activeDialogueId }) => {
-      setDialogues((prevDialogues) => {
-        const conversations = prevDialogues.filter(
-          (conversation) => conversation._id !== activeDialogueId
-        );
+    // socket.on("new dialogue", ({ newConversation, activeDialogueId }) => {
+    //   setDialogues((prevDialogues) => {
+    //     const conversations = prevDialogues.filter(
+    //       (conversation) => conversation._id !== activeDialogueId
+    //     );
 
-        setActiveDialogue(newConversation._id);
-        return [newConversation, ...conversations];
-      });
-    });
+    //     setActiveDialogue(newConversation._id);
+    //     return [newConversation, ...conversations];
+    //   });
+    // });
 
     socket.on("private message", ({ dialogue }) => {
       setDialogues((prevDialogues) => {

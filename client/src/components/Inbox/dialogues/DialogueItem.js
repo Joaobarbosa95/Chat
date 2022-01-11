@@ -32,9 +32,12 @@ const DialogueItem = ({ dialogue, reference }) => {
       },
     })
       .then((res) => {
-        setLastMessage(res.data.lastMessage.text);
-        setUnseenMessages(res.data.unseenCount);
-        const time = formatDate(res.data.lastMessage.timestamp);
+        const { unseenCount } = res.data;
+        const { text, timestamp } = res.data.lastMessage;
+
+        setLastMessage(text);
+        setUnseenMessages(unseenCount);
+        const time = formatDate(timestamp);
         setLastMessageTime(time);
       })
       .catch((e) => {

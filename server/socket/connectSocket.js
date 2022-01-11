@@ -79,17 +79,9 @@ function connectSocket(io) {
     });
 
     socket.on("private message", async (data) => {
-      const { username, dialogueId, publicId, message } = data;
-      let { conversationId } = data;
+      const { username, publicId, message, conversationId } = data;
 
       // If conversationId is an empty string, conversation don't exist, create a new one
-      if (conversationId.length < 1) {
-        const newConversation = await createNewConversation(
-          socket.username,
-          username
-        );
-        conversationId = newConversation.conversationId;
-      }
 
       const newMessage = await saveNewMessage(
         req.user,
@@ -122,6 +114,13 @@ function connectSocket(io) {
       socket.emit("private message", { newMessage });
     });
 
+    socket.on("new dialogue", async ({ username }) => {
+      const newConversation = await createNewConversation(
+        socket.username,
+        username
+      );
+      socket.emit("new dialogue", newConversation);
+    });
     socket.on("disconnect", async () => {
       // Clear session
       users = users.filter(

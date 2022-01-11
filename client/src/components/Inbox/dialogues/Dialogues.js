@@ -96,7 +96,7 @@ const Dialogues = () => {
                   <DialogueItem
                     key={dialogue._id}
                     dialogue={dialogue}
-                    ref={lastDialogueElementRef}
+                    reference={lastDialogueElementRef}
                   />
                 );
 

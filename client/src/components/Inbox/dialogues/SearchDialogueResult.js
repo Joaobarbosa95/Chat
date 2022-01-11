@@ -21,7 +21,9 @@ export default function SearchDialogueResult({ searchedUser, setAddDialogue }) {
         });
 
         res.data.length === 0
-          ? setActiveDialogue("")
+          ? user.socket.emit("new dialogue", {
+              username: searchedUser.username,
+            })
           : setActiveDialogue(res.data[0]._id);
 
         setPublicId(searchedUser._id);

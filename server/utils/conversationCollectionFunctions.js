@@ -1,4 +1,5 @@
 const Conversations = require("../models/conversations");
+const uuidv4 = require("uuid").v4;
 
 async function createNewConversation(userOne, userTwo) {
   const newConversation = new Conversations({

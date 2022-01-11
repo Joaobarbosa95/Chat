@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useChatContext } from "../../components/Contexts/ChatContext";
 
-export default function usePublicProfileQuery(token, username) {
+export default function usePublicProfileQuery(token, username, conversationId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [publicProfile, setPublicProfile] = useState([]);

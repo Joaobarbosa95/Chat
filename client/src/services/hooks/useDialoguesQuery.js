@@ -12,6 +12,40 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
 
   const { setActiveDialogue, setUsername } = useChatContext();
 
+  // When a new conversation is added
+  useEffect(() => {
+    const { socket } = user;
+
+    if (!socket) return;
+    socket.on("new dialogue", (newConversation) => {
+      const { userOne, userTwo, conversationId } = newConversation;
+      setDialogues((prevDialogues) => {
+        return [
+          {
+            userOne: userOne,
+            userTwo: userTwo,
+            conversationId: conversationId,
+            message: {},
+          },
+          ...prevDialogues,
+        ];
+      });
+    });
+
+    return () => {
+      socket.off("new dialogue");
+    };
+  });
+
+  useEffect(() => {
+    const { socket } = user;
+    if (!socket) return;
+
+    socket.on("new dialogue", () => {});
+
+    socket.on("private message", (message) => {});
+  });
+
   useEffect(() => {
     if (!token) return;
     setLoading(true);
@@ -27,8 +61,7 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
       cancelToken: new axios.CancelToken((c) => (cancel = c)),
     })
       .then((res) => {
-        console.log(res);
-        if (dialogues.length === 0) return setLoading(false);
+        if (res.data.length === 0) return setLoading(false);
 
         const { userOne, userTwo, conversationId } = res.data[0];
 
