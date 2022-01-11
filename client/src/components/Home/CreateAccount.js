@@ -51,7 +51,7 @@ const CreateAccount = ({ setError }) => {
           };
         });
 
-        navigate("/profile", { replace: true });
+        navigate("/home", { replace: true });
       });
   }
 

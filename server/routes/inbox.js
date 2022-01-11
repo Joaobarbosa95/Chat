@@ -90,7 +90,6 @@ router.post("/conversationid", auth, async (req, res) => {
   }).and({
     $or: [{ userOne: req.body.username }, { userTwo: req.body.username }],
   });
-  console.log(conversationId);
 
   res.send(conversationId);
 });
