@@ -6,7 +6,7 @@ import { useChatContext } from "../../Contexts/ChatContext";
 
 export const ChatInput = () => {
   const { user } = useUserContext();
-  const { publicId, username, dialogueId } = useChatContext();
+  const { publicId, username, activeDialogue } = useChatContext();
   const { socket } = user;
   const [messageText, setMessageText] = useState("");
 
@@ -23,10 +23,11 @@ export const ChatInput = () => {
       timestamp: new Date(),
     };
 
+    console.log(activeDialogue);
     // emit event
     socket.emit("private message", {
       message,
-      dialogueId,
+      activeDialogue,
       username,
       publicId,
     });

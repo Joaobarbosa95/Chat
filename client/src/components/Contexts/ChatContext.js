@@ -8,7 +8,7 @@ export function useChatContext() {
 
 export function ChatProvider({ children }) {
   const [activeDialogue, setActiveDialogue] = useState("");
-  const [PublicId, setPublicId] = useState("");
+  const [publicId, setPublicId] = useState("");
   const [username, setUsername] = useState("");
 
   return (
@@ -17,7 +17,7 @@ export function ChatProvider({ children }) {
         activeDialogue,
         setActiveDialogue,
         setPublicId,
-        PublicId,
+        publicId,
         username,
         setUsername,
       }}

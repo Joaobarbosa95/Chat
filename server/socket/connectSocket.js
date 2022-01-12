@@ -79,30 +79,19 @@ function connectSocket(io) {
     });
 
     socket.on("private message", async (data) => {
-      const { username, publicId, message, conversationId } = data;
+      const { username, publicId, message, activeDialogue: dialogueId } = data;
 
-      // If conversationId is an empty string, conversation don't exist, create a new one
+      // If dialogueId is an empty string, conversation don't exist, create a new one
+      console.log(username, publicId, message, dialogueId);
 
       const newMessage = await saveNewMessage(
-        req.user,
+        socket.username,
         username,
-        conversationId,
+        dialogueId,
         message
       );
 
-      await updateConversationLastUpdated(conversationId);
-
-      //   socket.to(publicId).to(socket.publicId).emit("new dialogue", {
-      //     activeDialogueId: dialogueId,
-      //     newConversation,
-      //   });
-
-      //   socket.emit("new dialogue", {
-      //     activeDialogueId: dialogueId,
-      //     newConversation,
-      //   });
-      //   return;
-      // }
+      await updateConversationLastUpdated(dialogueId);
 
       // Send to the other user and other open tabs
       socket
@@ -115,11 +104,12 @@ function connectSocket(io) {
     });
 
     socket.on("new dialogue", async ({ username }) => {
-      const newConversation = await createNewConversation(
-        socket.username,
-        username
-      );
-      socket.emit("new dialogue", newConversation);
+      const id = uuidv4();
+      socket.emit("new dialogue", {
+        userOne: socket.username,
+        userTwo: username,
+        id: id,
+      });
     });
     socket.on("disconnect", async () => {
       // Clear session

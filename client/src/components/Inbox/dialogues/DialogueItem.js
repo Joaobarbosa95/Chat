@@ -53,7 +53,7 @@ const DialogueItem = ({ dialogue, reference }) => {
     <div
       className="dialogue-item"
       onClick={(e) => {
-        setActiveDialogue(conversationId);
+        setActiveDialogue(dialogue.conversationId);
         setUsername(otherUser);
       }}
       ref={reference}

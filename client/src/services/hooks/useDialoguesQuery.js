@@ -17,19 +17,22 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
     const { socket } = user;
 
     if (!socket) return;
-    socket.on("new dialogue", (newConversation) => {
-      const { userOne, userTwo, conversationId } = newConversation;
+    socket.on("new dialogue", ({ userOne, userTwo, id }) => {
       setDialogues((prevDialogues) => {
         return [
           {
             userOne: userOne,
             userTwo: userTwo,
-            conversationId: conversationId,
+            conversationId: id,
             message: {},
           },
           ...prevDialogues,
         ];
       });
+    });
+
+    socket.on("private message", ({ newMessage }) => {
+      console.log(newMessage);
     });
 
     return () => {

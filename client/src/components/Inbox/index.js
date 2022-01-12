@@ -14,28 +14,17 @@ const Index = () => {
 
   useEffect(() => {
     if (!socket) return;
-    // socket.on("new dialogue", ({ newConversation, activeDialogueId }) => {
+
+    // socket.on("private message", ({ dialogue }) => {
     //   setDialogues((prevDialogues) => {
     //     const conversations = prevDialogues.filter(
-    //       (conversation) => conversation._id !== activeDialogueId
+    //       (conversation) => conversation._id !== dialogue._id
     //     );
 
-    //     setActiveDialogue(newConversation._id);
-    //     return [newConversation, ...conversations];
+    //     return [dialogue, ...conversations];
     //   });
     // });
-
-    socket.on("private message", ({ dialogue }) => {
-      setDialogues((prevDialogues) => {
-        const conversations = prevDialogues.filter(
-          (conversation) => conversation._id !== dialogue._id
-        );
-
-        return [dialogue, ...conversations];
-      });
-    });
     return () => {
-      socket.off("new dialogue");
       socket.off("private message");
     };
   }, [socket]);
@@ -44,71 +33,71 @@ const Index = () => {
     if (dialogues.length === 0) return;
     socket.emit("users");
 
-    socket.on("users", (users) => {
-      setDialogues((prevDialogues) => {
-        const newDialogues = prevDialogues.map((dialogue) => {
-          const { userOne, userTwo } = dialogue;
-          const socketUsername = userOne === user.username ? userTwo : userOne;
+    // socket.on("users", (users) => {
+    //   setDialogues((prevDialogues) => {
+    //     const newDialogues = prevDialogues.map((dialogue) => {
+    //       const { userOne, userTwo } = dialogue;
+    //       const socketUsername = userOne === user.username ? userTwo : userOne;
 
-          const online = users.find(
-            (socket) => socket.username === socketUsername
-          );
+    //       const online = users.find(
+    //         (socket) => socket.username === socketUsername
+    //       );
 
-          if (online) {
-            dialogue.status = true;
-            return dialogue;
-          }
+    //       if (online) {
+    //         dialogue.status = true;
+    //         return dialogue;
+    //       }
 
-          dialogue.status = false;
-          return dialogue;
-        });
-        return newDialogues;
-      });
-    });
+    //       dialogue.status = false;
+    //       return dialogue;
+    //     });
+    //     return newDialogues;
+    //   });
+    // });
 
-    socket.on("user connected", ({ username }) => {
-      const socketUsername = username;
+    // socket.on("user connected", ({ username }) => {
+    //   const socketUsername = username;
 
-      setDialogues((prevDialogues) => {
-        let userIndex;
+    //   setDialogues((prevDialogues) => {
+    //     let userIndex;
 
-        prevDialogues.find((user, i) => {
-          if (
-            user.userOne === socketUsername ||
-            user.userTwo === socketUsername
-          ) {
-            userIndex = i;
-          }
-        });
+    //     prevDialogues.find((user, i) => {
+    //       if (
+    //         user.userOne === socketUsername ||
+    //         user.userTwo === socketUsername
+    //       ) {
+    //         userIndex = i;
+    //       }
+    //     });
 
-        if (userIndex === -1) return prevDialogues;
+    //     if (userIndex === -1) return prevDialogues;
 
-        prevDialogues[userIndex].status = true;
-        return [].concat(prevDialogues);
-      });
-    });
+    //     prevDialogues[userIndex].status = true;
+    //     return [].concat(prevDialogues);
+    //   });
+    // });
 
-    socket.on("user disconnected", ({ username }) => {
-      const socketUsername = username;
+    // socket.on("user disconnected", ({ username }) => {
+    //   const socketUsername = username;
 
-      setDialogues((prevDialogues) => {
-        let userIndex;
+    //   setDialogues((prevDialogues) => {
+    //     let userIndex;
 
-        prevDialogues.find((user, i) => {
-          if (
-            user.userOne === socketUsername ||
-            user.userTwo === socketUsername
-          ) {
-            userIndex = i;
-          }
-        });
+    //     prevDialogues.find((user, i) => {
+    //       if (
+    //         user.userOne === socketUsername ||
+    //         user.userTwo === socketUsername
+    //       ) {
+    //         userIndex = i;
+    //       }
+    //     });
 
-        if (userIndex === -1) return prevDialogues;
+    //     if (userIndex === -1) return prevDialogues;
 
-        prevDialogues[userIndex].status = false;
-        return [].concat(prevDialogues);
-      });
-    });
+    //     prevDialogues[userIndex].status = false;
+    //     return [].concat(prevDialogues);
+    //   });
+    // });
 
     return () => {
       socket.off("users");

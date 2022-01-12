@@ -1,11 +1,11 @@
 const Conversations = require("../models/conversations");
 const uuidv4 = require("uuid").v4;
 
-async function createNewConversation(userOne, userTwo) {
+async function createNewConversation(userOne, userTwo, conversationId) {
   const newConversation = new Conversations({
     userOne: userOne,
     userTwo: userTwo,
-    conversationId: uuidv4(),
+    conversationId: conversationId || uuidv4(),
     last_updated: new Date(),
   });
 
@@ -19,6 +19,10 @@ async function updateConversationLastUpdated(conversationId) {
     { conversationId: conversationId },
     { last_updated: new Date() }
   );
+}
+
+async function removeConversation(conversationId) {
+  await Conversations.findOneAndDelete({ conversationId: conversationId });
 }
 
 module.exports = {
