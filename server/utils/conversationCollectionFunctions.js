@@ -15,10 +15,12 @@ async function createNewConversation(userOne, userTwo, conversationId) {
 }
 
 async function updateConversationLastUpdated(conversationId) {
-  await Conversations.updateOne(
+  const conversation = await Conversations.findOneAndUpdate(
     { conversationId: conversationId },
     { last_updated: new Date() }
   );
+
+  return conversation;
 }
 
 async function removeConversation(conversationId) {

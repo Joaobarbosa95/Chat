@@ -18,6 +18,7 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
 
     if (!socket) return;
     socket.on("new dialogue", ({ userOne, userTwo, id }) => {
+      setActiveDialogue(id);
       setDialogues((prevDialogues) => {
         return [
           {

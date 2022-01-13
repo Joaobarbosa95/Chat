@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useUserContext } from "../../components/Contexts/UserContext";
 
 export default function useMessagesQuery(
   token,
   messagesLoaded,
   conversationId
 ) {
+  const { user } = useUserContext();
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -13,6 +16,21 @@ export default function useMessagesQuery(
 
   useEffect(() => {
     setMessages([]);
+  }, [conversationId]);
+
+  // Socket listeners
+  useEffect(() => {
+    user.socket.on("private message", ({ newMessage }) => {
+      if (newMessage.conversationId !== conversationId) return;
+
+      setMessages((prevMessages) => {
+        return [newMessage, ...prevMessages];
+      });
+    });
+
+    return () => {
+      user.socket.off("private message");
+    };
   }, [conversationId]);
 
   useEffect(() => {
@@ -35,7 +53,7 @@ export default function useMessagesQuery(
     })
       .then((res) => {
         setMessages((prevMessages) => {
-          return [...prevMessages, ...res.data];
+          return [...prevMessages, ...res.data.reverse()];
         });
         setHasMore(res.data.length > 0);
         setLoading(false);

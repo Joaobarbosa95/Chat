@@ -17,8 +17,6 @@ export const ChatInput = () => {
     if (messageText.trim().length === 0) return;
 
     const message = {
-      sender: user.username,
-      receiver: username,
       text: messageText.trim(),
       timestamp: new Date(),
     };

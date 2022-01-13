@@ -82,7 +82,13 @@ function connectSocket(io) {
       const { username, publicId, message, activeDialogue: dialogueId } = data;
 
       // If dialogueId is an empty string, conversation don't exist, create a new one
-      console.log(username, publicId, message, dialogueId);
+
+      const conversation = await updateConversationLastUpdated(dialogueId);
+
+      console.log("conversation", conversation);
+      if (!conversation) {
+        await createNewConversation(socket.username, username, dialogueId);
+      }
 
       const newMessage = await saveNewMessage(
         socket.username,
@@ -90,8 +96,6 @@ function connectSocket(io) {
         dialogueId,
         message
       );
-
-      await updateConversationLastUpdated(dialogueId);
 
       // Send to the other user and other open tabs
       socket

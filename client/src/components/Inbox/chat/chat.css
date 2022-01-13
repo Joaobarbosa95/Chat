@@ -10,9 +10,7 @@
 .messages-box {
   grid-row: 2;
   padding: 20px;
-  overflow-wrap: break-word;
-  display: flex;
-  flex-direction: column-reverse;
+  overflow-wrap: anywhere;
 }
 
 .chat-user:after {
