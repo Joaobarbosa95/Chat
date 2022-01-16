@@ -43,8 +43,8 @@ const MessagesBox = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          if (firstMessagesRenderRef.current > 3)
-            lastMessage.current.scrollTop = 5;
+          if (firstMessagesRenderRef.current > 1)
+            lastMessage.current.scrollTop = 1;
           setMessagesLoaded(messages.length - 1);
         }
       });
@@ -62,6 +62,7 @@ const MessagesBox = () => {
 
   useEffect(() => {
     if (firstMessagesRenderRef.current > 2) return;
+    firstMessagesRenderRef.current = firstMessagesRenderRef.current + 1;
     startScrollBottom();
   }, [messages, activeDialogue]);
 

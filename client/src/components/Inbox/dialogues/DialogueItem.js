@@ -7,26 +7,14 @@ import { updateUnseeMessages } from "../../../services/api/user";
 import formatDate from "../../../utils/formatDate";
 import axios from "axios";
 
-const DialogueItem = ({ dialogue, reference }) => {
+const DialogueItem = ({ dialogue }) => {
   const { user } = useUserContext();
-  const {
-    userOne,
-    userTwo,
-    conversationId,
-    text,
-    timestamp,
-    unseenMessagesCount,
-  } = dialogue;
+  const { userOne, userTwo, conversationId, text, timestamp } = dialogue;
 
   const { setActiveDialogue, setUsername, activeDialogue } = useChatContext();
   const [lastMessage, setLastMessage] = useState("");
   const [lastMessageTime, setLastMessageTime] = useState("");
   const [unseenMessages, setUnseenMessages] = useState(0);
-
-  // if (text && timestamp) {
-  //   setLastMessage(text);
-  //   setLastMessageTime(timestamp);
-  // }
 
   useEffect(() => {
     if (!conversationId) return;
@@ -62,7 +50,7 @@ const DialogueItem = ({ dialogue, reference }) => {
       });
 
     return () => cancelQuery();
-  }, []);
+  });
 
   const otherUser = user.username === userOne ? userTwo : userOne;
 
@@ -89,7 +77,7 @@ const DialogueItem = ({ dialogue, reference }) => {
         </div>
       </div>
       <div className="dialogue-text">
-        <div className="dialogue-last-message">{lastMessage}</div>
+        <div className="dialogue-last-message">{text || lastMessage}</div>
         {unseenMessages > 0 && (
           <div className="unseen-messages-count">{unseenMessages}</div>
         )}

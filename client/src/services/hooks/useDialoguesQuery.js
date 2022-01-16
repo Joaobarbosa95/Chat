@@ -5,6 +5,8 @@ import { useUserContext } from "../../components/Contexts/UserContext";
 
 export default function useDialoguesQuery(token, conversationsLoaded) {
   const { user } = useUserContext();
+  const { socket } = user;
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [dialogues, setDialogues] = useState([]);
@@ -14,8 +16,6 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
 
   // When a new conversation is added
   useEffect(() => {
-    const { socket } = user;
-
     if (!socket) return;
     socket.on("new dialogue", ({ userOne, userTwo, id }) => {
       setActiveDialogue(id);
@@ -32,7 +32,7 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
       });
     });
 
-    socket.on("private message", ({ newMessage }) => {
+    socket.on("private message 2", ({ newMessage }) => {
       const { sender, receiver, conversationId, text, timestamp } = newMessage;
       const lastDialogue = {
         userOne: sender,
@@ -42,16 +42,17 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
         timestamp: timestamp,
       };
 
-      const conversations = dialogues.filter((conversation) => {
-        return conversation.conversationId !== newMessage.conversationId;
-      });
+      const conversations = dialogues.filter(
+        (conversation) => conversation.conversationId !== conversationId
+      );
       setDialogues([lastDialogue, ...conversations]);
     });
 
     return () => {
       socket.off("new dialogue");
+      socket.off("private message 2");
     };
-  });
+  }, [socket, token, dialogues]);
 
   useEffect(() => {
     if (!token) return;
@@ -70,7 +71,6 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
       .then((res) => {
         if (res.data.length === 0) return setLoading(false);
 
-        console.log(res);
         const { userOne, userTwo, conversationId } = res.data[0];
 
         setUsername(user.username === userOne ? userTwo : userOne);

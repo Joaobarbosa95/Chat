@@ -22,9 +22,6 @@ const Dialogues = () => {
     user.token,
     conversationsLoaded
   );
-  // useEffect(() => {
-  //   return socket.off("users");
-  // }, [onlineUsers]);
 
   useEffect(() => {
     if (dialogues.length === 0) return;
@@ -91,7 +88,12 @@ const Dialogues = () => {
                 dialogue.userTwo.startsWith(searchUser)
             )
             .map((dialogue, index) => {
-              return <DialogueItem key={dialogue._id} dialogue={dialogue} />;
+              return (
+                <DialogueItem
+                  key={dialogue.conversationId}
+                  dialogue={dialogue}
+                />
+              );
             })}
           {loading && "Loading..."}
           {error && "An error occured"}

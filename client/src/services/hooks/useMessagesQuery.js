@@ -31,7 +31,7 @@ export default function useMessagesQuery(
     return () => {
       user.socket.off("private message");
     };
-  }, [conversationId]);
+  });
 
   useEffect(() => {
     if (!token || conversationId.length < 1) return;

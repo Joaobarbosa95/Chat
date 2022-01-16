@@ -81,8 +81,8 @@ function connectSocket(io) {
     socket.on("private message", async (data) => {
       const { username, publicId, message, activeDialogue: dialogueId } = data;
 
-      // If dialogueId is an empty string, conversation don't exist, create a new one
-
+      console.log("DATA", data);
+      console.log("public ID", socket.publicId);
       const conversation = await updateConversationLastUpdated(dialogueId);
 
       if (!conversation) {
@@ -95,7 +95,7 @@ function connectSocket(io) {
         dialogueId,
         message
       );
-
+      console.log("new massagem", newMessage);
       // Send to the other user and other open tabs
       socket
         .to(publicId)
@@ -104,6 +104,7 @@ function connectSocket(io) {
 
       // Send main tab
       socket.emit("private message", { newMessage });
+      socket.emit("private message 2", { newMessage });
     });
 
     socket.on("new dialogue", async ({ username }) => {
