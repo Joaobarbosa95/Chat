@@ -21,8 +21,6 @@ export default function useMessagesQuery(
   // Socket listeners
   useEffect(() => {
     user.socket.on("private message", ({ newMessage }) => {
-      if (newMessage.conversationId !== conversationId) return;
-
       setMessages((prevMessages) => {
         return [...prevMessages, newMessage];
       });

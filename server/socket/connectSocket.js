@@ -102,6 +102,11 @@ function connectSocket(io) {
         .to(socket.publicId)
         .emit("private message", { newMessage });
 
+      socket
+        .to(publicId)
+        .to(socket.publicId)
+        .emit("private message 2", { newMessage });
+
       // Send main tab
       socket.emit("private message", { newMessage });
       socket.emit("private message 2", { newMessage });

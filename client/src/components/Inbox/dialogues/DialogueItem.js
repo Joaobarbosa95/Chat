@@ -17,6 +17,15 @@ const DialogueItem = ({ dialogue }) => {
   const [unseenMessages, setUnseenMessages] = useState(0);
 
   useEffect(() => {
+    if (!text || !timestamp) return;
+    setLastMessage(text);
+    setLastMessageTime(formatDate(timestamp));
+    activeDialogue === conversationId
+      ? setUnseenMessages(0)
+      : setUnseenMessages(unseenMessages + 1);
+  }, [text, timestamp]);
+
+  useEffect(() => {
     if (!conversationId) return;
     if (lastMessage.length > 1) return;
 
@@ -71,13 +80,15 @@ const DialogueItem = ({ dialogue }) => {
       )}
       <div className="dialogue-info">
         <div className="dialogue-name">{otherUser}</div>
-        <div className="last-message-time">{lastMessageTime}</div>
+        <div className="last-message-time">
+          {formatDate(timestamp) || lastMessageTime}
+        </div>
         <div className="dialogue-status">
           {dialogue?.status ? "online" : "offline"}
         </div>
       </div>
       <div className="dialogue-text">
-        <div className="dialogue-last-message">{text || lastMessage}</div>
+        <div className="dialogue-last-message">{lastMessage}</div>
         {unseenMessages > 0 && (
           <div className="unseen-messages-count">{unseenMessages}</div>
         )}
