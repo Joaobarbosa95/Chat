@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, memo } from "react";
 import { useUserContext } from "../../Contexts/UserContext";
 import { useChatContext } from "../../Contexts/ChatContext";
 import useMessagesQuery from "../../../services/hooks/useMessagesQuery";
@@ -9,38 +9,42 @@ const MessagesBox = () => {
   const { activeDialogue } = useChatContext();
   const [messagesLoaded, setMessagesLoaded] = useState(0);
 
-  const { loading, error, hasMore, messages } = useMessagesQuery(
+  let { loading, error, hasMore, messages } = useMessagesQuery(
     user.token,
     messagesLoaded,
     activeDialogue
   );
 
+  const firstMessagesRenderRef = useRef(0);
+
   useEffect(() => {
     setMessagesLoaded(0);
+    firstMessagesRenderRef.current = 0;
   }, [activeDialogue]);
 
-  // Smooth Scrolling
-  const messagesBottom = useRef(null);
-
-  const scrollToBottom = () => {
-    messagesBottom.current?.scrollIntoView({
-      behavior: "smooth",
+  // Scroll to new message
+  const scrollToBottom = (element) => {
+    element.scrollIntoView({
+      behavior: "auto",
     });
   };
+  const observerMessageBottom = useRef(null);
 
-  // Only when a new message is received -- will trigger when user is scrolling top also
   useEffect(() => {
-    scrollToBottom();
+    if (lastMessage.current.scrollTopMax - lastMessage.current.scrollTop < 100)
+      scrollToBottom(observerMessageBottom.current);
   }, [messages]);
 
-  // Infinite Scrolling
+  // Infinite Scrolling Top
   const observer = useRef();
-  const lastMessageElementRef = useCallback(
+  const infiniteScrollElementRef = useCallback(
     (node) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
+          if (firstMessagesRenderRef.current > 3)
+            lastMessage.current.scrollTop = 5;
           setMessagesLoaded(messages.length - 1);
         }
       });
@@ -49,25 +53,37 @@ const MessagesBox = () => {
     [activeDialogue, loading, hasMore]
   );
 
+  // Start Scroll bottom
+  const lastMessage = useRef();
+
+  const startScrollBottom = () => {
+    lastMessage.current.scrollTop = lastMessage.current.scrollHeight;
+  };
+
+  useEffect(() => {
+    if (firstMessagesRenderRef.current > 2) return;
+    startScrollBottom();
+  }, [messages, activeDialogue]);
+
   return (
-    <div className="messages-box">
+    <div className="messages-box" ref={lastMessage}>
       {loading && "Loading..."}
       {error && "An error has occured"}
       {messages.map((message, index) => {
-        if (messages.length === index + 1)
+        if (index === 0) {
           return (
             <Message
               message={message}
               key={message._id}
-              reference={lastMessageElementRef}
+              reference={infiniteScrollElementRef}
             />
           );
-
+        }
         return <Message message={message} key={message._id} />;
       })}
-      <div ref={messagesBottom} style={{ width: "100%" }} />
+      <div style={{ width: "100%" }} ref={observerMessageBottom}></div>
     </div>
   );
 };
 
-export default MessagesBox;
+export default memo(MessagesBox);

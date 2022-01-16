@@ -32,7 +32,7 @@ router.post("/messages", auth, async (req, res) => {
     const messages = await Messages.find({ conversationId: conversationId })
       .sort("-timestamp")
       .skip(messagesLoaded)
-      .limit(15);
+      .limit(20);
 
     res.send(messages);
   } catch (e) {
@@ -44,14 +44,28 @@ router.post("/messages", auth, async (req, res) => {
 router.post("/last-message", auth, async (req, res) => {
   const conversationId = req.body.conversationId;
   try {
-    const lastMessage = await Messages.find({
+    let lastMessage = await Messages.find({
       conversationId: conversationId,
       seen: false,
     }).sort("-timestamp");
 
+    let unSeenMessages = lastMessage.filter(
+      (message) => message.sender !== req.user
+    );
+
+    if (lastMessage.length === 0) {
+      lastMessage = await Messages.find({
+        conversationId: conversationId,
+      })
+        .sort("-timestamp")
+        .limit(1);
+
+      unSeenMessages = 0;
+    }
+
     res.send({
       lastMessage: lastMessage[0],
-      unseenCount: lastMessage.length,
+      unseenCount: unSeenMessages.length,
     });
   } catch (e) {
     res.send({ error: e.message });
@@ -92,5 +106,20 @@ router.post("/conversationid", auth, async (req, res) => {
   });
 
   res.send(conversationId);
+});
+
+router.post("/update-messages-status", auth, async (req, res) => {
+  const { conversationId } = req.body;
+
+  const lastMessage = await Messages.updateMany(
+    {
+      conversationId: conversationId,
+      seen: false,
+      sender: { $ne: req.user },
+    },
+    { seen: true }
+  );
+
+  res.send(lastMessage);
 });
 module.exports = router;

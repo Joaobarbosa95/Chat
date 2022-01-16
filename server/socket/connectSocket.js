@@ -85,7 +85,6 @@ function connectSocket(io) {
 
       const conversation = await updateConversationLastUpdated(dialogueId);
 
-      console.log("conversation", conversation);
       if (!conversation) {
         await createNewConversation(socket.username, username, dialogueId);
       }

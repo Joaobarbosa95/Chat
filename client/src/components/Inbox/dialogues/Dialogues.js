@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 import "./dialogues.css";
 import { FaSearch } from "react-icons/fa";
 import DialogueItem from "./DialogueItem";
@@ -32,20 +32,20 @@ const Dialogues = () => {
     // setDialogues(sortedDialogues);
   }, [sortType]);
 
-  const observer = useRef();
-  const lastDialogueElementRef = useCallback(
-    (node) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setConversationsLoaded(dialogues.length - 1);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [loading, hasMore]
-  );
+  // const observer = useRef();
+  // const lastDialogueElementRef = useCallback(
+  //   (node) => {
+  //     if (loading) return;
+  //     if (observer.current) observer.current.disconnect();
+  //     observer.current = new IntersectionObserver((entries) => {
+  //       if (entries[0].isIntersecting && hasMore) {
+  //         setConversationsLoaded(dialogues.length - 1);
+  //       }
+  //     });
+  //     if (node) observer.current.observe(node);
+  //   },
+  //   [loading, hasMore]
+  // );
 
   return (
     <div
@@ -91,15 +91,6 @@ const Dialogues = () => {
                 dialogue.userTwo.startsWith(searchUser)
             )
             .map((dialogue, index) => {
-              if (dialogues.length === index + 1)
-                return (
-                  <DialogueItem
-                    key={dialogue._id}
-                    dialogue={dialogue}
-                    reference={lastDialogueElementRef}
-                  />
-                );
-
               return <DialogueItem key={dialogue._id} dialogue={dialogue} />;
             })}
           {loading && "Loading..."}
@@ -110,4 +101,4 @@ const Dialogues = () => {
   );
 };
 
-export default Dialogues;
+export default memo(Dialogues);

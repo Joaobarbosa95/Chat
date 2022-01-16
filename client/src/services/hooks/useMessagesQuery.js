@@ -24,7 +24,7 @@ export default function useMessagesQuery(
       if (newMessage.conversationId !== conversationId) return;
 
       setMessages((prevMessages) => {
-        return [newMessage, ...prevMessages];
+        return [...prevMessages, newMessage];
       });
     });
 
@@ -52,10 +52,11 @@ export default function useMessagesQuery(
       cancelToken: new axios.CancelToken((c) => (cancel = c)),
     })
       .then((res) => {
+        res.data.reverse();
         setMessages((prevMessages) => {
-          return [...prevMessages, ...res.data.reverse()];
+          return [...res.data, ...prevMessages];
         });
-        setHasMore(res.data.length > 0);
+        setHasMore(!(res.data.length < 20));
         setLoading(false);
       })
       .catch((e) => {

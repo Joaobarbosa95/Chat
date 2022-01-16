@@ -1,26 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useUserContext } from "../../Contexts/UserContext";
 import { useChatContext } from "../../Contexts/ChatContext";
+import { updateUnseeMessages } from "../../../services/api/user";
 
 import formatDate from "../../../utils/formatDate";
 import axios from "axios";
 
 const DialogueItem = ({ dialogue, reference }) => {
   const { user } = useUserContext();
-  const { userOne, userTwo, conversationId } = dialogue;
+  const {
+    userOne,
+    userTwo,
+    conversationId,
+    text,
+    timestamp,
+    unseenMessagesCount,
+  } = dialogue;
 
-  const { setActiveDialogue, setUsername } = useChatContext();
+  const { setActiveDialogue, setUsername, activeDialogue } = useChatContext();
   const [lastMessage, setLastMessage] = useState("");
   const [lastMessageTime, setLastMessageTime] = useState("");
   const [unseenMessages, setUnseenMessages] = useState(0);
 
-  useEffect(() => {
-    let cancelQuery;
-    const token = "Bearer " + user.token;
+  // if (text && timestamp) {
+  //   setLastMessage(text);
+  //   setLastMessageTime(timestamp);
+  // }
 
+  useEffect(() => {
     if (!conversationId) return;
     if (lastMessage.length > 1) return;
+
+    let cancelQuery;
+    const token = "Bearer " + user.token;
 
     axios({
       method: "POST",
@@ -36,7 +49,11 @@ const DialogueItem = ({ dialogue, reference }) => {
         const { text, timestamp } = res.data.lastMessage;
 
         setLastMessage(text);
-        setUnseenMessages(unseenCount);
+
+        conversationId === activeDialogue
+          ? setUnseenMessages(0)
+          : setUnseenMessages(unseenCount);
+
         const time = formatDate(timestamp);
         setLastMessageTime(time);
       })
@@ -55,8 +72,9 @@ const DialogueItem = ({ dialogue, reference }) => {
       onClick={(e) => {
         setActiveDialogue(dialogue.conversationId);
         setUsername(otherUser);
+        updateUnseeMessages(user.token, dialogue.conversationId);
+        setUnseenMessages(0);
       }}
-      ref={reference}
     >
       {dialogue.avatar ? (
         <img src={dialogue.avatar} alt="avatar" className="avatar" />
@@ -72,10 +90,12 @@ const DialogueItem = ({ dialogue, reference }) => {
       </div>
       <div className="dialogue-text">
         <div className="dialogue-last-message">{lastMessage}</div>
-        <div className="unseen-messages-count">{unseenMessages}</div>
+        {unseenMessages > 0 && (
+          <div className="unseen-messages-count">{unseenMessages}</div>
+        )}
       </div>
     </div>
   );
 };
 
-export default DialogueItem;
+export default memo(DialogueItem);

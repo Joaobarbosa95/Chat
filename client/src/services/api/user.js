@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export async function fetchPublicProfile(user, otherUser) {
   const url = "http://localhost:4000/inbox/public-profile";
 
@@ -62,4 +64,15 @@ export async function logout(user) {
   user.username = null;
   user.token = null;
   user.socket.disconnect();
+}
+
+export async function updateUnseeMessages(token, conversationId) {
+  await axios({
+    method: "POST",
+    url: "http://localhost:4000/inbox/update-messages-status",
+    data: { conversationId: conversationId },
+    headers: {
+      authorization: token,
+    },
+  });
 }

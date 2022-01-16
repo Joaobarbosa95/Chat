@@ -21,7 +21,6 @@ export const ChatInput = () => {
       timestamp: new Date(),
     };
 
-    console.log(activeDialogue);
     // emit event
     socket.emit("private message", {
       message,

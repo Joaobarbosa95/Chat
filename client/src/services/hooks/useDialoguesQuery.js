@@ -33,21 +33,24 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
     });
 
     socket.on("private message", ({ newMessage }) => {
-      console.log(newMessage);
+      const { sender, receiver, conversationId, text, timestamp } = newMessage;
+      const lastDialogue = {
+        userOne: sender,
+        userTwo: receiver,
+        conversationId: conversationId,
+        text: text,
+        timestamp: timestamp,
+      };
+
+      const conversations = dialogues.filter((conversation) => {
+        return conversation.conversationId !== newMessage.conversationId;
+      });
+      setDialogues([lastDialogue, ...conversations]);
     });
 
     return () => {
       socket.off("new dialogue");
     };
-  });
-
-  useEffect(() => {
-    const { socket } = user;
-    if (!socket) return;
-
-    socket.on("new dialogue", () => {});
-
-    socket.on("private message", (message) => {});
   });
 
   useEffect(() => {
@@ -67,6 +70,7 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
       .then((res) => {
         if (res.data.length === 0) return setLoading(false);
 
+        console.log(res);
         const { userOne, userTwo, conversationId } = res.data[0];
 
         setUsername(user.username === userOne ? userTwo : userOne);
