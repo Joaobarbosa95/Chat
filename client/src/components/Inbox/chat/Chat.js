@@ -15,7 +15,7 @@ const Chat = () => {
   const { username } = useChatContext();
 
   return (
-    <>
+    <div className="direct-messages-container">
       <div className="chat-user">
         {undefined ? (
           <img src={username.avatar} alt="avatar" className="avatar" />
@@ -30,7 +30,7 @@ const Chat = () => {
       </div>
       <MessagesBox />
       <ChatInput />
-    </>
+    </div>
   );
 };
 

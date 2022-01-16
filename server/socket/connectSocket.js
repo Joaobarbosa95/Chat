@@ -75,14 +75,12 @@ function connectSocket(io) {
     socket.broadcast.emit("user connected", { username: socket.username });
 
     socket.on("users", () => {
-      socket.emit("users", users);
+      socket.emit("users", { users: users });
     });
 
     socket.on("private message", async (data) => {
       const { username, publicId, message, activeDialogue: dialogueId } = data;
 
-      console.log("DATA", data);
-      console.log("public ID", socket.publicId);
       const conversation = await updateConversationLastUpdated(dialogueId);
 
       if (!conversation) {
@@ -95,7 +93,6 @@ function connectSocket(io) {
         dialogueId,
         message
       );
-      console.log("new massagem", newMessage);
       // Send to the other user and other open tabs
       socket
         .to(publicId)

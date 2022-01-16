@@ -9,13 +9,20 @@ import axios from "axios";
 
 const DialogueItem = ({ dialogue }) => {
   const { user } = useUserContext();
+  const { socket } = user;
+
   const { userOne, userTwo, conversationId, text, timestamp } = dialogue;
 
-  const { setActiveDialogue, setUsername, activeDialogue } = useChatContext();
+  const { setActiveDialogue, setUsername, activeDialogue, onlineUsers } =
+    useChatContext();
   const [lastMessage, setLastMessage] = useState("");
   const [lastMessageTime, setLastMessageTime] = useState("");
   const [unseenMessages, setUnseenMessages] = useState(0);
+  const [status, setStatus] = useState("offline");
 
+  const otherUser = user.username === userOne ? userTwo : userOne;
+
+  // New message handler
   useEffect(() => {
     if (!text || !timestamp) return;
     setLastMessage(text);
@@ -25,6 +32,26 @@ const DialogueItem = ({ dialogue }) => {
       : setUnseenMessages(unseenMessages + 1);
   }, [text, timestamp]);
 
+  // Socket
+  useEffect(() => {
+    const userFound = onlineUsers.find((user) => user.username === otherUser);
+    if (userFound) setStatus("online");
+
+    socket.on("user connected", ({ username }) => {
+      if (otherUser === username) setStatus("online");
+    });
+
+    socket.on("user disconnected", ({ username }) => {
+      if (otherUser === username) setStatus("offline");
+    });
+
+    return () => {
+      socket.off("user connected");
+      socket.off("user disconnected");
+    };
+  }, [socket, onlineUsers]);
+
+  // Fetch last message
   useEffect(() => {
     if (!conversationId) return;
     if (lastMessage.length > 1) return;
@@ -61,8 +88,6 @@ const DialogueItem = ({ dialogue }) => {
     return () => cancelQuery();
   });
 
-  const otherUser = user.username === userOne ? userTwo : userOne;
-
   return (
     <div
       className="dialogue-item"
@@ -83,9 +108,7 @@ const DialogueItem = ({ dialogue }) => {
         <div className="last-message-time">
           {formatDate(timestamp) || lastMessageTime}
         </div>
-        <div className="dialogue-status">
-          {dialogue?.status ? "online" : "offline"}
-        </div>
+        <div className="dialogue-status">{status}</div>
       </div>
       <div className="dialogue-text">
         <div className="dialogue-last-message">{lastMessage}</div>
