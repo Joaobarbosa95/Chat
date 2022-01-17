@@ -23,11 +23,12 @@ const Dialogues = () => {
     conversationsLoaded
   );
 
-  useEffect(() => {
-    if (dialogues.length === 0) return;
-    const sortedDialogues = sortDialogues(dialogues, sortType);
-    // setDialogues(sortedDialogues);
-  }, [sortType]);
+  const [sortedDialogues, setSortedDialogues] = useState([]);
+
+  // useEffect(() => {
+  //   if (dialogues.length === 0) return;
+  //   const sortedDialogues = sortDialogues(dialogues, sortType);
+  // }, [sortType]);
 
   // const observer = useRef();
   // const lastDialogueElementRef = useCallback(
@@ -81,13 +82,13 @@ const Dialogues = () => {
           </button>
         </div>
         <div className="dialogues">
-          {dialogues
+          {sortDialogues(dialogues, sortType)
             .filter(
               (dialogue) =>
                 dialogue.userOne.startsWith(searchUser) ||
                 dialogue.userTwo.startsWith(searchUser)
             )
-            .map((dialogue, index) => {
+            .map((dialogue) => {
               return (
                 <DialogueItem
                   key={dialogue.conversationId}

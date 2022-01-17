@@ -1,15 +1,11 @@
 export default function sortDialogues(dialogues, sort) {
-  return [].concat(dialogues).sort((conversationA, conversationB) => {
-    const { messages: messagesA } = conversationA;
-    const { messages: messagesB } = conversationB;
+  return dialogues.sort((conversationA, conversationB) => {
+    const { last_updated: timestampA } = conversationA;
+    const { last_updated: timestampB } = conversationB;
 
-    const messageTimeA = new Date(
-      messagesA[messagesA.length - 1].timestamp
-    ).getTime();
+    const messageTimeA = new Date(timestampA).getTime();
 
-    const messageTimeB = new Date(
-      messagesB[messagesB.length - 1].timestamp
-    ).getTime();
+    const messageTimeB = new Date(timestampB).getTime();
 
     if (sort == "latest first") {
       return messageTimeB - messageTimeA;

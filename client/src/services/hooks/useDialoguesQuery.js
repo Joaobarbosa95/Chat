@@ -39,7 +39,7 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
         userTwo: receiver,
         conversationId: conversationId,
         text: text,
-        timestamp: timestamp,
+        last_updated: timestamp,
       };
 
       const conversations = dialogues.filter(

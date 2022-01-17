@@ -11,7 +11,7 @@ const DialogueItem = ({ dialogue }) => {
   const { user } = useUserContext();
   const { socket } = user;
 
-  const { userOne, userTwo, conversationId, text, timestamp } = dialogue;
+  const { userOne, userTwo, conversationId, text, last_updated } = dialogue;
 
   const { setActiveDialogue, setUsername, activeDialogue, onlineUsers } =
     useChatContext();
@@ -24,13 +24,13 @@ const DialogueItem = ({ dialogue }) => {
 
   // New message handler
   useEffect(() => {
-    if (!text || !timestamp) return;
+    if (!text) return;
     setLastMessage(text);
-    setLastMessageTime(formatDate(timestamp));
+    setLastMessageTime(formatDate(last_updated));
     activeDialogue === conversationId
       ? setUnseenMessages(0)
       : setUnseenMessages(unseenMessages + 1);
-  }, [text, timestamp]);
+  }, [text, last_updated]);
 
   // Socket
   useEffect(() => {
@@ -105,9 +105,7 @@ const DialogueItem = ({ dialogue }) => {
       )}
       <div className="dialogue-info">
         <div className="dialogue-name">{otherUser}</div>
-        <div className="last-message-time">
-          {formatDate(timestamp) || lastMessageTime}
-        </div>
+        <div className="last-message-time">{lastMessageTime}</div>
         <div className="dialogue-status">{status}</div>
       </div>
       <div className="dialogue-text">
