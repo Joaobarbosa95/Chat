@@ -1,17 +1,21 @@
 import React from "react";
+import { useUserContext } from "../../../Contexts/UserContext";
 
-const ChatHeaderOnline = ({ user, setUser, setOnlineUsers }) => {
+const ChatHeaderOnline = () => {
+  const { user, setUser } = useUserContext();
+
   return (
     <div className="chat-title chat-online">
       <div>
-        <p>{user.accountType} Global Chat</p>
+        <p>Global Chat</p>
         <p>You are logged as {user.username}</p>
       </div>
       <button
         className="logout-btn"
         onClick={() => {
+          if (user.accountType === "Permanent") return;
+
           user.socket.disconnect();
-          setOnlineUsers([]);
           setUser((previousUser) => {
             return { ...previousUser, username: null };
           });

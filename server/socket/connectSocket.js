@@ -9,32 +9,8 @@ const {
 const uuidv4 = require("uuid").v4;
 
 function connectSocket(io) {
-  // let onlineUsers = [];
-  // io.on("connection", (socket) => {
-  //   let socketUser;
-  //   let messages = [];
-  //   // New client
-  //   socket.on("user", (newUser) => {
-  //     socketUser = newUser;
-  //     onlineUsers.push(newUser);
-  //     socket.broadcast.emit("new-user", { user: socketUser });
-  //   });
-  //   // Get users
-  //   socket.on("get-users", () => {
-  //     socket.emit("online-users", onlineUsers);
-  //   });
-  //   // Update messages
-  //   socket.on("new-message", (message) => {
-  //     messages.push(message);
-  //     socket.broadcast.emit("update-messages", message);
-  //   });
-  //   // Inform other users this client connected
-  //   socket.on("disconnect", () => {
-  //     onlineUsers = onlineUsers.filter((user) => user.name !== socketUser.name);
-  //     io.sockets.emit("user-disconnect", { user: socketUser });
-  //   });
-  // });
   let users = [];
+  let globalChatUsers = [];
 
   io.use((socket, next) => {
     const { username, sessionId, publicId } = socket.handshake.auth;
@@ -56,6 +32,9 @@ function connectSocket(io) {
     socket.sessionId = uuidv4();
     socket.publicId = publicId;
     socket.username = username;
+
+    if (!publicId) next();
+
     users.push({
       username: socket.username,
       sessionId: socket.sessionId,
@@ -65,6 +44,44 @@ function connectSocket(io) {
   });
 
   io.on("connection", (socket) => {
+    /**
+     * GLOBAL CHAT
+     */
+    let messages = [];
+
+    socket.on("user joined chat", () => {
+      socket.join("global chat");
+      socket.to("global chat").emit("user joined chat", {
+        username: socket.username,
+      });
+      socket.emit("user joined chat", { username: socket.username });
+      globalChatUsers.push({ username: socket.username });
+    });
+
+    // Get users
+    socket.on("get users", () => {
+      socket.to("global chat").emit("online users", globalChatUsers);
+    });
+    // Update messages
+    socket.on("new message", (message) => {
+      messages.push(message);
+      socket.to("global chat").emit("new message", message);
+      socket.emit("new message", message);
+    });
+    // Inform other users this client connected
+    socket.on("user left chat", () => {
+      socket.leave("global chat");
+      globalChatUsers = globalChatUsers.filter(
+        (user) => user.username !== socket.username
+      );
+      socket
+        .to("global chat")
+        .emit("user disconnect", { username: socket.username });
+    });
+
+    /**
+     * PRIVATE MESSAGING
+     */
     socket.emit("session", {
       sessionId: socket.sessionId,
       publicId: socket.publicId,
@@ -118,6 +135,8 @@ function connectSocket(io) {
       });
     });
     socket.on("disconnect", async () => {
+      if (!socket.publicId) return;
+
       // Clear session
       users = users.filter(
         (usersSocket) => usersSocket.sessionId !== socket.sessionId

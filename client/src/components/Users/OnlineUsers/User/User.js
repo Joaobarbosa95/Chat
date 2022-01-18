@@ -3,7 +3,8 @@ import { FaUserAlt } from "react-icons/fa";
 
 import "./User.css";
 
-const User = ({ name, image, status }) => {
+const User = ({ user }) => {
+  const { username, image, status } = user;
   return (
     <div className="online-user">
       {image ? (
@@ -11,7 +12,7 @@ const User = ({ name, image, status }) => {
       ) : (
         <FaUserAlt className="online-user-image" />
       )}
-      <span className="online-username">{name}</span>
+      <span className="online-username">{username}</span>
     </div>
   );
 };

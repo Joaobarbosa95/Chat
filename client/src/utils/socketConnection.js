@@ -18,6 +18,7 @@ export function socketInit(username, publicId) {
       return null;
     }
   });
+  if (!publicId) return socket;
 
   socket.on("session", ({ sessionId }) => {
     socket.sessionId = sessionId;

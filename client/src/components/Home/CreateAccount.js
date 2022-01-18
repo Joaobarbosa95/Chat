@@ -48,6 +48,7 @@ const CreateAccount = ({ setError }) => {
             token: res.token,
             socket: socketInit(res.user.username, res.public._id),
             token: res.token,
+            accountType: "Permanent",
           };
         });
 

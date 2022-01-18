@@ -6,34 +6,15 @@ import { socketInit } from "../../../../utils/socketConnection";
 import ChatHeaderOnline from "./ChatHeaderOnline";
 import ChatHeaderSignIn from "./ChatHeaderSignIn";
 
-const ChatHeader = ({ onlineUsers, setOnlineUsers }) => {
-  const { user, setUser } = useUserContext();
-  const [payload, setPayload] = useState(null);
-
-  useEffect(() => {
-    if (payload) {
-      console.log("payload");
-      setUser((prev) => {
-        return {
-          ...prev,
-          username: payload.username,
-          stayConnected: payload.stayConnected,
-          socket: socketInit(payload.username),
-        };
-      });
-    }
-  }, [payload]);
+const ChatHeader = () => {
+  const { user } = useUserContext();
 
   return (
     <>
       {user.username ? (
-        <ChatHeaderOnline
-          user={user}
-          setUser={(user) => setUser(user)}
-          setOnlineUsers={(users) => setOnlineUsers(users)}
-        />
+        <ChatHeaderOnline />
       ) : (
-        <ChatHeaderSignIn setPayload={(payload) => setPayload(payload)} />
+        <ChatHeaderSignIn />
       )}
     </>
   );

@@ -30,6 +30,7 @@ const Login = ({ setError }) => {
           username: res.user.username,
           token: res.token,
           socket: socketInit(res.user.username, res.public._id),
+          accountType: "Permanent",
         };
       });
       setAuthed(true);

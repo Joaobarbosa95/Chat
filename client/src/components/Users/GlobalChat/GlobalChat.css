@@ -1,7 +1,7 @@
 .chat-container {
   grid-column: 1;
   display: grid;
-  grid-template-rows: 50px auto 130px;
+  grid-template-rows: 50px auto 100px;
 }
 
 .chat-messages-container {

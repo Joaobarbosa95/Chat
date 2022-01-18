@@ -4,37 +4,36 @@ import User from "./User/User";
 import { useUserContext } from "../../Contexts/UserContext";
 import { useOnlineUsersContext } from "../../Contexts/OnlineUsersContext";
 
-const OnlineUsers = ({ setOnlineUsers }) => {
-  const { user, setUser } = useUserContext();
+const OnlineUsers = () => {
+  const { user } = useUserContext();
+  const { socket } = user;
   const { onlineUsers, dispatch } = useOnlineUsersContext();
 
   useEffect(() => {
-    if (user.username) {
-      user.socket.emit("get-users");
+    if (!socket) return;
+    socket.emit("get users");
 
-      user.socket.on("online-users", (onlineUsers) => {
-        dispatch({ type: "get-users", onlineUsers: onlineUsers });
-      });
+    socket.on("online users", (onlineUsers) => {
+      console.log("online users", onlineUsers);
+      dispatch({ type: "online users", onlineUsers: onlineUsers });
+    });
 
-      user.socket.on("new-user", ({ user }) => {
-        dispatch({ type: "new-user", user: user });
-      });
+    socket.on("user joined chat", (user) => {
+      dispatch({ type: "user joined the room", user: user });
+    });
 
-      user.socket.on("user-disconnect", ({ user }) => {
-        console.log(user);
-        dispatch({ type: "user-disconnect", user: user });
-      });
-    }
+    socket.on("user left chat", (user) => {
+      dispatch({ type: "user left the chat", user: user });
+    });
+
     return () => {
-      if (user.socket) {
-        user.socket.off("online-users");
-        user.socket.off("new-user");
-        user.socket.off("user-disconnect");
-      }
+      socket.off("online users");
+      socket.off("user joined the room");
+      socket.off("user left the chat");
     };
-  }, [user.username]);
+  }, [socket]);
 
-  if (!user.username) {
+  if (!socket) {
     return (
       <div className="online-users-container">
         <Title />
@@ -48,12 +47,7 @@ const OnlineUsers = ({ setOnlineUsers }) => {
       <Title />
       <div className="online-users">
         {onlineUsers.map((user) => (
-          <User
-            key={user.name}
-            image={user.image}
-            name={user.name}
-            status={user.status}
-          />
+          <User key={user.username} user={user} />
         ))}
       </div>
     </div>
