@@ -1,20 +1,21 @@
 import React from "react";
 import "./Message.css";
-import formatTimestamp from "../../../../utils/formatTimestamp";
+import TextMessage from "./TextMessage";
+import UserConnected from "./UserConnected";
+import UserDisconnected from "./UserDisconnected";
 
-const Message = ({ username, text, time }) => {
-  // if not time or text the user joined or left the room
-  return (
-    <>
-      <div className="message-container">
-        <div>
-          <div>{username}</div>
-          <div className="message-text">{text}</div>
-          <div className="message-date">{formatTimestamp(time)}</div>
-        </div>
-      </div>
-    </>
-  );
+const Message = ({ message }) => {
+  const { type, username, text, time } = message;
+  switch (type) {
+    case "user connected":
+      return <UserConnected username={username} />;
+    case "user disconnected":
+      return <UserDisconnected username={username} />;
+    case "message":
+      return <TextMessage username={username} text={text} time={time} />;
+    default:
+      return <> </>;
+  }
 };
 
 export default Message;

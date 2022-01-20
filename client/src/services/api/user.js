@@ -64,6 +64,7 @@ export async function logout(user) {
   user.username = null;
   user.token = null;
   user.socket.disconnect();
+  user.socket = null;
 }
 
 export async function updateUnseeMessages(token, conversationId) {

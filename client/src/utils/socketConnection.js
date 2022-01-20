@@ -3,7 +3,12 @@ import ioClient from "socket.io-client";
 const ENDPOINT = "http://localhost:4000";
 
 export function socketInit(username, publicId) {
-  const socket = ioClient(ENDPOINT);
+  const socket = ioClient(ENDPOINT, {
+    upgrade: false,
+    transports: ["websocket"],
+    reconnection: true,
+    forceNew: true,
+  });
 
   const sessionId = localStorage.getItem("SessionID");
 
@@ -18,7 +23,6 @@ export function socketInit(username, publicId) {
       return null;
     }
   });
-  if (!publicId) return socket;
 
   socket.on("session", ({ sessionId }) => {
     socket.sessionId = sessionId;

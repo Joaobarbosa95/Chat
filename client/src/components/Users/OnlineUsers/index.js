@@ -5,50 +5,50 @@ import { useUserContext } from "../../Contexts/UserContext";
 import { useOnlineUsersContext } from "../../Contexts/OnlineUsersContext";
 
 const OnlineUsers = () => {
-  const { user } = useUserContext();
-  const { socket } = user;
+  const { user, setUser } = useUserContext();
+  const { username } = user;
+  const { socket, accountType } = user;
   const { onlineUsers, dispatch } = useOnlineUsersContext();
 
   useEffect(() => {
     if (!socket) return;
-    socket.emit("get users");
 
     socket.on("online users", (onlineUsers) => {
-      console.log("online users", onlineUsers);
       dispatch({ type: "online users", onlineUsers: onlineUsers });
     });
 
     socket.on("user joined chat", (user) => {
-      dispatch({ type: "user joined the room", user: user });
+      dispatch({ type: "user joined chat", user: user });
     });
 
     socket.on("user left chat", (user) => {
-      dispatch({ type: "user left the chat", user: user });
+      user.username === username
+        ? dispatch({ type: "disconnected chat" })
+        : dispatch({ type: "user left chat", user: user });
     });
 
     return () => {
+      socket.emit("user left chat");
+      if (accountType === "Temporary") socket.disconnect();
+      setUser((prev) => {
+        return {
+          ...prev,
+          username: null,
+          socket: null,
+        };
+      });
       socket.off("online users");
-      socket.off("user joined the room");
-      socket.off("user left the chat");
+      socket.off("user joined chat");
+      socket.off("user left chat");
     };
   }, [socket]);
-
-  if (!socket) {
-    return (
-      <div className="online-users-container">
-        <Title />
-        <div className="online-users"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="online-users-container">
       <Title />
       <div className="online-users">
-        {onlineUsers.map((user) => (
-          <User key={user.username} user={user} />
-        ))}
+        {socket &&
+          onlineUsers.map((user) => <User key={user.username} user={user} />)}
       </div>
     </div>
   );

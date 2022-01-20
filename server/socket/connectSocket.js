@@ -26,14 +26,13 @@ function connectSocket(io) {
         return next();
       }
     }
-
     if (!username) return next("Invalid username");
 
     socket.sessionId = uuidv4();
     socket.publicId = publicId;
     socket.username = username;
 
-    if (!publicId) next();
+    if (!publicId) return next();
 
     users.push({
       username: socket.username,
@@ -49,43 +48,45 @@ function connectSocket(io) {
      */
     let messages = [];
 
+    console.log("socket", socket.username);
     socket.on("user joined chat", () => {
+      console.log(socket.username + " joined chat");
       socket.join("global chat");
       socket.to("global chat").emit("user joined chat", {
         username: socket.username,
       });
       socket.emit("user joined chat", { username: socket.username });
       globalChatUsers.push({ username: socket.username });
+
+      socket.emit("online users", globalChatUsers);
     });
 
-    // Get users
-    socket.on("get users", () => {
-      socket.to("global chat").emit("online users", globalChatUsers);
-    });
     // Update messages
     socket.on("new message", (message) => {
-      messages.push(message);
       socket.to("global chat").emit("new message", message);
       socket.emit("new message", message);
     });
     // Inform other users this client connected
     socket.on("user left chat", () => {
-      socket.leave("global chat");
+      console.log(socket.username + " left chat");
       globalChatUsers = globalChatUsers.filter(
         (user) => user.username !== socket.username
       );
       socket
         .to("global chat")
-        .emit("user disconnect", { username: socket.username });
+        .emit("user left chat", { username: socket.username });
+      socket.leave("global chat");
     });
 
     /**
      * PRIVATE MESSAGING
      */
-    socket.emit("session", {
-      sessionId: socket.sessionId,
-      publicId: socket.publicId,
-    });
+    if (socket.publicId) {
+      socket.emit("session", {
+        sessionId: socket.sessionId,
+        publicId: socket.publicId,
+      });
+    }
 
     socket.join(socket.publicId);
 

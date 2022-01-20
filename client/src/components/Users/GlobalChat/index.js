@@ -26,17 +26,16 @@ const GlobalChat = () => {
       });
     });
 
-    socket.on("user left chat", ({ userLeftMessage }) => {
+    socket.on("user left chat", (userLeftMessage) => {
       setMessages((prevMessages) => {
         return [
           ...prevMessages,
-          { type: "user disconnect", ...userLeftMessage },
+          { type: "user disconnected", ...userLeftMessage },
         ];
       });
     });
 
-    socket.on("new message", ({ newMessage }) => {
-      console.log(newMessage);
+    socket.on("new message", (newMessage) => {
       setMessages((prevMessages) => {
         return [...prevMessages, { type: "message", ...newMessage }];
       });
@@ -54,9 +53,9 @@ const GlobalChat = () => {
       <ChatHeader />
       <div className="chat-messages-container">
         <div className="chat-messages">
-          {messages.map((message) => (
-            <Message key={message.id} message={message} />
-          ))}
+          {messages.map((message) => {
+            return <Message key={message.id} message={message} />;
+          })}
         </div>
       </div>
       <Chat />

@@ -2,8 +2,9 @@ import { useReducer } from "react";
 // importar object para chamar nos dispatchs
 const ACTION_TYPE = {
   GET_USERS: "online users",
-  NEW_USER: "user joined the chat",
-  USER_DISCONNECT: "user left the chat",
+  NEW_USER: "user joined chat",
+  USER_DISCONNECT: "user left chat",
+  DISCONNECTED_CHAT: "disconnected chat",
 };
 
 const initialState = [];
@@ -15,8 +16,11 @@ const reducer = function (state, action) {
     case ACTION_TYPE.NEW_USER:
       return [...state, action.user];
 
+    case ACTION_TYPE.DISCONNECTED_CHAT:
+      return [];
+
     case ACTION_TYPE.USER_DISCONNECT:
-      return state.filter((user) => user.name !== action.user.username);
+      return state.filter((user) => user.username !== action.user.username);
 
     default:
       return state;

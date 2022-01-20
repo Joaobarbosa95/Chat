@@ -8,6 +8,7 @@ import Users from "./components/Users";
 import Home from "./components/Home";
 import User from "./components/User";
 import Inbox from "./components/Inbox";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               <Routes>
                 <Route path="home" element={<Home />} />
                 <Route path="users" element={<Users />} />
+                <Route path="send" element={<Dashboard />} />
                 <Route
                   path="user"
                   element={

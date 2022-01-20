@@ -5,18 +5,10 @@ import OnlineUsers from "./OnlineUsers";
 import "./Users.css";
 
 const Users = () => {
-  const [onlineUsers, setOnlineUsers] = useState([]);
-
   return (
     <div className="user-content">
-      <GlobalChat
-        onlineUsers={onlineUsers}
-        setOnlineUsers={(users) => setOnlineUsers(users)}
-      />
-      <OnlineUsers
-        onlineUsers={onlineUsers}
-        setOnlineUsers={(users) => setOnlineUsers(users)}
-      />
+      <GlobalChat />
+      <OnlineUsers />
     </div>
   );
 };

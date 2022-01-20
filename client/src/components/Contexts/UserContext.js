@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { socketInit } from "../../utils/socketConnection";
 
 const UserContext = React.createContext();
 
