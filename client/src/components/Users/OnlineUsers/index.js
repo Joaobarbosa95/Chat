@@ -29,14 +29,16 @@ const OnlineUsers = () => {
 
     return () => {
       socket.emit("user left chat");
-      if (accountType === "Temporary") socket.disconnect();
-      setUser((prev) => {
-        return {
-          ...prev,
-          username: null,
-          socket: null,
-        };
-      });
+      if (accountType === "Temporary") {
+        socket.disconnect();
+        setUser((prev) => {
+          return {
+            ...prev,
+            username: null,
+            socket: null,
+          };
+        });
+      }
       socket.off("online users");
       socket.off("user joined chat");
       socket.off("user left chat");
