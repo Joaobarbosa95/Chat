@@ -2,7 +2,7 @@ import ioClient from "socket.io-client";
 
 const ENDPOINT = "http://localhost:4000";
 
-export function socketInit(username, publicId) {
+export function socketInit(username, publicId, token) {
   const socket = ioClient(ENDPOINT, {
     upgrade: false,
     transports: ["websocket"],
@@ -12,7 +12,7 @@ export function socketInit(username, publicId) {
 
   const sessionId = localStorage.getItem("SessionID");
 
-  socket.auth = { username, publicId, sessionId };
+  socket.auth = { username, publicId, sessionId, token };
 
   socket.connect();
 

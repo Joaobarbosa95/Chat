@@ -18,6 +18,8 @@ const OnlineUsers = () => {
     });
 
     socket.on("user joined chat", (user) => {
+      if (user.username === username) return;
+      console.log("run anyway");
       dispatch({ type: "user joined chat", user: user });
     });
 

@@ -27,8 +27,9 @@ export function AuthProvider({ children }) {
         return {
           ...prevUser,
           username: res.username,
-          socket: socketInit(res.username, res.publicProfile._id),
+          socket: socketInit(res.username, res.publicProfile._id, token),
           token: token,
+          accountType: "Permanent",
         };
       });
 

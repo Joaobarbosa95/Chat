@@ -29,7 +29,7 @@ const Login = ({ setError }) => {
           ...prev,
           username: res.user.username,
           token: res.token,
-          socket: socketInit(res.user.username, res.public._id),
+          socket: socketInit(res.user.username, res.public._id, res.token),
           accountType: "Permanent",
         };
       });
