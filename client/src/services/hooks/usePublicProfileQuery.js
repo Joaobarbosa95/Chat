@@ -1,31 +1,42 @@
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useChatContext } from "../../Contexts/ChatContext";
 
-export default usePublicProfileQuery = (username) => {
-  const [publicProfile, setPublicProfile] = useState({});
+export default function usePublicProfileQuery(token, username, conversationId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [publicProfile, setPublicProfile] = useState([]);
+  const [hasMore, setHasMore] = useState(false);
+
+  const { setPublicId } = useChatContext();
 
   useEffect(() => {
+    if (!token || username.trim().length < 1) return;
     setLoading(true);
     setError(false);
-
     let cancel;
     axios({
-      method: "GET",
-      url: "http://localhost:4000/public-profile",
-      params: { username: username },
+      method: "POST",
+      url: "http://localhost:4000/inbox/public-profile",
+      data: { username: username },
+      headers: {
+        authorization: "Bearer " + token,
+      },
       cancelToken: new axios.CancelToken((c) => (cancel = c)),
     })
       .then((res) => {
-        //   setPublicProfile()
+        setPublicId(res.data[0]._id);
+        setPublicProfile(res.data[0]);
+        setHasMore(res.data.length > 0);
+        setLoading(false);
       })
       .catch((e) => {
         if (axios.isCancel(e)) return;
-        setError(e);
+        setLoading(false);
+        setError(true);
       });
     return () => cancel();
-  }, [username]);
+  }, [token, username]);
 
-  return { username };
-};
+  return { loading, error, publicProfile, hasMore };
+}

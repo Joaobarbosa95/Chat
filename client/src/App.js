@@ -1,13 +1,14 @@
 import "./index.css";
-import LeftMenu from "./components/LeftMenu/LeftMenu.js";
-import { ChatProvider } from "./components/Contexts/ChatContext";
-import { RequireAuth } from "./components/Contexts/AuthContext";
-import { OnlineUsersProvider } from "./components/Contexts/OnlineUsersContext";
+import LeftMenu from "./Components/LeftMenu/LeftMenu.js";
+import { ChatProvider } from "./Contexts/ChatContext";
+import { RequireAuth } from "./Contexts/AuthContext";
+import { OnlineUsersProvider } from "./Contexts/OnlineUsersContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Users from "./components/Users";
-import Home from "./components/Home";
-import User from "./components/User";
-import Inbox from "./components/Inbox";
+import Users from "./Components/MainContent/Users";
+import Home from "./Components/MainContent/Home";
+import User from "./Components/MainContent/User";
+import Inbox from "./Components/MainContent/Inbox";
+import Dashboard from "./Components/MainContent/Dashboard";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               <Routes>
                 <Route path="home" element={<Home />} />
                 <Route path="users" element={<Users />} />
+                <Route path="send" element={<Dashboard />} />
                 <Route
                   path="user"
                   element={

@@ -4,15 +4,19 @@ const auth = require("../middleware/auth");
 // collections
 const Messages = require("../models/messages");
 const PublicProfile = require("../models/publicProfile");
+const Conversations = require("../models/conversations");
 
 const router = new express.Router();
 
-router.get("/dialogues", auth, async (req, res) => {
+router.post("/dialogues", auth, async (req, res) => {
+  // Each page is equivalent to 5 conversations/dialogues
+  const conversationsLoaded = req.body.conversationsLoaded;
   try {
-    // Queries 5 unique conversations last messages
-    const dialogues = await Messages.find
-      .distinct("conversationId")
-      .or([{ sender: req.user }, { receiver: req.user }])
+    const dialogues = await Conversations.find({
+      $or: [{ userOne: req.user }, { userTwo: req.user }],
+    })
+      .sort("-last_updated")
+      .skip(conversationsLoaded)
       .limit(5);
 
     res.send(dialogues);
@@ -21,22 +25,47 @@ router.get("/dialogues", auth, async (req, res) => {
   }
 });
 
-router.get("/conversation", auth, async (req, res) => {
+router.post("/messages", auth, async (req, res) => {
+  const conversationId = req.body.conversationId;
+  const messagesLoaded = req.body.messagesLoaded;
   try {
-    // User will send a "page number", that will be a query of 10 new messages
-    // Ex: req.body.page = 0, query first 10 messages
-    //       req.body.page = 1, query the 10 messages after those (skip first 10)
-    const startPoint = req.body.page * 10;
-
-    // Query last 10 messages of the conversation
-    const messages = await Messages.find({
-      conversationId: req.body.conversationId,
-    })
-      .skip(startPoint)
-      .limit(10);
-    // See if skip includes the first/end result
+    const messages = await Messages.find({ conversationId: conversationId })
+      .sort("-timestamp")
+      .skip(messagesLoaded)
+      .limit(20);
 
     res.send(messages);
+  } catch (e) {
+    res.send({ error: e.message });
+  }
+});
+
+router.post("/last-message", auth, async (req, res) => {
+  const conversationId = req.body.conversationId;
+  try {
+    let lastMessage = await Messages.find({
+      conversationId: conversationId,
+      seen: false,
+    }).sort("-timestamp");
+
+    let unSeenMessages = lastMessage.filter(
+      (message) => message.sender !== req.user
+    );
+
+    if (lastMessage.length === 0) {
+      lastMessage = await Messages.find({
+        conversationId: conversationId,
+      })
+        .sort("-timestamp")
+        .limit(1);
+
+      unSeenMessages = 0;
+    }
+
+    res.send({
+      lastMessage: lastMessage[0],
+      unseenCount: unSeenMessages.length,
+    });
   } catch (e) {
     res.send({ error: e.message });
   }
@@ -68,4 +97,28 @@ router.post("/dialogue-search", auth, async (req, res) => {
   }
 });
 
+router.post("/conversationid", auth, async (req, res) => {
+  const conversationId = await Conversations.find({
+    $or: [{ userOne: req.user }, { userTwo: req.user }],
+  }).and({
+    $or: [{ userOne: req.body.username }, { userTwo: req.body.username }],
+  });
+
+  res.send(conversationId);
+});
+
+router.post("/update-messages-status", auth, async (req, res) => {
+  const { conversationId } = req.body;
+
+  const lastMessage = await Messages.updateMany(
+    {
+      conversationId: conversationId,
+      seen: false,
+      sender: { $ne: req.user },
+    },
+    { seen: true }
+  );
+
+  res.send(lastMessage);
+});
 module.exports = router;

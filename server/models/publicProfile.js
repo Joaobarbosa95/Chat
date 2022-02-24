@@ -29,6 +29,11 @@ const PublicProfileSchema = mongoose.Schema({
     type: String,
     default: "Nothing shared",
   },
+
+  status: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const PublicProfile = mongoose.model("Public_Profile", PublicProfileSchema);

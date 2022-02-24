@@ -41,6 +41,7 @@ router.post("/createAccount", async (req, res) => {
     // New public profile entry
     const newPublicProfile = new PublicProfile({
       username: username,
+      status: true,
     });
     const public = await newPublicProfile.save();
 

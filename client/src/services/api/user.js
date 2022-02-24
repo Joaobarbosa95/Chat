@@ -1,6 +1,9 @@
-async function fetchPublicProfile(user, otherUser) {
+import axios from "./axiosInstance";
+
+export async function fetchPublicProfile(user, otherUser) {
   const url = "http://localhost:4000/inbox/public-profile";
 
+  // replace with only token
   const bearer = "Bearer " + user?.token;
 
   const opts = {
@@ -19,7 +22,7 @@ async function fetchPublicProfile(user, otherUser) {
   return data;
 }
 
-async function validateToken(token) {
+export async function validateToken(token) {
   const url = "http://localhost:4000/user/validate";
 
   const bearer = "Bearer " + token;
@@ -38,7 +41,7 @@ async function validateToken(token) {
   return data;
 }
 
-async function login(username, password) {
+export async function login(username, password) {
   const url = "http://localhost:4000/user/login";
   const options = {
     method: "POST",
@@ -56,12 +59,22 @@ async function login(username, password) {
   return data;
 }
 
-async function logout(user) {
+export async function logout(user) {
   localStorage.removeItem("SessionID");
   localStorage.removeItem("ChatToken");
   user.username = null;
   user.token = null;
   user.socket.disconnect();
+  user.socket = null;
 }
 
-module.exports = { fetchPublicProfile, validateToken, login, logout };
+export async function updateUnseeMessages(token, conversationId) {
+  await axios({
+    method: "POST",
+    url: "http://localhost:4000/inbox/update-messages-status",
+    data: { conversationId: conversationId },
+    headers: {
+      authorization: token,
+    },
+  });
+}

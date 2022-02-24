@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import MainContent from "../MainContent/MainContent";
 
 import {
   FaUserAlt, // User
@@ -97,4 +96,3 @@ const LeftMenu = () => {
 };
 
 export default LeftMenu;
-// <MainContent activeTab={activeTab} />
