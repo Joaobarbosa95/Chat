@@ -42,6 +42,14 @@
   border: none;
   background: none;
   margin-left: 10px;
+  cursor: pointer;
+}
+
+.actions > select:hover {
+  background: #eeeeee61;
+  border-radius: 20px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 .add-new-btn {
@@ -62,8 +70,7 @@
 .add-new-btn:active {
   background: #f44a4a;
 }
-
-.add-new-btn-label {
+tem .add-new-btn-label {
   margin-left: auto;
 }
 
@@ -74,7 +81,7 @@
   grid-template-columns: 20% auto;
   grid-template-rows: 80% auto;
   margin: 10px 0px;
-  transition-duration: 0.1s;
+  transition: 0.15s ease-in-out;
 }
 
 .dialogue-item:hover {
@@ -134,7 +141,6 @@
 .dialogue-last-message {
   display: inline-block;
   width: 85%;
-  max-height: 1rem;
   overflow: hidden;
 }
 

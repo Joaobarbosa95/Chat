@@ -70,7 +70,7 @@ const Dialogues = () => {
               setSortType(e.target.value);
             }}
           >
-            <option value="latest first">latest first</option>
+            <option value="newest first">newest first</option>
             <option value="last first">last first</option>
           </select>
           <label htmlFor="add-new-btn" className="add-new-btn-label">
