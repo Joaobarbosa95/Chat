@@ -5,9 +5,9 @@ import { useUserContext } from "../../../../Contexts/UserContext";
 import { useChatContext } from "../../../../Contexts/ChatContext";
 
 export const ChatInput = () => {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
   const { publicId, username, activeDialogue } = useChatContext();
-  const { socket } = user;
+  const { socket } = userState;
   const [messageText, setMessageText] = useState("");
 
   // hook to query the conversation id

@@ -7,7 +7,7 @@ import sortDialogues from "../../../../utils/sortDialogues";
 import useDialoguesQuery from "../../../../services/hooks/useDialoguesQuery";
 
 const Dialogues = () => {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
 
   const [sortType, setSortType] = useState("latest first");
 
@@ -18,7 +18,7 @@ const Dialogues = () => {
   const [conversationsLoaded, setConversationsLoaded] = useState(0);
 
   const { loading, error, hasMore, dialogues } = useDialoguesQuery(
-    user.token,
+    userState.token,
     conversationsLoaded
   );
 

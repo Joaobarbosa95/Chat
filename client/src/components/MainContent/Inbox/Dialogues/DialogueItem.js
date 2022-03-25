@@ -8,8 +8,8 @@ import formatDate from "../../../../utils/formatDate";
 import axios from "axios";
 
 const DialogueItem = ({ dialogue }) => {
-  const { user } = useUserContext();
-  const { socket } = user;
+  const { userState } = useUserContext();
+  const { socket } = userState;
 
   const { userOne, userTwo, conversationId, text, last_updated } = dialogue;
 
@@ -20,7 +20,7 @@ const DialogueItem = ({ dialogue }) => {
   const [unseenMessages, setUnseenMessages] = useState(0);
   const [status, setStatus] = useState("offline");
 
-  const otherUser = user.username === userOne ? userTwo : userOne;
+  const otherUser = userState.username === userOne ? userTwo : userOne;
 
   // New message handler
   useEffect(() => {
@@ -57,7 +57,7 @@ const DialogueItem = ({ dialogue }) => {
     if (lastMessage.length > 1) return;
 
     let cancelQuery;
-    const token = "Bearer " + user.token;
+    const token = "Bearer " + userState.token;
 
     axios({
       method: "POST",
@@ -94,7 +94,7 @@ const DialogueItem = ({ dialogue }) => {
       onClick={(e) => {
         setActiveDialogue(dialogue.conversationId);
         setUsername(otherUser);
-        updateUnseeMessages(user.token, dialogue.conversationId);
+        updateUnseeMessages(userState.token, dialogue.conversationId);
         setUnseenMessages(0);
       }}
     >

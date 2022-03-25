@@ -1,9 +1,10 @@
 import { useReducer } from "react";
 
 const ACTION_TYPE = {
-    USER_LOGIN = "user login",
-    USER_LOGOUT = "user disconnect"
-}
+  USER_CREATE_ACCOUNT: "create account",
+  USER_LOGIN: "user login",
+  USER_LOGOUT: "user disconnect",
+};
 
 const initialState = {
   username: null,
@@ -14,18 +15,19 @@ const initialState = {
 };
 
 const reducer = function (state, action) {
-    switch (action.type) {
-        case USER_LOGIN:
-        return {...state, ...action.user}
+  switch (action.type) {
+    case ACTION_TYPE.USER_CREATE_ACCOUNT:
+      return { ...state, ...action.payload };
+    case ACTION_TYPE.USER_LOGIN:
+      return { ...state, ...action.payload };
 
-        case USER_LOGOUT: 
-        return initialState
-    }
-
+    case ACTION_TYPE.USER_LOGOUT:
+      return initialState;
+  }
 };
 
 export default function useUsersReducer() {
-    const [userState, userDispatch] = useReducer(reducer, initialState)
+  const [userState, userDispatch] = useReducer(reducer, initialState);
 
-    return {userState, userDispatch}
+  return { userState, userDispatch };
 }

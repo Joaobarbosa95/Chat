@@ -8,7 +8,7 @@ import { useAuthContext } from "../../../Contexts/AuthContext";
 const Login = ({ setError }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { setUser } = useUserContext();
+  const { userDispatch } = useUserContext();
   const { setAuthed } = useAuthContext();
 
   const navigate = useNavigate();
@@ -23,15 +23,14 @@ const Login = ({ setError }) => {
       if (res.error) return setError(res.error);
 
       localStorage.setItem("ChatToken", res.token);
-
-      setUser((prev) => {
-        return {
-          ...prev,
+      userDispatch({
+        type: "user login",
+        payload: {
           username: res.user.username,
           token: res.token,
           socket: socketInit(res.user.username, res.public._id, res.token),
           accountType: "Permanent",
-        };
+        },
       });
       setAuthed(true);
 

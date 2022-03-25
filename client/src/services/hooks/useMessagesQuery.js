@@ -7,7 +7,7 @@ export default function useMessagesQuery(
   messagesLoaded,
   conversationId
 ) {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -20,14 +20,14 @@ export default function useMessagesQuery(
 
   // Socket listeners
   useEffect(() => {
-    user.socket.on("private message", ({ newMessage }) => {
+    userState.socket.on("private message", ({ newMessage }) => {
       setMessages((prevMessages) => {
         return [...prevMessages, newMessage];
       });
     });
 
     return () => {
-      user.socket.off("private message");
+      userState.socket.off("private message");
     };
   });
 

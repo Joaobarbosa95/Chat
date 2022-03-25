@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-
+import useUserReducer from "../Reducers/UserReducer";
 const UserContext = React.createContext();
 
 const defaultUser = {
@@ -15,10 +15,11 @@ export function useUserContext() {
 }
 
 export function UserProvider({ children }) {
-  const [user, setUser] = useState(defaultUser);
+  const { userState, userDispatch } = useUserReducer();
+  //const [user, setUser] = useState(defaultUser);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ userState, userDispatch }}>
       {children}
     </UserContext.Provider>
   );

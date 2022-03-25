@@ -4,19 +4,19 @@ import { socketInit } from "../../../../../utils/socketConnection";
 
 const ChatHeaderSignIn = () => {
   const [username, setUsername] = useState("");
-  const { setUser } = useUserContext();
+  const { userDispatch } = useUserContext();
   return (
     <div className="chat-title">
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          setUser((prev) => {
-            return {
-              ...prev,
+          userDispatch({
+            type: "login global chat",
+            payload: {
               username: username,
               stayConnected: e.target[1].checked,
               socket: socketInit(username),
-            };
+            },
           });
         }}
       >

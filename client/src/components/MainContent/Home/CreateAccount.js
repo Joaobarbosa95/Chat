@@ -8,7 +8,7 @@ const CreateAccount = ({ setError }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-  const { setUser } = useUserContext();
+  const { userDispatch } = useUserContext();
   const { setAuthed } = useAuthContext();
   const navigate = useNavigate();
 
@@ -41,15 +41,14 @@ const CreateAccount = ({ setError }) => {
         if (res.error) return setError(res.error);
         localStorage.setItem("ChatToken", res.token);
         setAuthed(true);
-        setUser((prev) => {
-          return {
-            ...prev,
+        userDispatch({
+          type: "create account",
+          payload: {
             username: res.user.username,
             token: res.token,
             socket: socketInit(res.user.username, res.public._id, res.token),
-            token: res.token,
             accountType: "Permanent",
-          };
+          },
         });
 
         navigate("/home", { replace: true });

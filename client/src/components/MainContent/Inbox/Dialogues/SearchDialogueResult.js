@@ -5,7 +5,7 @@ import axios from "axios";
 
 export default function SearchDialogueResult({ searchedUser, setAddDialogue }) {
   const { setPublicId, setUsername, setActiveDialogue } = useChatContext();
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
 
   return (
     <div
@@ -16,12 +16,12 @@ export default function SearchDialogueResult({ searchedUser, setAddDialogue }) {
           url: "http://localhost:4000/inbox/conversationid",
           data: { username: searchedUser.username },
           headers: {
-            authorization: "Bearer " + user.token,
+            authorization: "Bearer " + userState.token,
           },
         });
 
         res.data.length === 0
-          ? user.socket.emit("new dialogue", {
+          ? userState.socket.emit("new dialogue", {
               username: searchedUser.username,
             })
           : setActiveDialogue(res.data[0]._id);

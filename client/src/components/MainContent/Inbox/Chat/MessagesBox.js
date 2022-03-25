@@ -5,12 +5,12 @@ import useMessagesQuery from "../../../../services/hooks/useMessagesQuery";
 import Message from "./Message";
 
 const MessagesBox = () => {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
   const { activeDialogue } = useChatContext();
   const [messagesLoaded, setMessagesLoaded] = useState(0);
 
   let { loading, error, hasMore, messages } = useMessagesQuery(
-    user.token,
+    userState.token,
     messagesLoaded,
     activeDialogue
   );

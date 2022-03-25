@@ -4,11 +4,11 @@ import useUserSearch from "../../../../services/hooks/useUserSearch";
 import SearchDialogueResult from "./SearchDialogueResult";
 
 const AddDialogue = ({ addDialogue, setAddDialogue }) => {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
   const [userSearchInput, setUserSearchInput] = useState("");
 
   const { loading, error, hasMore, userSearch, notFound } = useUserSearch(
-    user.token,
+    userState.token,
     userSearchInput
   );
 

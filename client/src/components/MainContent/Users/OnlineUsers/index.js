@@ -5,9 +5,9 @@ import { useUserContext } from "../../../../Contexts/UserContext";
 import { useOnlineUsersContext } from "../../../../Contexts/OnlineUsersContext";
 
 const OnlineUsers = () => {
-  const { user, setUser } = useUserContext();
-  const { username } = user;
-  const { socket, accountType } = user;
+  const { userState, userDispatch } = useUserContext();
+  const { username } = userState;
+  const { socket, accountType } = userState;
   const { onlineUsers, dispatch } = useOnlineUsersContext();
 
   useEffect(() => {
@@ -33,14 +33,9 @@ const OnlineUsers = () => {
       socket.emit("user left chat");
       if (accountType === "Temporary") {
         socket.disconnect();
-        setUser((prev) => {
-          return {
-            ...prev,
-            username: null,
-            socket: null,
-          };
-        });
+        userDispatch({ type: "user disconnect" });
       }
+
       socket.off("online users");
       socket.off("user joined chat");
       socket.off("user left chat");
@@ -52,7 +47,9 @@ const OnlineUsers = () => {
       <Title />
       <div className="online-users">
         {socket &&
-          onlineUsers.map((user) => <User key={user.username} user={user} />)}
+          onlineUsers.map((user) => (
+            <User key={user.username} user={userState} />
+          ))}
       </div>
     </div>
   );

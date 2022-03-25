@@ -8,9 +8,9 @@ import Chat from "./Chat/Chat";
 import AboutUser from "./AboutUser/AboutUser";
 
 const Index = () => {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
   const { setOnlineUsers } = useChatContext();
-  const { socket } = user;
+  const { socket } = userState;
 
   useEffect(() => {
     if (!socket) return;

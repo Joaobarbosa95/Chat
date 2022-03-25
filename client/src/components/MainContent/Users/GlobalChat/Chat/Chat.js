@@ -5,14 +5,14 @@ import { v4 as uuidv4 } from "uuid";
 import { useUserContext } from "../../../../../Contexts/UserContext";
 
 const Chat = () => {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
   const [message, setMessage] = useState("");
-  const { socket } = user;
+  const { socket } = userState;
 
   function Submit() {
     if (message.trim().length < 1) return;
     const newMessage = {
-      username: user.username,
+      username: userState.username,
       text: message,
       time: new Date().getTime(),
       id: uuidv4(),

@@ -6,9 +6,9 @@ import ChatHeaderOnline from "./ChatHeaderOnline";
 import ChatHeaderSignIn from "./ChatHeaderSignIn";
 
 const ChatHeader = () => {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
 
-  return <>{user.socket ? <ChatHeaderOnline /> : <ChatHeaderSignIn />}</>;
+  return <>{userState.socket ? <ChatHeaderOnline /> : <ChatHeaderSignIn />}</>;
 };
 
 export default ChatHeader;

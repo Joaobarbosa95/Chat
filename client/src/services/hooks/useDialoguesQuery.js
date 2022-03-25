@@ -4,8 +4,8 @@ import { useChatContext } from "../../Contexts/ChatContext";
 import { useUserContext } from "../../Contexts/UserContext";
 
 export default function useDialoguesQuery(token, conversationsLoaded) {
-  const { user } = useUserContext();
-  const { socket } = user;
+  const { userState } = useUserContext();
+  const { socket } = userState;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -73,7 +73,7 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
 
         const { userOne, userTwo, conversationId } = res.data[0];
 
-        setUsername(user.username === userOne ? userTwo : userOne);
+        setUsername(userState.username === userOne ? userTwo : userOne);
         setActiveDialogue(conversationId);
 
         setDialogues((prevDialogues) => {

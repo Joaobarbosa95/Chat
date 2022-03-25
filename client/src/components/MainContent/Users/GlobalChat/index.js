@@ -13,8 +13,8 @@ import "./GlobalChat.css";
 
 const GlobalChat = () => {
   const [messages, setMessages] = useState([]);
-  const { user } = useUserContext();
-  const { socket } = user;
+  const { userState } = useUserContext();
+  const { socket } = userState;
 
   useEffect(() => {
     if (!socket) return;

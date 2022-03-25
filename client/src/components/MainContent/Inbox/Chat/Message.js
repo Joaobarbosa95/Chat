@@ -4,9 +4,9 @@ import { useUserContext } from "../../../../Contexts/UserContext";
 import formatTimestamp from "../../../../utils/formatTimestamp";
 
 const Message = ({ message, reference }) => {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
 
-  const fromWho = user.username === message.sender ? "sender" : "receiver";
+  const fromWho = userState.username === message.sender ? "sender" : "receiver";
 
   let formatedTimestamp = formatTimestamp(message.timestamp);
 

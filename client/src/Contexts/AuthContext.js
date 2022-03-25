@@ -12,7 +12,7 @@ export function useAuthContext() {
 
 export function AuthProvider({ children }) {
   const [authed, setAuthed] = useState(false);
-  const { user, setUser } = useUserContext();
+  const { userDispatch } = useUserContext();
 
   useEffect(() => {
     // Get token, username and sessionId from local storage
@@ -23,14 +23,14 @@ export function AuthProvider({ children }) {
 
     validateToken(token).then((res) => {
       if (res.error) return console.log("invalid token");
-      setUser((prevUser) => {
-        return {
-          ...prevUser,
+      userDispatch({
+        type: "user login",
+        payload: {
           username: res.username,
           socket: socketInit(res.username, res.publicProfile._id, token),
           token: token,
           accountType: "Permanent",
-        };
+        },
       });
 
       setAuthed(true);

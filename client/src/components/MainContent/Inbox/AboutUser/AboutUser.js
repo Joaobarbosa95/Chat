@@ -6,16 +6,16 @@ import { useChatContext } from "../../../../Contexts/ChatContext";
 import usePublicProfileQuery from "../../../../services/hooks/usePublicProfileQuery";
 
 const AboutUser = () => {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
   const { username } = useChatContext();
-  const { publicProfile } = usePublicProfileQuery(user.token, username);
+  const { publicProfile } = usePublicProfileQuery(userState.token, username);
 
   return (
     <div className="about-user-container">
       <div className="user-account-info">
         <div className="general-info">
           {undefined ? (
-            <img src={user.avatar} alt="avatar" className="avatar-info" />
+            <img src={userState.avatar} alt="avatar" className="avatar-info" />
           ) : (
             <FaUserCircle className="avatar-info" />
           )}

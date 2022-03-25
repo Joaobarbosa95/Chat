@@ -5,7 +5,7 @@ import { logout } from "../../../services/api/user";
 import { useAuthContext } from "../../../Contexts/AuthContext";
 
 export const Logged = () => {
-  const { user } = useUserContext();
+  const { userState } = useUserContext();
   const { setAuthed } = useAuthContext();
   const location = useLocation();
   const navigate = useNavigate();
@@ -16,10 +16,10 @@ export const Logged = () => {
 
   return (
     <div>
-      You are logge as {user.username}{" "}
+      You are logged as {userState.username}{" "}
       <button
         onClick={() => {
-          logout(user);
+          logout(userState);
           setAuthed(false);
         }}
       >
