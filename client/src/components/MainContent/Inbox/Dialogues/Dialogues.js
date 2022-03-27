@@ -9,7 +9,7 @@ import useDialoguesQuery from "../../../../services/hooks/useDialoguesQuery";
 const Dialogues = () => {
   const { userState } = useUserContext();
 
-  const [sortType, setSortType] = useState("latest first");
+  const [sortType, setSortType] = useState("newest first");
 
   const [searchUser, setSearchUser] = useState("");
 
