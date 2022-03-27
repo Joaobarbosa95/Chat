@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
+import axiosParent from "axios";
 import { useChatContext } from "../../Contexts/ChatContext";
 import { useUserContext } from "../../Contexts/UserContext";
+
+const { CancelToken, isCancel } = axiosParent;
 
 export default function useDialoguesQuery(token, conversationsLoaded) {
   const { userState } = useUserContext();
@@ -61,12 +64,12 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
     let cancel;
     axios({
       method: "POST",
-      url: "http://localhost:4000/inbox/dialogues",
+      url: "/inbox/dialogues",
       data: { conversationsLoaded: conversationsLoaded },
       headers: {
         authorization: "Bearer " + token,
       },
-      cancelToken: new axios.CancelToken((c) => (cancel = c)),
+      cancelToken: new CancelToken((c) => (cancel = c)),
     })
       .then((res) => {
         if (res.data.length === 0) return setLoading(false);
@@ -83,7 +86,7 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
         setLoading(false);
       })
       .catch((e) => {
-        if (axios.isCancel(e)) return;
+        if (isCancel(e)) return;
         setLoading(false);
         setError(true);
       });

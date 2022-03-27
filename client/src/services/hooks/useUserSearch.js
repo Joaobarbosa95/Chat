@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
+import axiosParent from "axios";
+
+const { CancelToken, isCancel } = axiosParent;
 
 export default function useUserSearch(token, username) {
   const [loading, setLoading] = useState(false);
@@ -21,12 +24,12 @@ export default function useUserSearch(token, username) {
     let cancel;
     axios({
       method: "POST",
-      url: "http://localhost:4000/inbox/dialogue-search",
+      url: "/inbox/dialogue-search",
       data: { username: username.trim().toLowerCase() },
       headers: {
         authorization: "Bearer " + token,
       },
-      cancelToken: new axios.CancelToken((c) => (cancel = c)),
+      cancelToken: new CancelToken((c) => (cancel = c)),
     })
       .then((res) => {
         setLoading(false);
@@ -35,7 +38,7 @@ export default function useUserSearch(token, username) {
         setHasMore(res.data.length > 0);
       })
       .catch((e) => {
-        if (axios.isCancel(e)) return;
+        if (isCancel(e)) return;
         setLoading(false);
         setError(true);
       });

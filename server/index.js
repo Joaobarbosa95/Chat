@@ -28,7 +28,7 @@ const server = createServer(app);
 // Socket io
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL,
   },
 });
 

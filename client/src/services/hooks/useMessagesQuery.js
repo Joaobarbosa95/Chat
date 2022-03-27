@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
+import axiosParent from "axios";
 import { useUserContext } from "../../Contexts/UserContext";
+
+const { CancelToken, isCancel } = axiosParent;
 
 export default function useMessagesQuery(
   token,
@@ -39,7 +42,7 @@ export default function useMessagesQuery(
     let cancel;
     axios({
       method: "POST",
-      url: "http://localhost:4000/inbox/messages",
+      url: "/inbox/messages",
       data: {
         conversationId: String(conversationId),
         messagesLoaded: messagesLoaded,
@@ -47,7 +50,7 @@ export default function useMessagesQuery(
       headers: {
         authorization: "Bearer " + token,
       },
-      cancelToken: new axios.CancelToken((c) => (cancel = c)),
+      cancelToken: new CancelToken((c) => (cancel = c)),
     })
       .then((res) => {
         res.data.reverse();
@@ -58,7 +61,7 @@ export default function useMessagesQuery(
         setLoading(false);
       })
       .catch((e) => {
-        if (axios.isCancel(e)) return;
+        if (isCancel(e)) return;
         setLoading(false);
         setError(true);
       });

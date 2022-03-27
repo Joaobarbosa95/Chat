@@ -1,7 +1,7 @@
 import { FaUserCircle } from "react-icons/fa";
 import { useChatContext } from "../../../../Contexts/ChatContext";
 import { useUserContext } from "../../../../Contexts/UserContext";
-import axios from "axios";
+import axios from "../../../../services/api/axiosInstance";
 
 export default function SearchDialogueResult({ searchedUser, setAddDialogue }) {
   const { setPublicId, setUsername, setActiveDialogue } = useChatContext();
@@ -13,7 +13,7 @@ export default function SearchDialogueResult({ searchedUser, setAddDialogue }) {
       onClick={async (e) => {
         const res = await axios({
           method: "POST",
-          url: "http://localhost:4000/inbox/conversationid",
+          url: "/inbox/conversationid",
           data: { username: searchedUser.username },
           headers: {
             authorization: "Bearer " + userState.token,

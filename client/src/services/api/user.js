@@ -1,62 +1,49 @@
 import axios from "./axiosInstance";
 
 export async function fetchPublicProfile(user, otherUser) {
-  const url = "http://localhost:4000/inbox/public-profile";
-
   // replace with only token
   const bearer = "Bearer " + user?.token;
 
-  const opts = {
-    method: "POST",
-    withCredentials: true,
-    credentials: "include",
+  const res = await axios({
+    url: "/inbox/public-profile",
     headers: {
-      Authorization: bearer,
-      "Content-Type": "application/json",
+      authorization: bearer,
     },
-    body: JSON.stringify({ username: otherUser }),
-  };
+    data: JSON.stringify({ username: otherUser }),
+  });
 
-  const res = await fetch(url, opts);
-  const data = await res.json();
-  return data;
+  return res.data;
 }
 
 export async function validateToken(token) {
-  const url = "http://localhost:4000/user/validate";
-
   const bearer = "Bearer " + token;
 
-  const opts = {
+  const res = await axios({
     method: "POST",
+    url: "/user/validate",
     withCredentials: true,
-    credentials: "include",
     headers: {
-      Authorization: bearer,
+      authorization: bearer,
     },
-  };
+  });
 
-  const res = await fetch(url, opts);
-  const data = await res.json();
-  return data;
+  return res.data;
 }
 
 export async function login(username, password) {
-  const url = "http://localhost:4000/user/login";
-  const options = {
+  const res = await axios({
     method: "POST",
-    body: JSON.stringify({
+    url: "/user/login",
+    data: JSON.stringify({
       username: username.trim().toLowerCase(),
       password: password,
     }),
     headers: {
       "Content-Type": "application/json",
     },
-  };
+  });
 
-  const res = await fetch(url, options);
-  const data = await res.json();
-  return data;
+  return res.data;
 }
 
 export async function logout(user) {
@@ -71,7 +58,7 @@ export async function logout(user) {
 export async function updateUnseeMessages(token, conversationId) {
   await axios({
     method: "POST",
-    url: "http://localhost:4000/inbox/update-messages-status",
+    url: "/inbox/update-messages-status",
     data: { conversationId: conversationId },
     headers: {
       authorization: token,

@@ -20,23 +20,18 @@ userSchema.methods.generateAuthToken = async function () {
 };
 
 userSchema.statics.findByCredentials = async (username, password) => {
-  try {
-    const user = await User.findOne({ username: username });
+  const user = await User.findOne({ username: username });
 
-    if (!user) {
-      throw new Error("Username not found");
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      throw new Error("Wrong password");
-    }
-
-    return user;
-  } catch (e) {
-    throw new Error("Service unavailable");
+  if (!user) {
+    throw new Error("Username not found");
   }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    throw new Error("Wrong password");
+  }
+  return user;
 };
 
 // Hash the plain text password before saving

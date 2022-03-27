@@ -3,6 +3,7 @@ import { useUserContext } from "../../../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { socketInit } from "../../../utils/socketConnection";
 import { useAuthContext } from "../../../Contexts/AuthContext";
+import axios from "../../../services/api/axiosInstance";
 
 const CreateAccount = ({ setError }) => {
   const [username, setUsername] = useState("");
@@ -15,19 +16,6 @@ const CreateAccount = ({ setError }) => {
   function submitHandle(e) {
     e.preventDefault();
 
-    const url = "http://localhost:4000/user/createAccount";
-    const options = {
-      method: "POST",
-      body: JSON.stringify({
-        username: username.trim().toLowerCase(),
-        password: password,
-        repeatPassword: repeatPassword,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
     // input control
     if (username.trim().length < 1)
       setError("Username must be at least one character");
@@ -35,24 +23,33 @@ const CreateAccount = ({ setError }) => {
       setError("Password must be at least 7 characters");
     if (password !== repeatPassword) setError("Passwords don't match");
 
-    fetch(url, options)
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.error) return setError(res.error);
-        localStorage.setItem("ChatToken", res.token);
-        setAuthed(true);
-        userDispatch({
-          type: "create account",
-          payload: {
-            username: res.user.username,
-            token: res.token,
-            socket: socketInit(res.user.username, res.public._id, res.token),
-            accountType: "Permanent",
-          },
-        });
-
-        navigate("/home", { replace: true });
+    axios({
+      url: "/user/createAccount",
+      method: "POST",
+      data: JSON.stringify({
+        username: username.trim().toLowerCase(),
+        password: password,
+        repeatPassword: repeatPassword,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (res.error) return setError(res.error);
+      localStorage.setItem("ChatToken", res.token);
+      setAuthed(true);
+      userDispatch({
+        type: "create account",
+        payload: {
+          username: res.user.username,
+          token: res.token,
+          socket: socketInit(res.user.username, res.public._id, res.token),
+          accountType: "Permanent",
+        },
       });
+
+      navigate("/home", { replace: true });
+    });
   }
 
   return (

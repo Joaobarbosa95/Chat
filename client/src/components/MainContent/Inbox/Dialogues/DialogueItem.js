@@ -5,7 +5,10 @@ import { useChatContext } from "../../../../Contexts/ChatContext";
 import { updateUnseeMessages } from "../../../../services/api/user";
 
 import formatDate from "../../../../utils/formatDate";
-import axios from "axios";
+import axios from "../../../../services/api/axiosInstance";
+import axiosParent from "axios";
+
+const { CancelToken, isCancel } = axiosParent;
 
 const DialogueItem = ({ dialogue }) => {
   const { userState } = useUserContext();
@@ -61,9 +64,9 @@ const DialogueItem = ({ dialogue }) => {
 
     axios({
       method: "POST",
-      url: "http://localhost:4000/inbox/last-message",
+      url: "/inbox/last-message",
       data: { conversationId: conversationId },
-      cancelToken: new axios.CancelToken((c) => (cancelQuery = c)),
+      cancelToken: new CancelToken((c) => (cancelQuery = c)),
       headers: {
         authorization: token,
       },
@@ -82,7 +85,7 @@ const DialogueItem = ({ dialogue }) => {
         setLastMessageTime(time);
       })
       .catch((e) => {
-        if (axios.isCancel(e)) return;
+        if (isCancel(e)) return;
       });
 
     return () => cancelQuery();

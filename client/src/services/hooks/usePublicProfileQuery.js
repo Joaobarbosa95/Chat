@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
+import axiosParent from "axios";
 import { useChatContext } from "../../Contexts/ChatContext";
+
+const { CancelToken, isCancel } = axiosParent;
 
 export default function usePublicProfileQuery(token, username, conversationId) {
   const [loading, setLoading] = useState(true);
@@ -17,12 +20,12 @@ export default function usePublicProfileQuery(token, username, conversationId) {
     let cancel;
     axios({
       method: "POST",
-      url: "http://localhost:4000/inbox/public-profile",
+      url: "/inbox/public-profile",
       data: { username: username },
       headers: {
         authorization: "Bearer " + token,
       },
-      cancelToken: new axios.CancelToken((c) => (cancel = c)),
+      cancelToken: new CancelToken((c) => (cancel = c)),
     })
       .then((res) => {
         setPublicId(res.data[0]._id);
@@ -31,7 +34,7 @@ export default function usePublicProfileQuery(token, username, conversationId) {
         setLoading(false);
       })
       .catch((e) => {
-        if (axios.isCancel(e)) return;
+        if (isCancel(e)) return;
         setLoading(false);
         setError(true);
       });
