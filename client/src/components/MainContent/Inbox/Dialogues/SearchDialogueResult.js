@@ -3,7 +3,11 @@ import { useChatContext } from "../../../../Contexts/ChatContext";
 import { useUserContext } from "../../../../Contexts/UserContext";
 import axios from "../../../../services/api/axiosInstance";
 
-export default function SearchDialogueResult({ searchedUser, setAddDialogue }) {
+export default function SearchDialogueResult({
+  searchedUser,
+  setAddDialogue,
+  dialogues,
+}) {
   const { setPublicId, setUsername, setActiveDialogue } = useChatContext();
   const { userState } = useUserContext();
 
@@ -11,23 +15,27 @@ export default function SearchDialogueResult({ searchedUser, setAddDialogue }) {
     <div
       className="dialogue-result"
       onClick={async (e) => {
-        const res = await axios({
-          method: "POST",
-          url: "/inbox/conversationid",
-          data: { username: searchedUser.username },
-          headers: {
-            authorization: "Bearer " + userState.token,
-          },
+        // Search dialogue already loaded
+        const dialogueAlreadyLoaded = dialogues.find(
+          (dialogue) =>
+            dialogue.userOne === searchedUser.username ||
+            dialogue.userTwo === searchedUser.username
+        );
+
+        if (dialogueAlreadyLoaded) {
+          setPublicId(dialogueAlreadyLoaded._id);
+          setUsername(searchedUser.username);
+          setActiveDialogue(dialogueAlreadyLoaded.conversationId);
+
+          setAddDialogue(false);
+
+          return;
+        }
+
+        userState.socket.emit("new dialogue", {
+          username: searchedUser.username,
         });
 
-        res.data.length === 0
-          ? userState.socket.emit("new dialogue", {
-              username: searchedUser.username,
-            })
-          : setActiveDialogue(res.data[0]._id);
-
-        setPublicId(searchedUser._id);
-        setUsername(searchedUser.username);
         setAddDialogue(false);
       }}
     >

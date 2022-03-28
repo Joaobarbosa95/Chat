@@ -20,7 +20,7 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
   // When a new conversation is added
   useEffect(() => {
     if (!socket) return;
-    socket.on("new dialogue", ({ userOne, userTwo, id }) => {
+    socket.on("new dialogue", ({ userOne, userTwo, id, messages }) => {
       setActiveDialogue(id);
       setDialogues((prevDialogues) => {
         return [
@@ -28,7 +28,7 @@ export default function useDialoguesQuery(token, conversationsLoaded) {
             userOne: userOne,
             userTwo: userTwo,
             conversationId: id,
-            message: {},
+            message: messages,
           },
           ...prevDialogues,
         ];

@@ -1,6 +1,14 @@
 const Conversations = require("../models/conversations");
 const uuidv4 = require("uuid").v4;
 
+async function getConversationId(userOne, userTwo) {
+  return await Conversations.find({
+    $or: [{ userOne: userOne }, { userTwo: userOne }],
+  }).and({
+    $or: [{ userOne: userTwo }, { userTwo: userTwo }],
+  });
+}
+
 async function createNewConversation(userOne, userTwo, conversationId) {
   const newConversation = new Conversations({
     userOne: userOne,
@@ -30,4 +38,5 @@ async function removeConversation(conversationId) {
 module.exports = {
   createNewConversation,
   updateConversationLastUpdated,
+  getConversationId,
 };

@@ -3,7 +3,7 @@ import { useUserContext } from "../../../../Contexts/UserContext";
 import useUserSearch from "../../../../services/hooks/useUserSearch";
 import SearchDialogueResult from "./SearchDialogueResult";
 
-const AddDialogue = ({ addDialogue, setAddDialogue }) => {
+const AddDialogue = ({ addDialogue, setAddDialogue, dialogues }) => {
   const { userState } = useUserContext();
   const [userSearchInput, setUserSearchInput] = useState("");
 
@@ -39,6 +39,7 @@ const AddDialogue = ({ addDialogue, setAddDialogue }) => {
               conversationId={searchedUser}
               key={searchedUser._id}
               setAddDialogue={(boolean) => setAddDialogue(boolean)}
+              dialogues={dialogues}
             />
           ))}
           {loading && "Loading..."}

@@ -41,9 +41,11 @@ export async function login(username, password) {
     headers: {
       "Content-Type": "application/json",
     },
-  });
+  })
+    .then((res) => res)
+    .catch((e) => e.response.data);
 
-  return res.data;
+  return res;
 }
 
 export async function logout(user) {

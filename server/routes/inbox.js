@@ -6,6 +6,8 @@ const Messages = require("../models/messages");
 const PublicProfile = require("../models/publicProfile");
 const Conversations = require("../models/conversations");
 
+const { getConversationId } = require("../utils/conversationCollectionFunctions");
+
 const router = new express.Router();
 
 router.post("/dialogues", auth, async (req, res) => {
@@ -98,11 +100,8 @@ router.post("/dialogue-search", auth, async (req, res) => {
 });
 
 router.post("/conversationid", auth, async (req, res) => {
-  const conversationId = await Conversations.find({
-    $or: [{ userOne: req.user }, { userTwo: req.user }],
-  }).and({
-    $or: [{ userOne: req.body.username }, { userTwo: req.body.username }],
-  });
+  //
+  const conversationId = await getConversationId(req.user, req.body.username);
 
   res.send(conversationId);
 });

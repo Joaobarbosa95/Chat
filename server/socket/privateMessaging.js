@@ -4,7 +4,10 @@ const { saveNewMessage } = require("../utils/messagesCollectionFunctions");
 const {
   createNewConversation,
   updateConversationLastUpdated,
+  getConversationId,
 } = require("../utils/conversationCollectionFunctions");
+
+const { fetchMessages } = require("../utils/messagesCollectionFunctions");
 
 const removeOfflineUser = require("../utils/removeOfflineUser");
 
@@ -64,13 +67,29 @@ module.exports = (io, socket, users) => {
   });
 
   socket.on("new dialogue", async ({ username }) => {
-    const id = uuidv4();
-    socket.emit("new dialogue", {
-      userOne: socket.username,
-      userTwo: username,
-      id: id,
-    });
+    try {
+      // Check if the conversation already exists
+      const conversationId = await getConversationId(socket.username, username);
+
+      let messages;
+      // if yes, fetch conversation messages
+      if (conversationId.length > 0) {
+        messages = await fetchMessages(conversationId, 0);
+      }
+
+      const id = conversationId.length > 0 ? conversationId : uuidv4();
+
+      socket.emit("new dialogue", {
+        userOne: socket.username,
+        userTwo: username,
+        id: id,
+        messages: messages,
+      });
+    } catch (e) {
+      socket.emit("new dialogue", { error: e });
+    }
   });
+
   socket.on("disconnect", async () => {
     // Clear session
     removeOfflineUser(socket.username, users);

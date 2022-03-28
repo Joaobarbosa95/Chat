@@ -15,6 +15,14 @@ async function saveNewMessage(sender, receiver, conversationId, message) {
   return newMessage;
 }
 
+async function fetchMessages(conversationId, messagesLoaded) {
+  return await Messages.find({ conversationId: conversationId })
+    .sort("-timestamp")
+    .skip(messagesLoaded)
+    .limit(20);
+}
+
 module.exports = {
   saveNewMessage,
+  fetchMessages,
 };

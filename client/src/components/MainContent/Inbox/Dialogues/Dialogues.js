@@ -22,8 +22,6 @@ const Dialogues = () => {
     conversationsLoaded
   );
 
-  const [sortedDialogues, setSortedDialogues] = useState([]);
-
   // useEffect(() => {
   //   if (dialogues.length === 0) return;
   //   const sortedDialogues = sortDialogues(dialogues, sortType);
@@ -53,6 +51,7 @@ const Dialogues = () => {
       <AddDialogue
         addDialogue={addDialogue}
         setAddDialogue={(boolean) => setAddDialogue(boolean)}
+        dialogues={dialogues}
       />
       <div className={addDialogue ? "inactive" : ""}>
         <div className="search">

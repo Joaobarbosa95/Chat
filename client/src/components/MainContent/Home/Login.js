@@ -14,30 +14,34 @@ const Login = ({ setError }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  function submitHandle(e) {
+  async function submitHandle(e) {
     e.preventDefault();
-    login(username, password).then((res) => {
-      setUsername("");
-      setPassword("");
+    const res = await login(username, password);
 
-      if (res.error) return setError(res.error);
+    setUsername("");
+    setPassword("");
 
-      localStorage.setItem("ChatToken", res.token);
-      userDispatch({
-        type: "user login",
-        payload: {
-          username: res.user.username,
-          token: res.token,
-          socket: socketInit(res.user.username, res.public._id, res.token),
-          accountType: "Permanent",
-        },
-      });
-      setAuthed(true);
+    if (res.error) return setError(res.error);
 
-      if (location.state) {
-        navigate(location.state.from.pathname);
-      }
+    localStorage.setItem("ChatToken", res.data.token);
+    userDispatch({
+      type: "user login",
+      payload: {
+        username: res.data.user.username,
+        token: res.data.token,
+        socket: socketInit(
+          res.data.user.username,
+          res.data.public._id,
+          res.data.token
+        ),
+        accountType: "Permanent",
+      },
     });
+    setAuthed(true);
+
+    if (location.state) {
+      navigate(location.state.from.pathname);
+    }
   }
   return (
     <div className="login-container">
