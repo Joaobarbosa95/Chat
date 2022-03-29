@@ -88,6 +88,15 @@
   align-items: center;
 }
 
+.tabs-display:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.tabs-display:active {
+  opacity: 1;
+}
+
 .login {
   display: flex;
   justify-content: center;
@@ -123,4 +132,13 @@
 .login-form > input {
   text-indent: 10px;
   font-size: 1em;
+}
+
+form > button:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+form > button:active {
+  opacity: 1;
 }

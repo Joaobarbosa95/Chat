@@ -5,6 +5,7 @@ import { socketInit } from "../../../utils/socketConnection";
 import { login } from "../../../services/api/user";
 import { useAuthContext } from "../../../Contexts/AuthContext";
 
+
 const Login = ({ setError }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,23 +17,25 @@ const Login = ({ setError }) => {
 
   async function submitHandle(e) {
     e.preventDefault();
+
     const res = await login(username, password);
 
     setUsername("");
     setPassword("");
 
     if (res.error) return setError(res.error);
+    if (!res.data) return setError("Service Unavailable");
 
-    localStorage.setItem("ChatToken", res.data.token);
+    localStorage.setItem("ChatToken", res?.data?.token);
     userDispatch({
       type: "user login",
       payload: {
-        username: res.data.user.username,
-        token: res.data.token,
+        username: res?.data?.user.username,
+        token: res?.data?.token,
         socket: socketInit(
-          res.data.user.username,
-          res.data.public._id,
-          res.data.token
+          res?.data?.user.username,
+          res?.data?.public._id,
+          res?.data?.token
         ),
         accountType: "Permanent",
       },
