@@ -3,10 +3,13 @@ import { useUserContext } from "../../../Contexts/UserContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { logout } from "../../../services/api/user";
 import { useAuthContext } from "../../../Contexts/AuthContext";
+import { useChatContext } from "../../../Contexts/ChatContext";
 
 export const Logged = () => {
   const { userState } = useUserContext();
   const { setAuthed } = useAuthContext();
+  const { setActiveDialogue, setPublicId, setUsername, setOnlineUsers } =
+    useChatContext();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -20,6 +23,10 @@ export const Logged = () => {
       <button
         onClick={() => {
           logout(userState);
+          setActiveDialogue(null);
+          setPublicId(null);
+          setUsername(null);
+          setOnlineUsers(null);
           setAuthed(false);
         }}
       >

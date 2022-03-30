@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import useUserReducer from "../Reducers/UserReducer";
 const UserContext = React.createContext();
 

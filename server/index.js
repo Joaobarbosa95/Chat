@@ -6,6 +6,7 @@ require("./db/mongoose");
 
 const express = require("express");
 const { createServer } = require("http");
+const cors = require("cors");
 
 // Socket
 const socketIo = require("socket.io");
@@ -14,9 +15,15 @@ const connectSocket = require("./socket/connectSocket");
 // Routes
 const mountRoutes = require("./routes");
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 443;
 const app = express();
 
+app.use(
+  cors({
+    origin: "https://chateia-me.herokuapp.com",
+    optionsSuccessStatus: 200,
+  })
+);
 app.use(express.json());
 
 // Routes

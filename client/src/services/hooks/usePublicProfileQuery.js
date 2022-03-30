@@ -14,7 +14,7 @@ export default function usePublicProfileQuery(token, username, conversationId) {
   const { setPublicId } = useChatContext();
 
   useEffect(() => {
-    if (!token || username.trim().length < 1) return;
+    if (!token || username?.trim().length < 1) return;
     setLoading(true);
     setError(false);
     let cancel;

@@ -35,7 +35,7 @@ export default function useMessagesQuery(
   });
 
   useEffect(() => {
-    if (!token || conversationId.length < 1) return;
+    if (!token || conversationId?.length < 1) return;
 
     setLoading(true);
     setError(false);

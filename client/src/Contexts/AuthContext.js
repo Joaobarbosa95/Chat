@@ -22,7 +22,7 @@ export function AuthProvider({ children }) {
     if (!token) return;
 
     validateToken(token).then((res) => {
-      if (res.error) return console.log("invalid token");
+      if (res.error) return console.log(res.error);
       userDispatch({
         type: "user login",
         payload: {

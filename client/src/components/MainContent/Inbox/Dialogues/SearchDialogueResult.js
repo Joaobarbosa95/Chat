@@ -1,7 +1,6 @@
 import { FaUserCircle } from "react-icons/fa";
 import { useChatContext } from "../../../../Contexts/ChatContext";
 import { useUserContext } from "../../../../Contexts/UserContext";
-import axios from "../../../../services/api/axiosInstance";
 
 export default function SearchDialogueResult({
   searchedUser,

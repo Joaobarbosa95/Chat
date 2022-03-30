@@ -40,6 +40,7 @@ module.exports = (io, socket, users) => {
 
     const conversation = await updateConversationLastUpdated(dialogueId);
 
+    console.log(conversation);
     if (!conversation) {
       await createNewConversation(socket.username, username, dialogueId);
     }
@@ -77,7 +78,7 @@ module.exports = (io, socket, users) => {
         messages = await fetchMessages(conversationId, 0);
       }
 
-      const id = conversationId.length > 0 ? conversationId : uuidv4();
+      const id = conversationId?.length > 0 ? conversationId : uuidv4();
 
       socket.emit("new dialogue", {
         userOne: socket.username,

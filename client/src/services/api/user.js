@@ -10,9 +10,11 @@ export async function fetchPublicProfile(user, otherUser) {
       authorization: bearer,
     },
     data: JSON.stringify({ username: otherUser }),
-  });
+  })
+    .then((res) => res.data)
+    .catch((e) => e.response.data);
 
-  return res.data;
+  return res;
 }
 
 export async function validateToken(token) {
@@ -25,9 +27,11 @@ export async function validateToken(token) {
     headers: {
       authorization: bearer,
     },
-  });
+  })
+    .then((res) => res.data)
+    .catch((e) => e.response.data);
 
-  return res.data;
+  return res;
 }
 
 export async function login(username, password) {
@@ -42,8 +46,8 @@ export async function login(username, password) {
       "Content-Type": "application/json",
     },
   })
-    .then((res) => res)
-    .catch((e) => e.response.data);
+    .then((res) => res.data)
+    .catch((e) => e.response?.data || "Service Unavailable");
 
   return res;
 }

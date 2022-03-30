@@ -34,22 +34,30 @@ const CreateAccount = ({ setError }) => {
       headers: {
         "Content-Type": "application/json",
       },
-    }).then((res) => {
-      if (res.error) return setError(res.error);
-      localStorage.setItem("ChatToken", res.token);
-      setAuthed(true);
-      userDispatch({
-        type: "create account",
-        payload: {
-          username: res.user.username,
-          token: res.token,
-          socket: socketInit(res.user.username, res.public._id, res.token),
-          accountType: "Permanent",
-        },
-      });
+    })
+      .then((res) => {
+        localStorage.setItem("ChatToken", res.data.token);
+        setAuthed(true);
+        userDispatch({
+          type: "create account",
+          payload: {
+            username: res.data.user.username,
+            token: res.data.token,
+            socket: socketInit(
+              res.data.user.username,
+              res.data.public._id,
+              res.data.token
+            ),
+            accountType: "Permanent",
+          },
+        });
 
-      navigate("/home", { replace: true });
-    });
+        navigate("/home", { replace: true });
+      })
+      .catch((e) => {
+        console.log(e.response?.data.error);
+        setError(e.response?.data.error || "Service Unavailable");
+      });
   }
 
   return (

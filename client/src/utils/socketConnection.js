@@ -1,5 +1,6 @@
 import ioClient from "socket.io-client";
 
+// const ENDPOINT = "https://chateia-me-server.herokuapp.com/";
 const ENDPOINT = "http://localhost:4000";
 
 export function socketInit(username, publicId, token) {
