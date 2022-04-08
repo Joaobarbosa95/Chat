@@ -8,8 +8,13 @@ import { useChatContext } from "../../../Contexts/ChatContext";
 export const Logged = () => {
   const { userState } = useUserContext();
   const { setAuthed } = useAuthContext();
-  const { setActiveDialogue, setPublicId, setUsername, setOnlineUsers } =
-    useChatContext();
+  const {
+    setActiveDialogue,
+    setPublicId,
+    setUsername,
+    setOnlineUsers,
+    setStatus,
+  } = useChatContext();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -28,6 +33,7 @@ export const Logged = () => {
           setUsername(null);
           setOnlineUsers(null);
           setAuthed(false);
+          setStatus("offline");
         }}
       >
         Logout

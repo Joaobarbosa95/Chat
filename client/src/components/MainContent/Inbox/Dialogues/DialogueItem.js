@@ -16,12 +16,19 @@ const DialogueItem = ({ dialogue }) => {
 
   const { userOne, userTwo, conversationId, text, last_updated } = dialogue;
 
-  const { setActiveDialogue, setUsername, activeDialogue, onlineUsers } =
-    useChatContext();
+  const {
+    setActiveDialogue,
+    setUsername,
+    activeDialogue,
+    onlineUsers,
+    setStatus,
+    status,
+    setOnlineUsers,
+  } = useChatContext();
+
   const [lastMessage, setLastMessage] = useState("");
   const [lastMessageTime, setLastMessageTime] = useState("");
   const [unseenMessages, setUnseenMessages] = useState(0);
-  const [status, setStatus] = useState("offline");
 
   const otherUser = userState.username === userOne ? userTwo : userOne;
 
@@ -37,15 +44,21 @@ const DialogueItem = ({ dialogue }) => {
 
   // Socket
   useEffect(() => {
+    console.log(otherUser);
     const userFound = onlineUsers.find((user) => user.username === otherUser);
     if (userFound) setStatus("online");
 
     socket.on("user connected", ({ username }) => {
       if (otherUser === username) setStatus("online");
+      setOnlineUsers((prev) => {
+        return [...prev, { user: username }];
+      });
     });
 
     socket.on("user disconnected", ({ username }) => {
+      console.log("DISCNNECT", username);
       if (otherUser === username) setStatus("offline");
+      setOnlineUsers(onlineUsers.filter((user) => (user.username = !username)));
     });
 
     return () => {

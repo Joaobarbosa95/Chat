@@ -14,14 +14,13 @@ const removeOfflineUser = require("../utils/removeOfflineUser");
 const uuidv4 = require("uuid").v4;
 
 module.exports = (io, socket, users) => {
-  socket.on("connection", () => {
-    users.push({
-      username: socket.username,
-      sessionId: socket.sessionId,
-      publicId: socket.publicId,
-      token: socket.token,
-    });
+  users.push({
+    username: socket.username,
+    sessionId: socket.sessionId,
+    publicId: socket.publicId,
+    token: socket.token,
   });
+
   socket.emit("session", {
     sessionId: socket.sessionId,
     publicId: socket.publicId,
@@ -40,7 +39,6 @@ module.exports = (io, socket, users) => {
 
     const conversation = await updateConversationLastUpdated(dialogueId);
 
-    console.log(conversation);
     if (!conversation) {
       await createNewConversation(socket.username, username, dialogueId);
     }

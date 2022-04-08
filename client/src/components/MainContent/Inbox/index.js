@@ -18,6 +18,7 @@ const Index = () => {
     socket.emit("users");
 
     socket.on("users", ({ users }) => {
+      console.log("USERS", users);
       setOnlineUsers(users);
     });
 

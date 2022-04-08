@@ -12,7 +12,7 @@ import ChatInput from "./ChatInput";
 import "./chat.css";
 
 const Chat = () => {
-  const { username } = useChatContext();
+  const { username, status } = useChatContext();
 
   return (
     <div className="direct-messages-container">
@@ -25,7 +25,7 @@ const Chat = () => {
         <div className="user-info">
           <div className="chat-username">{username}</div>
           <div className="options">options</div>
-          <div className="chat-status">{true ? "online" : "offline"}</div>
+          <div className="chat-status">{status}</div>
         </div>
       </div>
       <MessagesBox />

@@ -2,7 +2,6 @@ const Conversations = require("../models/conversations");
 const uuidv4 = require("uuid").v4;
 
 async function getConversationId(userOne, userTwo) {
-  console.log("GETCONVERS", userTwo);
   return await Conversations.find({
     $or: [{ userOne: userOne }, { userTwo: userOne }],
   }).and({
@@ -11,7 +10,6 @@ async function getConversationId(userOne, userTwo) {
 }
 
 async function createNewConversation(userOne, userTwo, conversationId) {
-  console.log("CREATE NEW", userTwo);
   const newConversation = new Conversations({
     userOne: userOne,
     userTwo: userTwo,
@@ -19,7 +17,6 @@ async function createNewConversation(userOne, userTwo, conversationId) {
     last_updated: new Date(),
   });
 
-  console.log("CREATE NEW SAVE");
   await newConversation.save();
 
   return newConversation;

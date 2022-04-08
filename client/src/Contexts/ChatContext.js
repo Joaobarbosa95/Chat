@@ -11,6 +11,7 @@ export function ChatProvider({ children }) {
   const [publicId, setPublicId] = useState("");
   const [username, setUsername] = useState("");
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [status, setStatus] = useState("offline");
 
   return (
     <ChatContext.Provider
@@ -23,6 +24,8 @@ export function ChatProvider({ children }) {
         setUsername,
         onlineUsers,
         setOnlineUsers,
+        status,
+        setStatus,
       }}
     >
       {children}

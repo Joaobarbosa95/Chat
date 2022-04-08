@@ -7,9 +7,9 @@ export default function sortDialogues(dialogues, sort) {
 
     const messageTimeB = new Date(timestampB).getTime();
 
-    if (sort == "newest first") {
+    if (sort === "newest first") {
       return messageTimeB - messageTimeA;
-    } else if (sort == "last first") {
+    } else if (sort === "last first") {
       return messageTimeA - messageTimeB;
     }
   });
