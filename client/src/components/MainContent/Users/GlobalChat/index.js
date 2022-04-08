@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 // Components
 import ChatHeader from "./ChatHeader/ChatHeader";
@@ -8,6 +8,9 @@ import Chat from "./Chat/Chat";
 // Contexts
 import { useUserContext } from "../../../../Contexts/UserContext";
 
+// Hooks
+import useAutoScroll from "../../../../services/hooks/useAutoScroll";
+
 // Style
 import "./GlobalChat.css";
 
@@ -15,6 +18,10 @@ const GlobalChat = () => {
   const [messages, setMessages] = useState([]);
   const { userState } = useUserContext();
   const { socket } = userState;
+
+  const observerMessageBox = useRef();
+
+  const { observerMessageBottom } = useAutoScroll(messages, observerMessageBox);
 
   useEffect(() => {
     if (!socket) return;
@@ -52,10 +59,11 @@ const GlobalChat = () => {
     <div className="chat-container">
       <ChatHeader />
       <div className="chat-messages-container">
-        <div className="chat-messages">
-          {messages.map((message) => {
+        <div className="chat-messages" ref={observerMessageBox}>
+          {messages.map((message, index) => {
             return <Message key={message.id} message={message} />;
           })}
+          <div style={{ width: "100%" }} ref={observerMessageBottom}></div>
         </div>
       </div>
       <Chat />

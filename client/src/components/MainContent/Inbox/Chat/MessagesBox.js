@@ -4,6 +4,8 @@ import { useChatContext } from "../../../../Contexts/ChatContext";
 import useMessagesQuery from "../../../../services/hooks/useMessagesQuery";
 import Message from "./Message";
 
+import useAutoScroll from "../../../../services/hooks/useAutoScroll";
+
 const MessagesBox = () => {
   const { userState } = useUserContext();
   const { activeDialogue } = useChatContext();
@@ -16,23 +18,29 @@ const MessagesBox = () => {
   );
 
   const firstMessagesRenderRef = useRef(0);
+  const observerMessageBottom = useRef(null);
+  const messageBox = useRef();
+
+  const { observerMessageBottom } = useAutoScroll(messages, messageBox);
 
   useEffect(() => {
+    // Clear messages loaded count
     setMessagesLoaded(0);
     firstMessagesRenderRef.current = 0;
   }, [activeDialogue]);
 
   // Scroll to new message
-  const scrollToBottom = (element) => {
+  const scrollToLastMessageReceived = (element) => {
     element.scrollIntoView({
       behavior: "auto",
     });
   };
-  const observerMessageBottom = useRef(null);
 
   useEffect(() => {
-    if (lastMessage.current.scrollTopMax - lastMessage.current.scrollTop < 100)
-      scrollToBottom(observerMessageBottom.current);
+    // If scroll bar is moved 100px, don't auto scroll to new message
+    // (user might be reading the chat)
+    if (messageBox.current.scrollTopMax - messageBox.current.scrollTop < 100)
+      scrollToLastMessageReceived(observerMessageBottom.current);
   }, [messages]);
 
   // Infinite Scrolling Top
@@ -44,7 +52,7 @@ const MessagesBox = () => {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
           if (firstMessagesRenderRef.current > 1)
-            lastMessage.current.scrollTop = 1;
+            messageBox.current.scrollTop = 1;
           setMessagesLoaded(messages.length - 1);
         }
       });
@@ -54,10 +62,9 @@ const MessagesBox = () => {
   );
 
   // Start Scroll bottom
-  const lastMessage = useRef();
 
   const startScrollBottom = () => {
-    lastMessage.current.scrollTop = lastMessage.current.scrollHeight;
+    messageBox.current.scrollTop = messageBox.current.scrollHeight;
   };
 
   useEffect(() => {
@@ -67,7 +74,7 @@ const MessagesBox = () => {
   }, [messages, activeDialogue]);
 
   return (
-    <div className="messages-box" ref={lastMessage}>
+    <div className="messages-box" ref={messageBox}>
       {loading && "Loading..."}
       {error && "An error has occured"}
       {messages.map((message, index) => {
