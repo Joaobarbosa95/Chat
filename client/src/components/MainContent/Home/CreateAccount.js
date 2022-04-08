@@ -55,7 +55,6 @@ const CreateAccount = ({ setError }) => {
         navigate("/home", { replace: true });
       })
       .catch((e) => {
-        console.log(e.response?.data.error);
         setError(e.response?.data.error || "Service Unavailable");
       });
   }

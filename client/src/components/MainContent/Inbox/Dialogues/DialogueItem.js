@@ -44,7 +44,6 @@ const DialogueItem = ({ dialogue }) => {
 
   // Socket
   useEffect(() => {
-    console.log(otherUser);
     const userFound = onlineUsers.find((user) => user.username === otherUser);
     if (userFound) setStatus("online");
 
@@ -56,7 +55,6 @@ const DialogueItem = ({ dialogue }) => {
     });
 
     socket.on("user disconnected", ({ username }) => {
-      console.log("DISCNNECT", username);
       if (otherUser === username) setStatus("offline");
       setOnlineUsers(onlineUsers.filter((user) => (user.username = !username)));
     });

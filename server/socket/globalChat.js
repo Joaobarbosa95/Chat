@@ -9,7 +9,6 @@ module.exports = (socket, globalChatUsers) => {
     });
     socket.emit("user joined chat", { username: socket.username });
     globalChatUsers.push({ username: socket.username });
-
     socket.emit("online users", globalChatUsers);
   });
 

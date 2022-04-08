@@ -7,7 +7,13 @@ export default function SearchDialogueResult({
   setAddDialogue,
   dialogues,
 }) {
-  const { setPublicId, setUsername, setActiveDialogue } = useChatContext();
+  const {
+    onlineUsers,
+    setPublicId,
+    setUsername,
+    setActiveDialogue,
+    setStatus,
+  } = useChatContext();
   const { userState } = useUserContext();
 
   return (
@@ -20,6 +26,11 @@ export default function SearchDialogueResult({
             dialogue.userOne === searchedUser.username ||
             dialogue.userTwo === searchedUser.username
         );
+
+        const userFound = onlineUsers.find(
+          (user) => user.username === searchedUser
+        );
+        if (userFound) setStatus("online");
 
         if (dialogueAlreadyLoaded) {
           setPublicId(dialogueAlreadyLoaded._id);

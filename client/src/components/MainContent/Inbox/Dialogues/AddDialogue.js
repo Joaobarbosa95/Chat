@@ -42,7 +42,7 @@ const AddDialogue = ({ addDialogue, setAddDialogue, dialogues }) => {
               dialogues={dialogues}
             />
           ))}
-          {loading && "Loading..."}
+          {loading && userSearch.length > 0 && "Loading..."}
           {error && "An error occured"}
         </div>
       </div>

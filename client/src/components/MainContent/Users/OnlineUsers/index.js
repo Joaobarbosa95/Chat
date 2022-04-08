@@ -19,7 +19,6 @@ const OnlineUsers = () => {
 
     socket.on("user joined chat", (user) => {
       if (user.username === username) return;
-      console.log("run anyway");
       dispatch({ type: "user joined chat", user: user });
     });
 
@@ -47,9 +46,7 @@ const OnlineUsers = () => {
       <Title />
       <div className="online-users">
         {socket &&
-          onlineUsers.map((user) => (
-            <User key={user.username} user={userState} />
-          ))}
+          onlineUsers.map((user) => <User key={user.username} user={user} />)}
       </div>
     </div>
   );
