@@ -18,30 +18,15 @@ const MessagesBox = () => {
   );
 
   const firstMessagesRenderRef = useRef(0);
-  const observerMessageBottom = useRef(null);
-  const messageBox = useRef();
+  const observerMessageBox = useRef();
 
-  const { observerMessageBottom } = useAutoScroll(messages, messageBox);
+  const { observerMessageBottom } = useAutoScroll(messages, observerMessageBox);
 
   useEffect(() => {
     // Clear messages loaded count
     setMessagesLoaded(0);
     firstMessagesRenderRef.current = 0;
   }, [activeDialogue]);
-
-  // Scroll to new message
-  const scrollToLastMessageReceived = (element) => {
-    element.scrollIntoView({
-      behavior: "auto",
-    });
-  };
-
-  useEffect(() => {
-    // If scroll bar is moved 100px, don't auto scroll to new message
-    // (user might be reading the chat)
-    if (messageBox.current.scrollTopMax - messageBox.current.scrollTop < 100)
-      scrollToLastMessageReceived(observerMessageBottom.current);
-  }, [messages]);
 
   // Infinite Scrolling Top
   const observer = useRef();
@@ -52,7 +37,7 @@ const MessagesBox = () => {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
           if (firstMessagesRenderRef.current > 1)
-            messageBox.current.scrollTop = 1;
+            observerMessageBox.current.scrollTop = 1;
           setMessagesLoaded(messages.length - 1);
         }
       });
@@ -64,7 +49,8 @@ const MessagesBox = () => {
   // Start Scroll bottom
 
   const startScrollBottom = () => {
-    messageBox.current.scrollTop = messageBox.current.scrollHeight;
+    observerMessageBox.current.scrollTop =
+      observerMessageBox.current.scrollHeight;
   };
 
   useEffect(() => {
@@ -74,7 +60,7 @@ const MessagesBox = () => {
   }, [messages, activeDialogue]);
 
   return (
-    <div className="messages-box" ref={messageBox}>
+    <div className="messages-box" ref={observerMessageBox}>
       {loading && "Loading..."}
       {error && "An error has occured"}
       {messages.map((message, index) => {

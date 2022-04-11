@@ -7,8 +7,6 @@ const TextMessage = ({ username, text, time }) => {
 
   let style = {};
 
-  console.log(username, " aND ", you);
-
   if (username === you)
     style = {
       float: "right",

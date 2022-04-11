@@ -2,6 +2,10 @@ const removeOfflineUser = require("../utils/removeOfflineUser");
 
 module.exports = (socket, globalChatUsers) => {
   socket.on("user joined chat", () => {
+    // Reconnect
+    globalChatUsers.find((user) => user.username === socket.username);
+
+    // First time joining
     console.log(socket.username + " joined chat");
     socket.join("global chat");
     socket.to("global chat").emit("user joined chat", {

@@ -29,7 +29,7 @@ export async function validateToken(token) {
     },
   })
     .then((res) => res.data)
-    .catch((e) => e.response.data);
+    .catch((e) => e.response?.data);
 
   return res;
 }

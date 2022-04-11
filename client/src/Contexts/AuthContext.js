@@ -22,7 +22,17 @@ export function AuthProvider({ children }) {
     if (!token) return;
 
     validateToken(token).then((res) => {
-      if (res.error) return console.log(res.error);
+      // When the server is down and can't validate a token
+      if (!res)
+        return console.log("Server is currently down, try again in a moment");
+
+      // If token is invalide, clear localStorage
+      if (res.error) {
+        localStorage.removeItem("ChatToken");
+        return console.log(res.error);
+      }
+
+      // Else log user
       userDispatch({
         type: "user login",
         payload: {
